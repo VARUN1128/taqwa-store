@@ -34,3 +34,9 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation16.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.css-4t3x6l-MuiPaper-root-MuiDrawer-paper {
+  max-height: 72%;
+  border-bottom-right-radius: 10%;
+  border-bottom-left-radius: 3%;
+}

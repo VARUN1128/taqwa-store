@@ -12,3 +12,9 @@
 - Complete login page
 - Login page image is late loading
 - Sign in flow, details edit on cloud console
+- Continue with google, make it correctly align
+- Icons and font alignation check on phone
+- Logo on front screen correction
+- Routes
+- Default value thumbnail
+- Setup supabase

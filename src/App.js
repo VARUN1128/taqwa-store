@@ -8,6 +8,7 @@ import Clock from "./components/clock";
 import supabase from "./supabase";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Landing from "./pages/Landing/Landing";
+import BottomNavigator from "./components/BottomNavigator";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -43,6 +44,9 @@ function App() {
     <Provider store={store}>
       <SessionContext.Provider value={{ session, setSession }}>
         <Router>
+          {session && (
+            <BottomNavigator avatarInfo={session?.user.user_metadata} />
+          )}
           <Routes>
             <Route path="/" element={session ? <Landing /> : <Login />} />
           </Routes>
