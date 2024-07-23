@@ -58,14 +58,13 @@ const TopBar = ({ avatarInfo }) => {
 };
 const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
   const navigate = useNavigate();
-
   const handleClick = () => {
     navigate(`/product/${id}`);
   };
   return (
     <div
       onClick={handleClick}
-      className="w-[12em] sm:w-auto lg:max-w-[20em] h-fit product-card p-3 bg-white rounded-lg flex flex-col"
+      className="w-[12em] sm:w-auto lg:max-w-[20em] h-fit product-card p-3 mb-3 bg-white rounded-lg flex flex-col"
       style={{
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
         cursor: "pointer",
@@ -90,16 +89,23 @@ const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
           ₹ {price}
         </p>
         <span className="block mt-1 text-yellow-500">
-          {Array(Math.round(rating)).fill(
-            <AiFillStar
-              size={20}
-              color="#FFD700"
-              style={{
-                display: "inline-block",
-                verticalAlign: "middle",
-              }}
-            />
-          )}
+          <span
+            style={{
+              display: "inline-block",
+              verticalAlign: "middle",
+            }}
+          >
+            {Math.round(rating)}
+          </span>
+
+          <AiFillStar
+            size={20}
+            color="#ffdb00"
+            style={{
+              display: "inline-block",
+              verticalAlign: "middle",
+            }}
+          />
         </span>
       </div>
     </div>
@@ -169,6 +175,7 @@ export default function Landing() {
             category={category.category}
             thumbnail={category.thumbnail}
             index={index}
+            key={category.id}
           />
         ))}
       </div>
@@ -180,7 +187,7 @@ export default function Landing() {
   );
 }
 
-const CardList = ({ title, products }) => {
+export const CardList = ({ title, products }) => {
   return (
     <>
       <h3 className="text-xl text-left ml-4 mt-10">{title}</h3>
@@ -194,6 +201,7 @@ const CardList = ({ title, products }) => {
                 rating="4"
                 price={product.price}
                 thumbnail={product.images[0]}
+                key={product.id}
               />
             )
         )}

@@ -10,6 +10,7 @@ import "react-slideshow-image/dist/styles.css";
 import supabase from "../../supabase";
 import { useParams } from "react-router-dom";
 import Clock from "../../components/clock";
+import { CardList } from "../Landing/Landing";
 
 const Slideshow = ({ slideImages }) => {
   return (
@@ -35,6 +36,7 @@ const Slideshow = ({ slideImages }) => {
 const ProductDetail = () => {
   const [product, setProduct] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(true);
+  const [relatedProducts, setRelatedProducts] = React.useState([]);
 
   const rating = 4.5;
   const location = useLocation();
@@ -45,7 +47,6 @@ const ProductDetail = () => {
     navigator.clipboard.writeText(url);
     toast("Link copied to clipboard!");
   };
-
   useEffect(() => {
     const fetchProduct = async () => {
       const { data, error } = await supabase
@@ -55,10 +56,36 @@ const ProductDetail = () => {
       if (error) {
         console.log(error);
       }
-      console.log(data);
       setProduct(data[0]);
       setIsLoading(false);
+
+      const fetchRelatedProducts = async () => {
+        const { data: relatedData, error } = await supabase
+          .from("products")
+          .select("*")
+          .limit(10)
+          .order("category", { ascending: true })
+          .eq("category", data[0].category);
+        if (error) {
+          console.log(error);
+        }
+        console.log("Related Products");
+        console.log(relatedData);
+
+        // Select 4 random products
+        const randomProducts = [];
+        for (let i = 0; i < 4; i++) {
+          const randomIndex = Math.floor(Math.random() * relatedData.length);
+          randomProducts.push(relatedData[randomIndex]);
+          relatedData.splice(randomIndex, 1);
+        }
+
+        setRelatedProducts(randomProducts);
+      };
+
+      fetchRelatedProducts();
     };
+
     fetchProduct();
   }, [productId]);
 
@@ -74,7 +101,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="page overflow-x-hidden">
+    <div className="page overflow-x-hidden pb-[5em]">
       <TopProductDetail title={product.name} onCopy={handleCopy} />
       <ToastContainer />
 
@@ -142,6 +169,9 @@ const ProductDetail = () => {
           </span>
         </div>
       </div>
+      {relatedProducts.length > 0 && (
+        <CardList title="Related Products" products={relatedProducts} />
+      )}
     </div>
   );
 };

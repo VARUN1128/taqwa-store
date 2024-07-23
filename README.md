@@ -26,3 +26,4 @@
 - image load
 - clipboard on Android
 - Like button on click bug
+- Order by random, set related items as most ordered
