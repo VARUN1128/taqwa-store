@@ -1,10 +1,16 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { SessionContext } from "../../components/SessionContext";
 import "./Landing.css";
 import TopLogo from "../../images/TAQWA.png";
 import { TbMenu2 } from "react-icons/tb";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
 import SideDrawer from "../../components/SideDrawer";
+import SearchBar from "../../components/SearchBar";
+import Like from "../../components/Like";
+import { AiFillStar } from "react-icons/ai";
+import supabase from "../../supabase";
+import Clock from "../../components/clock";
+import { useNavigate } from "react-router-dom";
 
 const TopBar = ({ avatarInfo }) => {
   const [open, setOpen] = useState(false);
@@ -21,7 +27,7 @@ const TopBar = ({ avatarInfo }) => {
       }}
       className="px-2 top-bar w-full h-20 flex justify-between items-center"
     >
-      <div className="flex justify-start items-center w-full">
+      <div className="flex justify-start items-center w-full ">
         <TbMenu2
           size={25}
           onClick={() => {
@@ -50,13 +56,195 @@ const TopBar = ({ avatarInfo }) => {
     </div>
   );
 };
+const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/product/${id}`);
+  };
+  return (
+    <div
+      onClick={handleClick}
+      className="h-fit w-[11em] product-card p-3 bg-white rounded-lg  flex flex-col"
+      style={{
+        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+        cursor: "pointer",
+      }}
+    >
+      <img
+        src={thumbnail}
+        alt={productName}
+        className="w-35 h-35 object-cover rounded-sm"
+      />
+      <div className="product-details mt-3 w-100 ">
+        <div className="flex justify-between">
+          <p className=" ">{productName}</p>
+          <Like size="1em" />
+        </div>
+        <p
+          style={{
+            color: "#FE3A30",
+          }}
+          className=" mt-1"
+        >
+          ₹ {price}
+        </p>
+        <span className="block mt-1 text-yellow-500">
+          {Array(Math.round(rating)).fill(
+            <AiFillStar
+              size={20}
+              color="#FFD700"
+              style={{
+                display: "inline-block",
+                verticalAlign: "middle",
+              }}
+            />
+          )}
+        </span>
+      </div>
+    </div>
+  );
+};
+const CategoryCard = ({ index, category, thumbnail }) => {
+  return (
+    <div className="category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer">
+      <img
+        src={thumbnail}
+        alt="Category Thumbnail"
+        className="rounded-full w-[5em] h-[5em] object-cover"
+      />
+      <p className="category-name text-center">{category}</p>
+    </div>
+  );
+};
 export default function Landing() {
   const { session } = useContext(SessionContext);
+  const [categories, setCategories] = useState([]);
+  const [newArrivals, setNewArrivals] = useState([]);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const savedCategories = localStorage.getItem("categories");
+      if (savedCategories) {
+        setCategories(JSON.parse(savedCategories));
+        return;
+      }
 
+      const { data, error } = await supabase.from("categories").select("*");
+      if (error) {
+        console.log(error);
+      } else {
+        setCategories(data);
+
+        localStorage.setItem("categories", JSON.stringify(data));
+      }
+    };
+
+    const fetchNewArrivals = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(4);
+
+      if (error) {
+        console.log(error);
+      } else {
+        setNewArrivals(data);
+        console.log(data);
+      }
+    };
+
+    fetchNewArrivals();
+    fetchCategories();
+  }, []);
   return (
-    <div className="page-landing">
+    <div className="page overflow-y-auto hide-scrollbar pb-[3em] ">
       <TopBar avatarInfo={session?.user.user_metadata} />
-      <h1>Landing Page</h1>
+      <SearchBar />
+
+      <h3 className="text-xl text-left ml-4 mt-10">Categories</h3>
+      <div className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap ">
+        {categories.map((category, index) => (
+          <CategoryCard
+            category={category.category}
+            thumbnail={category.thumbnail}
+            index={index}
+          />
+        ))}
+      </div>
+      <h3 className="text-xl text-left ml-4 mt-10">New Arrivals</h3>
+      <div className="min-h-[17em] mb-10 m-auto justify-around w-100 gap-[1em]  flex flex-wrap mt-5 ">
+        {newArrivals.map(
+          (product) =>
+            console.log(product.images[0]) || (
+              <ProductCard
+                id={product.id}
+                productName={product.name}
+                rating="4"
+                price={product.price}
+                thumbnail={product.images[0]}
+              />
+            )
+        )}
+      </div>
+
+      <h3 className="text-xl text-left ml-4 mt-10">Top Rated</h3>
+      <div className="min-h-[17em] mb-10 m-auto justify-around w-100 gap-[1em]  flex flex-wrap mt-5 ">
+        <ProductCard
+          productName="Test Product"
+          rating="4"
+          price="200"
+          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
+        />
+        <ProductCard
+          productName="Test Product"
+          rating="3"
+          price="200"
+          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
+        />
+
+        <ProductCard
+          productName="Test Product"
+          rating="3"
+          price="200"
+          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
+        />
+        <ProductCard
+          productName="Test Product"
+          rating="3"
+          price="200"
+          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
+        />
+      </div>
+
+      <h3 className="text-xl text-left ml-4 mt-10">Best Sellers</h3>
+      <div className="min-h-[17em] mb-10 m-auto justify-around w-100 gap-[1em]  flex flex-wrap mt-5 ">
+        <ProductCard
+          productName="Test Product"
+          rating="4"
+          price="200"
+          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
+        />
+        <ProductCard
+          productName="Test Product"
+          rating="3"
+          price="200"
+          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
+        />
+
+        <ProductCard
+          productName="Test Product"
+          rating="3"
+          price="200"
+          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
+        />
+        <ProductCard
+          productName="Test Product"
+          rating="3"
+          price="200"
+          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
+        />
+      </div>
     </div>
   );
 }

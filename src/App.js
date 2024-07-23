@@ -9,6 +9,8 @@ import supabase from "./supabase";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Landing from "./pages/Landing/Landing";
 import BottomNavigator from "./components/BottomNavigator";
+import Profile from "./pages/Profile/Profile";
+import ProductDetail from "./pages/ProductDetail/ProductDetail";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -49,6 +51,14 @@ function App() {
           )}
           <Routes>
             <Route path="/" element={session ? <Landing /> : <Login />} />
+            <Route
+              path="/profile"
+              element={session ? <Profile /> : <Login />}
+            />
+            <Route
+              path="/product/:productId"
+              element={session ? <ProductDetail /> : <Login />}
+            />
           </Routes>
         </Router>
       </SessionContext.Provider>

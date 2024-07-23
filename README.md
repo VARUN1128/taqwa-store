@@ -16,5 +16,12 @@
 - Icons and font alignation check on phone
 - Logo on front screen correction
 - Routes
-- Default value thumbnail
+- Default value thumbnail on supabase
 - Setup supabase
+- Fix categories length in card
+- All links add
+- Like button sound effect
+- banner
+- bug in hamburger
+- image load
+- clipboard on Android

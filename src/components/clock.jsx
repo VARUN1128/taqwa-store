@@ -104,13 +104,13 @@ export default function Clock() {
             <div className="watch-week">
               <span className="week-arrow"></span>
               <ul>
-                <div>S</div>
-                <div>M</div>
-                <div>T</div>
-                <div>W</div>
-                <div>T</div>
-                <div>F</div>
-                <div>S</div>
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
               </ul>
             </div>
             <div className="watch-day">

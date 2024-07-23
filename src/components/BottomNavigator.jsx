@@ -8,8 +8,11 @@ import { PiHeart } from "react-icons/pi";
 import { PiHeartFill } from "react-icons/pi";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { IoBagCheck } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 export default function BottomNavigator({ avatarInfo }) {
+  const navigate = useNavigate();
+
   const [value, setValue] = React.useState(0);
   React.useEffect(() => {
     const currentPage = window.location.pathname;
@@ -31,7 +34,12 @@ export default function BottomNavigator({ avatarInfo }) {
     `https://api.dicebear.com/8.x/fun-emoji/png?seed=${userName}`;
 
   return (
-    <div className="bottom-nav">
+    <div
+      className="bottom-nav"
+      style={{
+        zIndex: 1000,
+      }}
+    >
       <Box sx={{ width: "100%" }}>
         <BottomNavigation
           showLabels
@@ -47,6 +55,7 @@ export default function BottomNavigator({ avatarInfo }) {
             icon={
               value === 0 ? <TbHomeFilled size={25} /> : <TbHome size={25} />
             }
+            onClick={() => navigate("/")}
           />
           <BottomNavigationAction
             label={
@@ -90,6 +99,7 @@ export default function BottomNavigator({ avatarInfo }) {
                 style={{ width: 30, borderRadius: "50%" }}
               />
             }
+            onClick={() => navigate("/profile")}
           />
         </BottomNavigation>
       </Box>
