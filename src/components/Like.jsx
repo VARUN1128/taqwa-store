@@ -7,7 +7,7 @@ const Like = ({ checked, size, onClick }) => {
     onClick && onClick();
 
     if (navigator.vibrate) {
-      navigator.vibrate(100);
+      navigator.vibrate(50);
     }
   };
   return (

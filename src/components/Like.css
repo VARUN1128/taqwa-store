@@ -1,5 +1,5 @@
 .heart-container {
-  --heart-color: rgb(255, 50, 50);
+  --heart-color: #ff0054;
   position: relative;
   transition: 0.5s;
 }

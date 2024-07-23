@@ -2,6 +2,7 @@
 
 ### TODO
 
+- RED: #ff0054
 - SEO
 - Favicon and metadata
 - Service on supabase
@@ -23,6 +24,5 @@
 - Like button sound effect
 - banner
 - image load
-- clipboard on Android
 - Order by random, set related items as most ordered
 - Scroll to top

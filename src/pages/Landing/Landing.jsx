@@ -85,7 +85,7 @@ const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
         </div>
         <p
           style={{
-            color: "#FE3A30",
+            color: "#ff0054",
           }}
           className=" mt-1"
         >

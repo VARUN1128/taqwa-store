@@ -11,7 +11,8 @@ import supabase from "../../supabase";
 import { useParams } from "react-router-dom";
 import Clock from "../../components/clock";
 import { CardList } from "../Landing/Landing";
-
+import { PiShoppingCartSimpleLight } from "react-icons/pi";
+import { HiMiniCurrencyRupee } from "react-icons/hi2";
 const Slideshow = ({ slideImages }) => {
   return (
     <div className="slide-container">
@@ -42,10 +43,15 @@ const ProductDetail = () => {
   const location = useLocation();
   const { productId } = useParams();
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     const url = window.location.origin + location.pathname;
-    navigator.clipboard.writeText(url);
-    toast("Link copied to clipboard!");
+    try {
+      await navigator.clipboard.writeText(url);
+      toast("Link copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+      toast(`Failed to copy the link. Please copy it manually: ${url}`);
+    }
   };
   useEffect(() => {
     const fetchProduct = async () => {
@@ -126,7 +132,7 @@ const ProductDetail = () => {
           </div>
           <p
             style={{
-              color: "#FE3A30",
+              color: "#ff0054",
             }}
             className="mt-1 mb-3 text-lg"
           >
@@ -149,24 +155,36 @@ const ProductDetail = () => {
           </span>
         </div>
         <div className="product-action justify-center items-center  w-full flex m-auto gap-3">
-          <span
+          <div
             style={{
-              backgroundColor: "#FE3A30",
+              backgroundColor: "#ff0054",
               color: "white",
+              transition: "transform 0.1s",
             }}
-            className="px-10 py-5 cursor-pointer rounded-lg font-bold"
+            className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95"
           >
+            <PiShoppingCartSimpleLight
+              size={20}
+              className="mr-2 inline-block align-middle"
+              color="white"
+            />
             Add to Cart
-          </span>
-          <span
+          </div>
+          <div
             style={{
-              backgroundColor: "#3669C9",
+              backgroundColor: "#ff9f00",
               color: "white",
+              transition: "transform 0.1s",
             }}
-            className="px-10 py-5 cursor-pointer rounded-lg font-bold"
+            className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95"
           >
+            <HiMiniCurrencyRupee
+              size={20}
+              className="mr-2 inline-block align-middle"
+              color="white"
+            />
             Buy Item
-          </span>
+          </div>
         </div>
       </div>
       {relatedProducts.length > 0 && (

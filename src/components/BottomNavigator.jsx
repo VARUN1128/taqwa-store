@@ -65,9 +65,9 @@ export default function BottomNavigator({ avatarInfo }) {
             }
             icon={
               value === 1 ? (
-                <PiHeartFill color="red" size={25} />
+                <PiHeartFill color="#ff0054" size={25} />
               ) : (
-                <PiHeart color="red" size={25} />
+                <PiHeart color="#ff0054" size={25} />
               )
             }
           />
