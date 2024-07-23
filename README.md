@@ -25,3 +25,4 @@
 - bug in hamburger
 - image load
 - clipboard on Android
+- Like button on click bug

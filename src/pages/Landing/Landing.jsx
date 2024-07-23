@@ -65,7 +65,7 @@ const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
   return (
     <div
       onClick={handleClick}
-      className="h-fit w-[11em] product-card p-3 bg-white rounded-lg  flex flex-col"
+      className="w-[12em] sm:w-auto lg:max-w-[20em] h-fit product-card p-3 bg-white rounded-lg flex flex-col"
       style={{
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
         cursor: "pointer",
@@ -107,7 +107,7 @@ const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
 };
 const CategoryCard = ({ index, category, thumbnail }) => {
   return (
-    <div className="category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer">
+    <div className="category-item flex flex-col items-center  justify-center flex-shrink-0 cursor-pointer">
       <img
         src={thumbnail}
         alt="Category Thumbnail"
@@ -158,7 +158,7 @@ export default function Landing() {
     fetchCategories();
   }, []);
   return (
-    <div className="page overflow-y-auto hide-scrollbar pb-[3em] ">
+    <div className="page overflow-y-auto hide-scrollbar pb-[5em] ">
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar />
 
@@ -172,9 +172,20 @@ export default function Landing() {
           />
         ))}
       </div>
-      <h3 className="text-xl text-left ml-4 mt-10">New Arrivals</h3>
-      <div className="min-h-[17em] mb-10 m-auto justify-around w-100 gap-[1em]  flex flex-wrap mt-5 ">
-        {newArrivals.map(
+
+      <CardList title="New Arrivals" products={newArrivals} />
+      <CardList title="Top Rated" products={newArrivals} />
+      <CardList title="Best Sellers" products={newArrivals} />
+    </div>
+  );
+}
+
+const CardList = ({ title, products }) => {
+  return (
+    <>
+      <h3 className="text-xl text-left ml-4 mt-10">{title}</h3>
+      <div className="min-h-[17em] m-auto justify-evenly w-100  flex flex-wrap mt-5 ">
+        {products.map(
           (product) =>
             console.log(product.images[0]) || (
               <ProductCard
@@ -187,64 +198,6 @@ export default function Landing() {
             )
         )}
       </div>
-
-      <h3 className="text-xl text-left ml-4 mt-10">Top Rated</h3>
-      <div className="min-h-[17em] mb-10 m-auto justify-around w-100 gap-[1em]  flex flex-wrap mt-5 ">
-        <ProductCard
-          productName="Test Product"
-          rating="4"
-          price="200"
-          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
-        />
-        <ProductCard
-          productName="Test Product"
-          rating="3"
-          price="200"
-          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
-        />
-
-        <ProductCard
-          productName="Test Product"
-          rating="3"
-          price="200"
-          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
-        />
-        <ProductCard
-          productName="Test Product"
-          rating="3"
-          price="200"
-          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
-        />
-      </div>
-
-      <h3 className="text-xl text-left ml-4 mt-10">Best Sellers</h3>
-      <div className="min-h-[17em] mb-10 m-auto justify-around w-100 gap-[1em]  flex flex-wrap mt-5 ">
-        <ProductCard
-          productName="Test Product"
-          rating="4"
-          price="200"
-          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
-        />
-        <ProductCard
-          productName="Test Product"
-          rating="3"
-          price="200"
-          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
-        />
-
-        <ProductCard
-          productName="Test Product"
-          rating="3"
-          price="200"
-          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
-        />
-        <ProductCard
-          productName="Test Product"
-          rating="3"
-          price="200"
-          thumbnail="https://i.imgur.com/FyfhPZ0.jpeg"
-        />
-      </div>
-    </div>
+    </>
   );
-}
+};
