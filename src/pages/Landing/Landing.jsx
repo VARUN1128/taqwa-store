@@ -31,7 +31,7 @@ export const TopBar = ({ avatarInfo }) => {
         <TbMenu2
           size={25}
           onClick={() => {
-            setOpen(!open);
+            setOpen((prevOpen) => !prevOpen);
           }}
           style={{ cursor: "pointer" }}
         />

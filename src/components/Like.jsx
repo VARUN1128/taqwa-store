@@ -1,9 +1,18 @@
 import React from "react";
 import "./Like.css";
 
-const Like = ({ checked, size }) => {
+const Like = ({ checked, size, onClick }) => {
+  const handleClick = (e) => {
+    e.stopPropagation();
+    onClick && onClick();
+
+    if (navigator.vibrate) {
+      navigator.vibrate(100);
+    }
+  };
   return (
     <div
+      onClick={handleClick}
       className="heart-container"
       title="Like"
       style={{

@@ -22,9 +22,7 @@
 - All links add
 - Like button sound effect
 - banner
-- bug in hamburger
 - image load
 - clipboard on Android
-- Like button on click bug
 - Order by random, set related items as most ordered
 - Scroll to top
