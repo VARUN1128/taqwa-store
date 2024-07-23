@@ -11,6 +11,7 @@ import Landing from "./pages/Landing/Landing";
 import BottomNavigator from "./components/BottomNavigator";
 import Profile from "./pages/Profile/Profile";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
+import SearchResults from "./pages/SearchResults/SearchResults";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -58,6 +59,10 @@ function App() {
             <Route
               path="/product/:productId"
               element={session ? <ProductDetail /> : <Login />}
+            />
+            <Route
+              path="/search"
+              element={session ? <SearchResults /> : <Login />}
             />
           </Routes>
         </Router>

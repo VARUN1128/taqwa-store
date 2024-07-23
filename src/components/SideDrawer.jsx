@@ -16,6 +16,7 @@ import { PiSneakerMove } from "react-icons/pi";
 import { GiWatch } from "react-icons/gi";
 import Crocs from "../images/crocs.svg";
 import { TbMenu2 } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 const AccountRelatedItems = {
   "My Wishlists": {
@@ -34,23 +35,23 @@ const AccountRelatedItems = {
 
 const CategoryItems = {
   "All Products": {
-    path: "/all",
+    path: "/search",
     icon: <GrAppsRounded size={30} color="black" />,
   },
   Shoes: {
-    path: "/shoes",
+    path: "/search?category=Shoes",
     icon: <PiSneakerMove size={30} color="black" />,
   },
   Converse: {
-    path: "/sneakers",
+    path: "/search?category=converse",
     icon: <GiConverseShoe size={30} color="black" />,
   },
   Watches: {
-    path: "/watches",
+    path: "/search?category=Watch",
     icon: <GiWatch size={30} color="black" />,
   },
   Crocs: {
-    path: "/crocs",
+    path: "/search?category=crocs",
     icon: (
       <div
         style={{
@@ -67,6 +68,12 @@ const CategoryItems = {
 };
 
 export default function SideDrawer({ name, profilePic, open, setOpen }) {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (path) => {
+    navigate(path);
+  };
+
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -89,6 +96,7 @@ export default function SideDrawer({ name, profilePic, open, setOpen }) {
           margin: "auto",
           cursor: "pointer",
         }}
+        onClick={() => navigate("/profile")}
       />
       <h2
         style={{
@@ -96,12 +104,17 @@ export default function SideDrawer({ name, profilePic, open, setOpen }) {
           fontFamily: "Product Sans",
           cursor: "pointer",
         }}
+        onClick={() => navigate("/profile")}
       >
         {name}
       </h2>
       <List>
         {Object.entries(CategoryItems).map(([text, { path, icon }]) => (
-          <ListItem key={text} disablePadding>
+          <ListItem
+            key={text}
+            disablePadding
+            onClick={() => handleCategoryClick(path)}
+          >
             <ListItemButton>
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText

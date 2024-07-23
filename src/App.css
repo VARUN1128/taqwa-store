@@ -36,9 +36,10 @@ body {
 }
 
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation16.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.css-4t3x6l-MuiPaper-root-MuiDrawer-paper {
-  max-height: 72%;
-  border-bottom-right-radius: 10%;
-  border-bottom-left-radius: 3%;
+  max-height: 80%;
+  border-bottom-right-radius: 20%;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -48,4 +49,15 @@ body {
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Disable tap highlight for all elements */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Disable tap highlight for specific elements */
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
 }

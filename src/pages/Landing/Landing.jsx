@@ -12,7 +12,7 @@ import supabase from "../../supabase";
 import Clock from "../../components/clock";
 import { useNavigate } from "react-router-dom";
 
-const TopBar = ({ avatarInfo }) => {
+export const TopBar = ({ avatarInfo }) => {
   const [open, setOpen] = useState(false);
 
   const userName = avatarInfo?.name.split(" ")[0] || "User";
@@ -25,7 +25,7 @@ const TopBar = ({ avatarInfo }) => {
       style={{
         boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
       }}
-      className="px-2 top-bar w-full h-20 flex justify-between items-center"
+      className="px-2 top-bar w-full h-20 flex justify-between items-center "
     >
       <div className="flex justify-start items-center w-full ">
         <TbMenu2
@@ -48,6 +48,9 @@ const TopBar = ({ avatarInfo }) => {
         className="h-10"
         style={{
           cursor: "pointer",
+        }}
+        onClick={() => {
+          window.location.href = "/";
         }}
       />
       <div className="flex justify-end items-center w-full">
@@ -112,8 +115,15 @@ const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
   );
 };
 const CategoryCard = ({ index, category, thumbnail }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/search?category=${category}`);
+  };
   return (
-    <div className="category-item flex flex-col items-center  justify-center flex-shrink-0 cursor-pointer">
+    <div
+      className="category-item flex flex-col items-center  justify-center flex-shrink-0 cursor-pointer"
+      onClick={handleClick}
+    >
       <img
         src={thumbnail}
         alt="Category Thumbnail"
