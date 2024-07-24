@@ -73,7 +73,9 @@ export default function SearchResults() {
       {!isFetching && hasFetched && products.length === 0 ? (
         <>
           <div className="mt-20 relative">
-            <h1 className="text-2xl ml-3">😅 Sorry that one isn't here yet</h1>
+            <h1 className="text-2xl ml-3 text-center">
+              😅 Sorry that one isn't here yet
+            </h1>
             <p className="text-gray-500 text-center mt-3">
               We're always adding new products to our catalog. Please check back
               later.

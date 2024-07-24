@@ -11,6 +11,7 @@ import { AiFillStar } from "react-icons/ai";
 import supabase from "../../supabase";
 import Clock from "../../components/clock";
 import { useNavigate } from "react-router-dom";
+import PlaceholderLoading from "react-placeholder-loading";
 
 export const TopBar = ({ avatarInfo }) => {
   const [open, setOpen] = useState(false);
@@ -60,10 +61,13 @@ export const TopBar = ({ avatarInfo }) => {
   );
 };
 const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
+  const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const navigate = useNavigate();
+
   const handleClick = () => {
     navigate(`/product/${id}`);
   };
+
   return (
     <div
       onClick={handleClick}
@@ -73,10 +77,15 @@ const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
         cursor: "pointer",
       }}
     >
+      {!thumbnailLoaded && (
+        <PlaceholderLoading shape="square" width={35} height={35} />
+      )}
       <img
         src={thumbnail}
         alt={productName}
         className="w-35 h-35 object-cover rounded-sm"
+        onLoad={() => setThumbnailLoaded(true)}
+        style={{ display: thumbnailLoaded ? "block" : "none" }}
       />
       <div className="product-details mt-3 w-100 ">
         <div className="flex justify-between">
@@ -121,7 +130,7 @@ const CategoryCard = ({ index, category, thumbnail }) => {
   };
   return (
     <div
-      className="category-item flex flex-col items-center  justify-center flex-shrink-0 cursor-pointer"
+      className="category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer transform transition-transform duration-150 active:scale-95"
       onClick={handleClick}
     >
       <img
