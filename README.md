@@ -23,6 +23,13 @@
 - All links add
 - Like button sound effect
 - banner
-- image load
 - Order by random, set related items as most ordered
 - Scroll to top
+- Like button around
+
+Main Page
+
+- Most wishlisted feature
+- Top Rated
+- Best Sellers
+- Loading again while liking?

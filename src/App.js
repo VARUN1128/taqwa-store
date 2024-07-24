@@ -12,10 +12,31 @@ import BottomNavigator from "./components/BottomNavigator";
 import Profile from "./pages/Profile/Profile";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import SearchResults from "./pages/SearchResults/SearchResults";
-
+import { WishlistContext } from "./components/WishlListContext";
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [wishlist, setWishlist] = useState([]);
+
+  useEffect(() => {
+    const fetchWishlist = async () => {
+      if (session && session.user) {
+        const { data, error } = await supabase
+          .from("wishlist")
+          .select("product_id")
+          .eq("user_id", session.user.id);
+        if (error) {
+          console.log(error);
+        } else {
+          setWishlist(data.map((item) => item.product_id));
+          console.log("Wishlist:", data);
+        }
+      }
+    };
+
+    fetchWishlist();
+  }, [session]);
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -45,28 +66,30 @@ function App() {
 
   return (
     <Provider store={store}>
-      <SessionContext.Provider value={{ session, setSession }}>
-        <Router>
-          {session && (
-            <BottomNavigator avatarInfo={session?.user.user_metadata} />
-          )}
-          <Routes>
-            <Route path="/" element={session ? <Landing /> : <Login />} />
-            <Route
-              path="/profile"
-              element={session ? <Profile /> : <Login />}
-            />
-            <Route
-              path="/product/:productId"
-              element={session ? <ProductDetail /> : <Login />}
-            />
-            <Route
-              path="/search"
-              element={session ? <SearchResults /> : <Login />}
-            />
-          </Routes>
-        </Router>
-      </SessionContext.Provider>
+      <WishlistContext.Provider value={{ wishlist, setWishlist }}>
+        <SessionContext.Provider value={{ session, setSession }}>
+          <Router>
+            {session && (
+              <BottomNavigator avatarInfo={session?.user.user_metadata} />
+            )}
+            <Routes>
+              <Route path="/" element={session ? <Landing /> : <Login />} />
+              <Route
+                path="/profile"
+                element={session ? <Profile /> : <Login />}
+              />
+              <Route
+                path="/product/:productId"
+                element={session ? <ProductDetail /> : <Login />}
+              />
+              <Route
+                path="/search"
+                element={session ? <SearchResults /> : <Login />}
+              />
+            </Routes>
+          </Router>
+        </SessionContext.Provider>
+      </WishlistContext.Provider>
     </Provider>
   );
 }

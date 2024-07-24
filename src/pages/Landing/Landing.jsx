@@ -12,6 +12,7 @@ import supabase from "../../supabase";
 import Clock from "../../components/clock";
 import { useNavigate } from "react-router-dom";
 import PlaceholderLoading from "react-placeholder-loading";
+import { WishlistContext } from "../../components/WishlListContext";
 
 export const TopBar = ({ avatarInfo }) => {
   const [open, setOpen] = useState(false);
@@ -60,12 +61,55 @@ export const TopBar = ({ avatarInfo }) => {
     </div>
   );
 };
-const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
+const ProductCard = ({
+  id,
+  productName,
+  rating,
+  price,
+  thumbnail,
+  session,
+}) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const navigate = useNavigate();
 
+  const { wishlist, setWishlist } = useContext(WishlistContext);
+  const isInWishlist = wishlist.includes(id);
+
   const handleClick = () => {
     navigate(`/product/${id}`);
+  };
+
+  const toggleWishlist = async () => {
+    // Optimistically update the UI
+    if (isInWishlist) {
+      setWishlist((oldWishlist) => oldWishlist.filter((item) => item !== id));
+    } else {
+      setWishlist((oldWishlist) => [...oldWishlist, id]);
+    }
+
+    // Then perform the network request in the background
+    if (isInWishlist) {
+      // Remove from wishlist
+      const { data, error } = await supabase
+        .from("wishlist")
+        .delete()
+        .match({ user_id: session.user.id, product_id: id });
+      if (error) {
+        console.log(error);
+        // If the request fails, revert the UI update
+        setWishlist((oldWishlist) => [...oldWishlist, id]);
+      }
+    } else {
+      // Add to wishlist
+      const { data, error } = await supabase
+        .from("wishlist")
+        .insert([{ user_id: session.user.id, product_id: id }]);
+      if (error) {
+        console.log(error);
+        // If the request fails, revert the UI update
+        setWishlist((oldWishlist) => oldWishlist.filter((item) => item !== id));
+      }
+    }
   };
 
   return (
@@ -90,7 +134,7 @@ const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
       <div className="product-details mt-3 w-100 ">
         <div className="flex justify-between">
           <p className=" ">{productName}</p>
-          <Like size="1em" />
+          <Like checked={isInWishlist} size="1em" onClick={toggleWishlist} />
         </div>
         <p
           style={{
@@ -123,20 +167,29 @@ const ProductCard = ({ id, productName, rating, price, thumbnail }) => {
     </div>
   );
 };
-const CategoryCard = ({ index, category, thumbnail }) => {
+
+export const CategoryCard = ({ index, category, thumbnail, loading }) => {
   const navigate = useNavigate();
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const handleClick = () => {
     navigate(`/search?category=${category}`);
   };
+
   return (
     <div
       className="category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer transform transition-transform duration-150 active:scale-95"
       onClick={handleClick}
     >
+      {!imageLoaded && (
+        <PlaceholderLoading shape="circle" width="5em" height="5em" />
+      )}
       <img
         src={thumbnail}
         alt="Category Thumbnail"
         className="rounded-full w-[5em] h-[5em] object-cover"
+        style={{ display: imageLoaded ? "block" : "none" }}
+        onLoad={() => setImageLoaded(true)}
       />
       <p className="category-name text-center">{category}</p>
     </div>
@@ -199,14 +252,14 @@ export default function Landing() {
         ))}
       </div>
 
-      <CardList title="New Arrivals" products={newArrivals} />
-      <CardList title="Top Rated" products={newArrivals} />
-      <CardList title="Best Sellers" products={newArrivals} />
+      <CardList title="New Arrivals" products={newArrivals} session={session} />
+      <CardList title="Top Rated" products={newArrivals} session={session} />
+      <CardList title="Best Sellers" products={newArrivals} session={session} />
     </div>
   );
 }
 
-export const CardList = ({ title, products }) => {
+export const CardList = ({ title, products, session }) => {
   return (
     <>
       <h3 className="text-xl text-left ml-4 mt-10">{title}</h3>
@@ -221,6 +274,7 @@ export const CardList = ({ title, products }) => {
                 price={product.price}
                 thumbnail={product.images[0]}
                 key={product.id}
+                session={session}
               />
             )
         )}

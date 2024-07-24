@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { VscGitFetch } from "react-icons/vsc";
 import SadCat from "../../images/sad_thumbsup.png";
+import { CategoryCard } from "../Landing/Landing";
 
 export default function SearchResults() {
   const { session } = useContext(SessionContext);
@@ -17,11 +18,35 @@ export default function SearchResults() {
   const [loading, setLoading] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const navigate = useNavigate();
 
   const [page, setPage] = useState(0);
   const itemsPerPage = 10;
+
+useEffect(() => {
+  const fetchCategories = async () => {
+    const savedCategories = localStorage.getItem("categories");
+    if (savedCategories) {
+      setCategories(JSON.parse(savedCategories));
+      return;
+    }
+
+    const { data, error } = await supabase.from("categories").select("*");
+    if (error) {
+      console.log(error);
+    } else {
+      setCategories(data);
+      localStorage.setItem("categories", JSON.stringify(data));
+    }
+  };
+
+  // Fetch categories only when products array is empty
+  if (products.length === 0) {
+    fetchCategories();
+  }
+}, [products]); // Add products as a dependency
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -55,7 +80,15 @@ export default function SearchResults() {
           throw error;
         }
 
-        setProducts((prevProducts) => [...prevProducts, ...data]);
+        setProducts((prevProducts) => {
+          const newProducts = data.filter(
+            (newProduct) =>
+              !prevProducts.some(
+                (prevProduct) => prevProduct.id === newProduct.id
+              )
+          );
+          return [...prevProducts, ...newProducts];
+        });
         setLoading(false);
         setHasFetched(true);
       } catch (error) {
@@ -70,6 +103,7 @@ export default function SearchResults() {
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar value={query && `${query}`} />
+
       {!isFetching && hasFetched && products.length === 0 ? (
         <>
           <div className="mt-20 relative">
@@ -78,8 +112,18 @@ export default function SearchResults() {
             </h1>
             <p className="text-gray-500 text-center mt-3">
               We're always adding new products to our catalog. Please check back
-              later.
+              later or check out our other categories.
             </p>
+            <div className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap ">
+              {categories.map((category, index) => (
+                <CategoryCard
+                  category={category.category}
+                  thumbnail={category.thumbnail}
+                  index={index}
+                  key={category.id}
+                />
+              ))}
+            </div>
           </div>
           <img
             src={SadCat}
@@ -88,7 +132,7 @@ export default function SearchResults() {
           />
           <span
             className=" text-white cursor-pointer
-            hover:bg-blue-500 transition-colors duration-300 ease-in-out mt-5"
+            hover:bg-blue-500 transition-colors duration-300 ease-in-out mt-20"
             onClick={() => navigate("/")}
             style={{
               position: "absolute",
@@ -106,6 +150,7 @@ export default function SearchResults() {
       ) : (
         <>
           <CardList
+            session={session}
             products={products}
             title={
               query

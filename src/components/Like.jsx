@@ -10,6 +10,7 @@ const Like = ({ checked, size, onClick }) => {
       navigator.vibrate(50);
     }
   };
+
   return (
     <div
       onClick={handleClick}

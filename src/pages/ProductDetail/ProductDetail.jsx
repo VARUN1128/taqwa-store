@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { TopProductDetail } from "../../components/TopPageDetail";
 import { useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -13,6 +13,9 @@ import Clock from "../../components/clock";
 import { CardList } from "../Landing/Landing";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
 import { HiMiniCurrencyRupee } from "react-icons/hi2";
+import { SessionContext } from "../../components/SessionContext";
+import { WishlistContext } from "../../components/WishlListContext";
+
 const Slideshow = ({ slideImages }) => {
   return (
     <div className="slide-container">
@@ -35,13 +38,22 @@ const Slideshow = ({ slideImages }) => {
 };
 
 const ProductDetail = () => {
+  //-----------------------------------
+
   const [product, setProduct] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(true);
   const [relatedProducts, setRelatedProducts] = React.useState([]);
-
+  const { session } = useContext(SessionContext);
+  //-----------------------------------
   const rating = 4.5;
   const location = useLocation();
   const { productId } = useParams();
+
+  // Wishlist functionality
+  const { wishlist, setWishlist } = useContext(WishlistContext);
+  const isInWishlist = wishlist.includes(product.id);
+
+  // Copy the URL to the clipboard
 
   const handleCopy = async () => {
     const url = window.location.origin + location.pathname;
@@ -95,6 +107,43 @@ const ProductDetail = () => {
     fetchProduct();
   }, [productId]);
 
+  //-----------------------------------
+  // Wishlist functionality
+
+  const toggleWishlist = async () => {
+    const id = product.id;
+    // Optimistically update the UI
+    if (isInWishlist) {
+      setWishlist((oldWishlist) => oldWishlist.filter((item) => item !== id));
+    } else {
+      setWishlist((oldWishlist) => [...oldWishlist, id]);
+    }
+
+    // Then perform the network request in the background
+    if (isInWishlist) {
+      // Remove from wishlist
+      const { data, error } = await supabase
+        .from("wishlist")
+        .delete()
+        .match({ user_id: session.user.id, product_id: id });
+      if (error) {
+        console.log(error);
+        // If the request fails, revert the UI update
+        setWishlist((oldWishlist) => [...oldWishlist, id]);
+      }
+    } else {
+      // Add to wishlist
+      const { data, error } = await supabase
+        .from("wishlist")
+        .insert([{ user_id: session.user.id, product_id: id }]);
+      if (error) {
+        console.log(error);
+        // If the request fails, revert the UI update
+        setWishlist((oldWishlist) => oldWishlist.filter((item) => item !== id));
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="page">
@@ -128,7 +177,7 @@ const ProductDetail = () => {
         <div className="product-details mt-1 w-full p-4 ">
           <div className="flex justify-between mb-3">
             <p className="text-2xl ">{product.name}</p>
-            <Like size="2em" />
+            <Like checked={isInWishlist} size="2em" onClick={toggleWishlist} />
           </div>
           <p
             style={{
@@ -188,7 +237,11 @@ const ProductDetail = () => {
         </div>
       </div>
       {relatedProducts.length > 0 && (
-        <CardList title="Related Products" products={relatedProducts} />
+        <CardList
+          session={session}
+          title="Related Products"
+          products={relatedProducts}
+        />
       )}
     </div>
   );
