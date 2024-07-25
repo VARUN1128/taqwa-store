@@ -115,10 +115,17 @@ const ProductCard = ({
   return (
     <div
       onClick={handleClick}
-      className="w-[12em] sm:w-auto lg:max-w-[20em] h-fit product-card p-3 mb-3 bg-white rounded-lg flex flex-col"
+      className="product-card p-3 mb-3 bg-white rounded-lg flex flex-col"
       style={{
+        width: "calc(50% - 2rem)", // This ensures that at least two cards are displayed in a row on small screens
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
         cursor: "pointer",
+        "@media (min-width: 1024px)": {
+          width: "80%", // This sets the width to 80% on larger screens
+        },
+        "@media (min-width: 1200px)": {
+          width: "60%", // This sets the width to 60% on even larger screens
+        },
       }}
     >
       {!thumbnailLoaded && (
@@ -263,21 +270,18 @@ export const CardList = ({ title, products, session }) => {
   return (
     <>
       <h3 className="text-xl text-left ml-4 mt-10">{title}</h3>
-      <div className="min-h-[17em] m-auto justify-evenly w-100  flex flex-wrap mt-5 ">
-        {products.map(
-          (product) =>
-            console.log(product.images[0]) || (
-              <ProductCard
-                id={product.id}
-                productName={product.name}
-                rating="4"
-                price={product.price}
-                thumbnail={product.images[0]}
-                key={product.id}
-                session={session}
-              />
-            )
-        )}
+      <div className="flex flex-wrap justify-evenly m-auto mt-5">
+        {products.map((product) => (
+          <ProductCard
+            id={product.id}
+            productName={product.name}
+            rating="4"
+            price={product.price}
+            thumbnail={product.images[0]}
+            key={product.id}
+            session={session}
+          />
+        ))}
       </div>
     </>
   );

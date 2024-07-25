@@ -210,7 +210,7 @@ const ProductDetail = () => {
               color: "white",
               transition: "transform 0.1s",
             }}
-            className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95"
+            className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
           >
             <PiShoppingCartSimpleLight
               size={20}
@@ -225,7 +225,7 @@ const ProductDetail = () => {
               color: "white",
               transition: "transform 0.1s",
             }}
-            className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95"
+            className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
           >
             <HiMiniCurrencyRupee
               size={20}
