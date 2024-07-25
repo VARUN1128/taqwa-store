@@ -13,6 +13,7 @@ import Profile from "./pages/Profile/Profile";
 import ProductDetail from "./pages/ProductDetail/ProductDetail";
 import SearchResults from "./pages/SearchResults/SearchResults";
 import { WishlistContext } from "./components/WishlListContext";
+import Wishlist from "./pages/Wishlist/Wishlist";
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -85,6 +86,10 @@ function App() {
               <Route
                 path="/search"
                 element={session ? <SearchResults /> : <Login />}
+              />
+              <Route
+                path="/wishlist"
+                element={session ? <Wishlist /> : <Login />}
               />
             </Routes>
           </Router>

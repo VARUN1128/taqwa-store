@@ -19,8 +19,8 @@ import { TbMenu2 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 
 const AccountRelatedItems = {
-  "My Wishlists": {
-    path: "/wishlists",
+  "My Wishlist": {
+    path: "/wishlist",
     icon: <PiHeart size={30} color="black" />,
   },
   "My Orders": {
@@ -131,7 +131,7 @@ export default function SideDrawer({ name, profilePic, open, setOpen }) {
       <Divider />
       <List>
         {Object.entries(AccountRelatedItems).map(([text, { path, icon }]) => (
-          <ListItem key={text} disablePadding>
+          <ListItem key={text} disablePadding onClick={() => navigate(path)}>
             <ListItemButton>
               <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText

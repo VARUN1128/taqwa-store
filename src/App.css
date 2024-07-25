@@ -54,10 +54,20 @@ body {
 /* Disable tap highlight for all elements */
 * {
   -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
 }
 
 /* Disable tap highlight for specific elements */
 a,
 button {
   -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; /* Chrome, Safari, Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
 }

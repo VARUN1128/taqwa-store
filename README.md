@@ -11,25 +11,27 @@
 - Add some kind of background animation to login page
 - Add domain in google consent
 - Complete login page
-- Login page image is late loading
 - Sign in flow, details edit on cloud console
 - Continue with google, make it correctly align
 - Icons and font alignation check on phone
-- Logo on front screen correction
-- Routes
-- Default value thumbnail on supabase
-- Setup supabase
-- Fix categories length in card
-- All links add
-- Like button sound effect
-- banner
-- Order by random, set related items as most ordered
-- Scroll to top
-- Like button around
 
-Main Page
+### Important ones
 
 - Most wishlisted feature
 - Top Rated
 - Best Sellers
+- Setup supabase dynoes
+- Google setup and also domain name
+
+### Small features
+
+- Login page image is late loading
 - Loading again while liking?
+- Like button around when unliking
+- Order by random, set related items as most ordered
+- Scroll to top
+- banner
+- Fix categories length in card horizontal scrolling
+- All links add
+- Like button sound effect
+- Logo on front screen correction, front screen itself correction

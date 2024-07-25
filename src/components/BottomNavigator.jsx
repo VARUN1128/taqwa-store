@@ -9,13 +9,16 @@ import { PiHeartFill } from "react-icons/pi";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { IoBagCheck } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function BottomNavigator({ avatarInfo }) {
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   const [value, setValue] = React.useState(0);
   React.useEffect(() => {
-    const currentPage = window.location.pathname;
+    const currentPage = location.pathname;
     if (currentPage === "/") {
       setValue(0);
     } else if (currentPage === "/wishlist") {
@@ -27,7 +30,7 @@ export default function BottomNavigator({ avatarInfo }) {
     } else {
       setValue(0);
     }
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, [location]); // Empty dependency array means this effect runs once on mount
   const userName = avatarInfo?.name.split(" ")[0] || "User";
   const avatarPic =
     avatarInfo?.avatar_url ||
@@ -70,6 +73,7 @@ export default function BottomNavigator({ avatarInfo }) {
                 <PiHeart color="#ff0054" size={25} />
               )
             }
+            onClick={() => navigate("/wishlist")}
           />
           <BottomNavigationAction
             label={

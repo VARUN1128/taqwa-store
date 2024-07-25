@@ -52,9 +52,12 @@ const Profile = () => {
       <div className="w-full bg-gray-500 h-[1px] mt-5"></div>
       <h1 className="text-2xl ml-2 mt-3">Personal</h1>
       <div className="flex flex-col gap-6 mt-5 ml-5">
-        <div className="flex gap-2 cursor-pointer ">
+        <div
+          className="flex gap-2 cursor-pointer "
+          onClick={() => navigate("/wishlist")}
+        >
           <PiHeart size={30} color="black" />
-          <span className="pt-1 font-bold">My Wishlists</span>
+          <span className="pt-1 font-bold">My Wishlist</span>
         </div>
         <div className="flex gap-2 cursor-pointer ">
           <IoBagCheckOutline size={30} color="black" />
