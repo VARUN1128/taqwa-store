@@ -13,8 +13,12 @@ import Clock from "../../components/clock";
 import { useNavigate } from "react-router-dom";
 import PlaceholderLoading from "react-placeholder-loading";
 import { WishlistContext } from "../../components/WishlListContext";
+import { useSelector } from "react-redux";
+import { selectTotalQuantity } from "../../components/cartSlice";
 
 export const TopBar = ({ avatarInfo }) => {
+  const itemCount = useSelector(selectTotalQuantity);
+
   const [open, setOpen] = useState(false);
 
   const userName = avatarInfo?.name.split(" ")[0] || "User";
@@ -55,8 +59,16 @@ export const TopBar = ({ avatarInfo }) => {
           window.location.href = "/";
         }}
       />
-      <div className="flex justify-end items-center w-full">
+      <div className="flex justify-end items-center w-full relative">
         <PiShoppingCartSimpleLight size={30} style={{ cursor: "pointer" }} />
+        {itemCount > 0 && (
+          <div
+            className="absolute bg-[#ff0054] text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
+            style={{ fontSize: "0.6rem", top: "-5px", right: "-5px" }}
+          >
+            {itemCount}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,10 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
+// store.js
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import cartReducer from "../components/cartSlice";
 
-const initialState = {
+const userInitialState = {
   user: null,
 };
 
-function rootReducer(state = initialState, action) {
+function userReducer(state = userInitialState, action) {
   switch (action.type) {
     case "SET_USER":
       return { ...state, user: action.payload };
@@ -12,6 +14,11 @@ function rootReducer(state = initialState, action) {
       return state;
   }
 }
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  cart: cartReducer,
+});
 
 const store = configureStore({
   reducer: rootReducer,

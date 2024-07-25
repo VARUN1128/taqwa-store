@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { MdContentCopy } from "react-icons/md";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
+import { useSelector } from "react-redux";
+import { selectTotalQuantity } from "./cartSlice";
 
 export default function TopPageDetail({ title }) {
   const onBack = () => {
@@ -41,6 +43,12 @@ export const TopProductDetail = ({ title, onCopy, onCart }) => {
     window.history.back();
   };
 
+  const itemCount = useSelector(selectTotalQuantity);
+
+  useEffect(() => {
+    console.log("Item count", itemCount);
+  }, [itemCount]);
+
   return (
     <div
       className="w-100 h-[5em] flex justify-center items-center relative px-4"
@@ -71,11 +79,21 @@ export const TopProductDetail = ({ title, onCopy, onCart }) => {
           style={{ cursor: "pointer" }}
           onClick={onCopy}
         />
-        <PiShoppingCartSimpleLight
-          size={25}
-          style={{ cursor: "pointer" }}
-          onClick={onCart}
-        />
+        <div className="relative">
+          <PiShoppingCartSimpleLight
+            size={25}
+            style={{ cursor: "pointer" }}
+            onClick={onCart}
+          />
+          {itemCount > 0 && (
+            <div
+              className="absolute  bg-[#ff0054] text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
+              style={{ fontSize: "0.6rem", top: "-6px", right: "-6px" }}
+            >
+              {itemCount}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

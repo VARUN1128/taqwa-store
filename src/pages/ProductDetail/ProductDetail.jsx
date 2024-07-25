@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TopProductDetail } from "../../components/TopPageDetail";
 import { useLocation } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -15,6 +15,10 @@ import { PiShoppingCartSimpleLight } from "react-icons/pi";
 import { HiMiniCurrencyRupee } from "react-icons/hi2";
 import { SessionContext } from "../../components/SessionContext";
 import { WishlistContext } from "../../components/WishlListContext";
+import { useSelector, useDispatch } from "react-redux";
+import { addItem, removeItem } from "../../components/cartSlice";
+import { PiMinusCircleFill } from "react-icons/pi";
+import { PiPlusCircleFill } from "react-icons/pi";
 
 const Slideshow = ({ slideImages }) => {
   return (
@@ -38,8 +42,6 @@ const Slideshow = ({ slideImages }) => {
 };
 
 const ProductDetail = () => {
-  //-----------------------------------
-
   const [product, setProduct] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(true);
   const [relatedProducts, setRelatedProducts] = React.useState([]);
@@ -65,6 +67,42 @@ const ProductDetail = () => {
       toast(`Failed to copy the link. Please copy it manually: ${url}`);
     }
   };
+
+  // Shopping cart functionality
+
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart);
+  const productInCart = cartItems.find((item) => item.id === product.id);
+  const quantity = productInCart ? productInCart.quantity : 0;
+  const [localQuantity, setLocalQuantity] = useState(quantity);
+
+  const handleAddToCart = () => {
+    console.log("Product added to cart");
+    setLocalQuantity(quantity + 1);
+    dispatch(addItem(product));
+    console.log(quantity);
+  };
+  const handleIncrement = (event) => {
+    event.stopPropagation();
+    setLocalQuantity(quantity + 1);
+    dispatch(addItem(product));
+  };
+
+  const handleDecrement = (event) => {
+    event.stopPropagation();
+    if (quantity > 0) {
+      setLocalQuantity(quantity - 1);
+      dispatch(removeItem(product));
+    }
+  };
+
+  useEffect(() => {
+    setLocalQuantity(0);
+  }, [productId]);
+
+  //-----------------------------------
+
+  //
   useEffect(() => {
     const fetchProduct = async () => {
       const { data, error } = await supabase
@@ -210,14 +248,35 @@ const ProductDetail = () => {
               color: "white",
               transition: "transform 0.1s",
             }}
+            onClick={handleAddToCart}
             className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
           >
-            <PiShoppingCartSimpleLight
-              size={20}
-              className="mr-2 inline-block align-middle"
-              color="white"
-            />
-            Add to Cart
+            {quantity > 0 ? (
+              <>
+                <PiMinusCircleFill
+                  size={20}
+                  className="mr-2 inline-block align-middle z-10"
+                  color="white"
+                  onClick={handleDecrement}
+                />
+                {quantity}
+                <PiPlusCircleFill
+                  size={20}
+                  className="ml-2 inline-block align-middle z-10"
+                  color="white"
+                  onClick={handleIncrement}
+                />
+              </>
+            ) : (
+              <>
+                <PiShoppingCartSimpleLight
+                  size={20}
+                  className="mr-2 inline-block align-middle"
+                  color="white"
+                />
+                Add to Cart
+              </>
+            )}
           </div>
           <div
             style={{
