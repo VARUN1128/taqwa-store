@@ -22,6 +22,9 @@
 - Best Sellers
 - Setup supabase dynoes
 - Google setup and also domain name
+- Item size
+- Save user home address
+- Server side proxy for country
 
 ### Small features
 
@@ -35,3 +38,4 @@
 - All links add
 - Like button sound effect
 - Logo on front screen correction, front screen itself correction
+- Vibrate effects

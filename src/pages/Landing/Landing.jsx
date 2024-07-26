@@ -26,6 +26,7 @@ export const TopBar = ({ avatarInfo }) => {
     avatarInfo?.avatar_url ||
     `https://api.dicebear.com/8.x/fun-emoji/png?seed=${userName}`;
 
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -60,11 +61,21 @@ export const TopBar = ({ avatarInfo }) => {
         }}
       />
       <div className="flex justify-end items-center w-full relative">
-        <PiShoppingCartSimpleLight size={30} style={{ cursor: "pointer" }} />
+        <PiShoppingCartSimpleLight
+          size={30}
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            navigate("/cart");
+          }}
+        />
+
         {itemCount > 0 && (
           <div
-            className="absolute bg-[#ff0054] text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
+            className="absolute bg-[#ff0054] text-white rounded-full text-xs w-5 h-5 flex items-center justify-center cursor-pointer"
             style={{ fontSize: "0.6rem", top: "-5px", right: "-5px" }}
+            onClick={() => {
+              navigate("/cart");
+            }}
           >
             {itemCount}
           </div>

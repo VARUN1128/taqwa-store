@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { TopProductDetail } from "../../components/TopPageDetail";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiFillStar } from "react-icons/ai";
@@ -28,7 +28,7 @@ const Slideshow = ({ slideImages }) => {
           return (
             <div
               key={index}
-              className="flex items-center justify-center bg-cover h-96 w-[96%] mx-auto rounded-lg bg-center bg-no-repeat mt-4"
+              className="flex items-center justify-center bg-cover h-96 w-[96%] mx-auto rounded-lg bg-center bg-no-repeat mt-4 cursor-zoom-in lg:object-contain"
               style={{
                 backgroundImage: `url("${slideImage}")`,
                 boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
@@ -99,6 +99,13 @@ const ProductDetail = () => {
   useEffect(() => {
     setLocalQuantity(0);
   }, [productId]);
+
+  const navigate = useNavigate();
+
+  const handleBuyNow = () => {
+    dispatch(addItem(product));
+    navigate("/cart");
+  };
 
   //-----------------------------------
 
@@ -182,6 +189,13 @@ const ProductDetail = () => {
     }
   };
 
+  // Image zoom functionality
+  const [isCover, setIsCover] = useState(true);
+
+  const handleImageClick = () => {
+    setIsCover(!isCover);
+  };
+
   if (isLoading) {
     return (
       <div className="page">
@@ -203,10 +217,13 @@ const ProductDetail = () => {
           <img
             src={product.images[0]}
             alt=""
-            className="w-[96%] m-auto rounded-lg mt-4 mb-3 h-96 object-cover"
+            className={`w-[96%] m-auto rounded-lg mt-4 mb-3 h-96 cursor-zoom-in ${
+              isCover ? "object-cover" : "object-contain"
+            }`}
             style={{
               boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
             }}
+            onClick={handleImageClick}
           />
         ) : (
           <Slideshow slideImages={product.images} />
@@ -241,12 +258,13 @@ const ProductDetail = () => {
               ))}
           </span>
         </div>
-        <div className="product-action justify-center items-center  w-full flex m-auto gap-3">
+        <div className="  product-action justify-center items-center  w-full flex m-auto gap-3">
           <div
             style={{
               backgroundColor: "#ff0054",
               color: "white",
               transition: "transform 0.1s",
+              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
             }}
             onClick={handleAddToCart}
             className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
@@ -255,14 +273,14 @@ const ProductDetail = () => {
               <>
                 <PiMinusCircleFill
                   size={20}
-                  className="mr-2 inline-block align-middle z-10"
+                  className="mr-3 inline-block align-middle z-10"
                   color="white"
                   onClick={handleDecrement}
                 />
                 {quantity}
                 <PiPlusCircleFill
                   size={20}
-                  className="ml-2 inline-block align-middle z-10"
+                  className="ml-3 inline-block align-middle z-10"
                   color="white"
                   onClick={handleIncrement}
                 />
@@ -283,7 +301,9 @@ const ProductDetail = () => {
               backgroundColor: "#ff9f00",
               color: "white",
               transition: "transform 0.1s",
+              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
             }}
+            onClick={handleBuyNow}
             className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
           >
             <HiMiniCurrencyRupee

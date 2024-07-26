@@ -4,6 +4,7 @@ import { MdContentCopy } from "react-icons/md";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { selectTotalQuantity } from "./cartSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function TopPageDetail({ title }) {
   const onBack = () => {
@@ -38,7 +39,8 @@ export default function TopPageDetail({ title }) {
   );
 }
 
-export const TopProductDetail = ({ title, onCopy, onCart }) => {
+export const TopProductDetail = ({ title, onCopy }) => {
+  const navigate = useNavigate();
   const onBack = () => {
     window.history.back();
   };
@@ -83,12 +85,13 @@ export const TopProductDetail = ({ title, onCopy, onCart }) => {
           <PiShoppingCartSimpleLight
             size={25}
             style={{ cursor: "pointer" }}
-            onClick={onCart}
+            onClick={() => navigate("/cart")}
           />
           {itemCount > 0 && (
             <div
-              className="absolute  bg-[#ff0054] text-white rounded-full text-xs w-5 h-5 flex items-center justify-center"
+              className="absolute  bg-[#ff0054] text-white rounded-full text-xs w-5 h-5 flex items-center justify-center cursor-pointer"
               style={{ fontSize: "0.6rem", top: "-6px", right: "-6px" }}
+              onClick={() => navigate("/cart")}
             >
               {itemCount}
             </div>
