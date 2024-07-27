@@ -47,7 +47,6 @@ const ProductDetail = () => {
   const [relatedProducts, setRelatedProducts] = React.useState([]);
   const { session } = useContext(SessionContext);
   //-----------------------------------
-  const rating = 4.5;
   const location = useLocation();
   const { productId } = useParams();
 
@@ -243,7 +242,7 @@ const ProductDetail = () => {
             ₹ {product.price}
           </p>
           <span className="block mt-1 text-yellow-500">
-            {Array(Math.round(rating))
+            {Array(Math.round(product.avg_rating))
               .fill()
               .map((_, index) => (
                 <AiFillStar

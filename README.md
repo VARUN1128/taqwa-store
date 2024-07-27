@@ -25,6 +25,12 @@
 - Item size
 - Save user home address
 - Server side proxy for country
+- Oauth verification and consent screen correection
+- Login Page fix
+- Admin
+- Order
+- icons and stuff fix for categories. also add more categories
+- SEO
 
 ### Small features
 
@@ -39,3 +45,11 @@
 - Like button sound effect
 - Logo on front screen correction, front screen itself correction
 - Vibrate effects
+- Favicon
+- Animation to 500
+- Back to home bug
+- Image loading animation fix
+- Delete image on admin panel should delete on imagekit
+- Delete entire product
+- Add new product
+- Back button on admin portal page

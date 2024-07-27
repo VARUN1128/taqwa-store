@@ -151,7 +151,7 @@ export default function SideDrawer({ name, profilePic, open, setOpen }) {
   return (
     <div>
       <Drawer
-        transitionDuration={1000}
+        transitionDuration={500}
         open={open}
         onClose={toggleDrawer(false)}
       >

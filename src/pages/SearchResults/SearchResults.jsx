@@ -25,28 +25,28 @@ export default function SearchResults() {
   const [page, setPage] = useState(0);
   const itemsPerPage = 10;
 
-useEffect(() => {
-  const fetchCategories = async () => {
-    const savedCategories = localStorage.getItem("categories");
-    if (savedCategories) {
-      setCategories(JSON.parse(savedCategories));
-      return;
-    }
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const savedCategories = localStorage.getItem("categories");
+      if (savedCategories) {
+        setCategories(JSON.parse(savedCategories));
+        return;
+      }
 
-    const { data, error } = await supabase.from("categories").select("*");
-    if (error) {
-      console.log(error);
-    } else {
-      setCategories(data);
-      localStorage.setItem("categories", JSON.stringify(data));
-    }
-  };
+      const { data, error } = await supabase.from("categories").select("*");
+      if (error) {
+        console.log(error);
+      } else {
+        setCategories(data);
+        localStorage.setItem("categories", JSON.stringify(data));
+      }
+    };
 
-  // Fetch categories only when products array is empty
-  if (products.length === 0) {
-    fetchCategories();
-  }
-}, [products]); // Add products as a dependency
+    // Fetch categories only when products array is empty
+    if (products.length === 0) {
+      fetchCategories();
+    }
+  }, [products]); // Add products as a dependency
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -142,6 +142,7 @@ useEffect(() => {
               backgroundColor: "#3669C9",
               padding: "1em",
               borderRadius: "2em",
+              marginTop: "3em",
             }}
           >
             Go Back Home

@@ -156,7 +156,7 @@ const ProductCard = ({
       <img
         src={thumbnail}
         alt={productName}
-        className="w-35 h-35 object-cover rounded-sm"
+        className="w-35 h-35 object-cover rounded-lg"
         onLoad={() => setThumbnailLoaded(true)}
         style={{ display: thumbnailLoaded ? "block" : "none" }}
       />
@@ -228,6 +228,7 @@ export default function Landing() {
   const { session } = useContext(SessionContext);
   const [categories, setCategories] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
+  const [topRated, setTopRated] = useState([]);
   useEffect(() => {
     const fetchCategories = async () => {
       const savedCategories = localStorage.getItem("categories");
@@ -261,8 +262,23 @@ export default function Landing() {
       }
     };
 
+    const fetchTopRated = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("avg_rating", { ascending: false })
+        .limit(4);
+
+      if (error) {
+        console.log(error);
+      } else {
+        setTopRated(data);
+      }
+    };
+
     fetchNewArrivals();
     fetchCategories();
+    fetchTopRated();
   }, []);
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em] ">
@@ -282,7 +298,7 @@ export default function Landing() {
       </div>
 
       <CardList title="New Arrivals" products={newArrivals} session={session} />
-      <CardList title="Top Rated" products={newArrivals} session={session} />
+      <CardList title="Top Rated" products={topRated} session={session} />
       <CardList title="Best Sellers" products={newArrivals} session={session} />
     </div>
   );
@@ -297,7 +313,7 @@ export const CardList = ({ title, products, session }) => {
           <ProductCard
             id={product.id}
             productName={product.name}
-            rating="4"
+            rating={product.avg_rating}
             price={product.price}
             thumbnail={product.images[0]}
             key={product.id}
