@@ -9,7 +9,6 @@ import SearchBar from "../../components/SearchBar";
 import Like from "../../components/Like";
 import { AiFillStar } from "react-icons/ai";
 import supabase from "../../supabase";
-import Clock from "../../components/clock";
 import { useNavigate } from "react-router-dom";
 import PlaceholderLoading from "react-placeholder-loading";
 import { WishlistContext } from "../../components/WishlListContext";
