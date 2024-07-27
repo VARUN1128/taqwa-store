@@ -16,6 +16,8 @@ import { WishlistContext } from "./components/WishlListContext";
 import Wishlist from "./pages/Wishlist/Wishlist";
 import Cart from "./pages/Cart/Cart";
 import AddAddress from "./pages/AddAddress/AddAddress";
+import OrderConfirm from "./pages/OrderStuff/OrderConfirm";
+
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -97,6 +99,10 @@ function App() {
               <Route
                 path="/address"
                 element={session ? <AddAddress /> : <Login />}
+              />
+              <Route
+                path="/confirmorder"
+                element={session ? <OrderConfirm /> : <Login />}
               />
             </Routes>
           </Router>

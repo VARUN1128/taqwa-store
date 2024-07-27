@@ -40,9 +40,12 @@ const Cart = () => {
       {cart.map((product) => (
         <div
           key={product.id}
-          className="flex justify-between items-center p-4 relative"
+          className="flex justify-between items-center p-4 relative cursor-pointer"
           style={{
             boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px",
+          }}
+          onClick={() => {
+            navigate(`/product/${product.id}`);
           }}
         >
           <img
@@ -82,7 +85,8 @@ const Cart = () => {
               transition: "transform 0.1s",
               boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
             }}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation(); // Stop event propagation
               dispatch(removeEntireItem(product));
 
               if (navigator.vibrate) {

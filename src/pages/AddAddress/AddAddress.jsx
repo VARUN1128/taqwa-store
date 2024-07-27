@@ -119,19 +119,23 @@ export default function AddAddress() {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
+    const address = {
+      ...data,
+      country: "India",
+      state: selectedState ? selectedState.value : "Kerala",
+    };
     const { error } = await supabase
       .from("users")
-      .update({ address: JSON.stringify(data) })
+      .update({ address: JSON.stringify(address) })
       .eq("id", session.user.id);
 
     if (error) {
       console.error("Error: ", error);
     } else {
-      navigate("/cart");
+      navigate("/confirmorder");
     }
     setIsLoading(false);
   };
-
   useEffect(() => {
     const fetchAddress = async () => {
       const { data, error } = await supabase
@@ -142,15 +146,20 @@ export default function AddAddress() {
 
       if (error) {
         console.error("Error: ", error);
-      } else if (data) {
+      } else if (data && data.address) {
         const address = JSON.parse(data.address);
         setValue("name", address.name);
         setValue("phone", address.phone);
         setValue("address", address.address);
         setValue("zip", address.zip);
         setValue("city", address.city);
-        setValue("country", { value: address.country, label: address.country });
-        setValue("state", { value: address.state, label: address.state });
+        setValue("country", { value: "India", label: "India" });
+        setValue(
+          "state",
+          address.state
+            ? { value: address.state, label: address.state }
+            : { value: "Kerala", label: "Kerala" }
+        );
       }
     };
 
@@ -166,6 +175,7 @@ export default function AddAddress() {
           placeholder="Name"
           {...register("name", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.name && (
           <span className="text-red-500">This field is required</span>
@@ -175,6 +185,7 @@ export default function AddAddress() {
           placeholder="Phone Number"
           {...register("phone", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
         />{" "}
         {errors.phone && (
           <span className="text-red-500">This field is required</span>
@@ -185,6 +196,7 @@ export default function AddAddress() {
           placeholder="Address"
           {...register("address", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.address && (
           <span className="text-red-500">This field is required</span>
@@ -194,6 +206,7 @@ export default function AddAddress() {
           placeholder="Zip Code"
           {...register("zip", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.zip && (
           <span className="text-red-500">This field is required</span>
@@ -203,6 +216,7 @@ export default function AddAddress() {
           placeholder="City"
           {...register("city", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.city && (
           <span className="text-red-500">This field is required</span>
