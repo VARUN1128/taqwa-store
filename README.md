@@ -21,21 +21,18 @@
 - Top Rated
 - Best Sellers
 - Setup supabase dynoes
-- Google setup and also domain name
-- Item size
-- Save user home address
-- Server side proxy for country
 - Oauth verification and consent screen correection
 - Login Page fix
 - Admin
 - Order
 - icons and stuff fix for categories. also add more categories
 - SEO
+- Edge functions for imagekit auth
+- All the remaining pages in client side including orders tab
 
 ### Small features
 
 - Login page image is late loading
-- Loading again while liking?
 - Like button around when unliking
 - Order by random, set related items as most ordered
 - Scroll to top
@@ -46,10 +43,9 @@
 - Logo on front screen correction, front screen itself correction
 - Vibrate effects
 - Favicon
-- Animation to 500
-- Back to home bug
 - Image loading animation fix
 - Delete image on admin panel should delete on imagekit
 - Delete entire product
 - Add new product
 - Back button on admin portal page
+- valav poy

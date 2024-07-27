@@ -130,23 +130,17 @@ export default function SearchResults() {
             alt="Sad Cat"
             className="absolute right-0 bottom-[3em] w-[12em]"
           />
-          <span
-            className=" text-white cursor-pointer
-            hover:bg-blue-500 transition-colors duration-300 ease-in-out mt-20"
-            onClick={() => navigate("/")}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              backgroundColor: "#3669C9",
-              padding: "1em",
-              borderRadius: "2em",
-              marginTop: "3em",
-            }}
-          >
-            Go Back Home
-          </span>
+          <div className="flex justify-center mt-5">
+            <span
+              className="text-white cursor-pointer hover:bg-blue-500 transition-colors duration-300 ease-in-out py-2 px-4 rounded-full"
+              onClick={() => navigate("/")}
+              style={{
+                backgroundColor: "#3669C9",
+              }}
+            >
+              Go Back Home
+            </span>
+          </div>
         </>
       ) : (
         <>

@@ -299,7 +299,6 @@ export default function Landing() {
 
       <CardList title="New Arrivals" products={newArrivals} session={session} />
       <CardList title="Top Rated" products={topRated} session={session} />
-      <CardList title="Best Sellers" products={newArrivals} session={session} />
     </div>
   );
 }
