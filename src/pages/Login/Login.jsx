@@ -33,7 +33,7 @@ export default function Login() {
     <div className="page-login flex flex-col justify-between items-center h-screen">
       <Marquee velocity={100}>
         {items.map((item, index) => (
-          <div key={index} style={{ marginRight: "100px" }}>
+          <div key={index} style={{ marginRight: "100px", paddingTop: "5em" }}>
             {item}
           </div>
         ))}
@@ -48,7 +48,11 @@ export default function Login() {
           {items.map((item, index) => (
             <div
               key={index}
-              style={{ marginRight: "100px", transform: "rotate(180deg)" }}
+              style={{
+                marginRight: "100px",
+                transform: "rotate(180deg)",
+                paddingBottom: "10em",
+              }}
             >
               {item}
             </div>
