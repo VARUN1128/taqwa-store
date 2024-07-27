@@ -30,11 +30,6 @@ body {
   transform: translate(-50%, -50%);
 }
 
-.cont-google-btn {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation16.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.css-4t3x6l-MuiPaper-root-MuiDrawer-paper {
   max-height: 80%;
   border-bottom-right-radius: 20%;
@@ -70,4 +65,14 @@ button {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+}
+
+/* App.css */
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
