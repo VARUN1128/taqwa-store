@@ -8,6 +8,12 @@ import { PiSneakerMove } from "react-icons/pi";
 import { GiWatch } from "react-icons/gi";
 import Crocs from "../../images/crocs.svg";
 import Marquee from "react-marquee-slider";
+import { TbPerfume } from "react-icons/tb";
+import { GiDelicatePerfume } from "react-icons/gi";
+import { PiBaseballCap } from "react-icons/pi";
+import { PiBaseballCapThin } from "react-icons/pi";
+import { IoWalletOutline } from "react-icons/io5";
+import { TbShoe } from "react-icons/tb";
 
 const url = new URL(window.origin).href;
 
@@ -23,51 +29,44 @@ export default function Login() {
   }
 
   const items = [
-    <GiConverseShoe size={70} />,
-    <PiSneakerMove size={70} />,
-    <GiWatch size={60} />,
+    <GiConverseShoe size={40} color="white" />,
+    <PiSneakerMove size={40} color="white" />,
+    <GiWatch size={40} color="white" />,
+    <PiBaseballCap size={40} color="white" />,
+    <TbShoe size={40} color="white" />,
+    <TbPerfume size={40} color="white" />,
+    <GiDelicatePerfume size={40} color="white" />,
+    <IoWalletOutline size={40} color="white" />,
+    <PiBaseballCapThin size={40} color="white" />,
 
     // <img src={Crocs} alt="Crocs" className="w-30 bg-red-500" />,
   ];
   return (
-    <div className="page-login flex flex-col justify-between items-center h-screen">
-      <Marquee velocity={100}>
+    <div className="page page-login flex flex-col justify-between items-center h-screen bg-black">
+      <Marquee velocity={80}>
         {items.map((item, index) => (
-          <div key={index} style={{ marginRight: "100px", paddingTop: "5em" }}>
+          <div key={index} style={{ marginRight: "10em", paddingTop: "5em" }}>
             {item}
           </div>
         ))}
       </Marquee>
       <div className="cont-google text-center ">
-        <img src={TaqwaLogoRemoved} alt="TAQWA" />
-        <span className="block logo-label">FASHION STORE</span>
-        <span className="block text-right text-[0.9em]">Walk out in style</span>
+        <img src={TaqwaLogoRemoved} alt="TAQWA" className="m-auto" />
+        <span className="block logo-label text-white ">FASHION STORE</span>
+        <span className="block text-right text-[0.9em] text-white ">
+          Walk out in style
+        </span>
       </div>
-      <div style={{ transform: "rotate(180deg)" }}>
-        <Marquee velocity={100}>
-          {items.map((item, index) => (
-            <div
-              key={index}
-              style={{
-                marginRight: "100px",
-                transform: "rotate(180deg)",
-                paddingBottom: "10em",
-              }}
-            >
-              {item}
-            </div>
-          ))}
-        </Marquee>
-      </div>
+      <div style={{ transform: "rotate(180deg)" }}></div>
       <span
-        className="flex justify-center items-center gap-2 cont-google-btn mb-20 absolute bottom-2 px-6 py-4 text-white bg-black rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap"
+        className="flex justify-center items-center gap-2 cont-google-btn mb-20 absolute bottom-2 px-6 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap"
         onClick={signIn}
       >
         {loading ? (
-          <CircularProgress style={{ color: "#fff" }} size={18} />
+          <CircularProgress style={{ color: "black" }} size={18} />
         ) : (
           <>
-            <FaGoogle style={{ display: "block" }} size={20} color="#fff" />
+            <FaGoogle style={{ display: "block" }} size={20} color="black" />
           </>
         )}
         Continue With Google
