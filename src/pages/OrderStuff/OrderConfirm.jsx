@@ -37,6 +37,39 @@ export default function OrderConfirm() {
     fetchAddress();
   }, [session]);
 
+  // When the user confirms the order get all the data and sent to a whatsapp number well formated about the address and the product details including link, then clear the cart
+  const confirmOrder = async () => {
+    const message = `🛒 Order Confirmed 🛒\n\n📦 Shipping Address 📦\n\nName: ${
+      address.name
+    }\nPhone: ${address.phone}\nAddress: ${address.address}\nZip: ${
+      address.zip
+    }\nCity: ${address.city}\nState: ${address.state || ""}\nCountry: ${
+      address.country || ""
+    }\n\n📦 Order Details 📦\n\n${cart
+      .map(
+        (product) =>
+          `Product: ${product.name}\nQuantity: ${product.quantity}\nPrice: ₹ ${
+            product.price * product.quantity
+          }\nCategory: ${
+            product.category
+          }\nLink: https://taqwafashionstore.com/product/${product.id}`
+      )
+      .join("\n\n")}\n\nTotal: ₹ ${cart.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    )}`;
+
+    const url = `https://api.whatsapp.com/send?phone=+918281931488&text=${encodeURIComponent(
+      message
+    )}`;
+
+    window.open(url, "_blank");
+
+    // Clear the cart
+    dispatch(removeEntireItem());
+    navigate("/");
+  };
+
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
@@ -154,9 +187,7 @@ export default function OrderConfirm() {
             boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
           className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
-          onClick={() => {
-            navigate("/address");
-          }}
+          onClick={confirmOrder}
         >
           <TbTruckDelivery
             size={20}

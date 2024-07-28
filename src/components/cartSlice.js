@@ -33,12 +33,10 @@ const cartSlice = createSlice({
       }
     },
     removeEntireItem: (state, action) => {
-      const itemIndex = state.findIndex(
-        (item) => item.id === action.payload.id
-      );
-      if (itemIndex >= 0) {
-        // Remove item from the cart regardless of its quantity
-        state.splice(itemIndex, 1);
+      if (action.payload && action.payload.id) {
+        return state.filter((item) => item.id !== action.payload.id);
+      } else {
+        return [];
       }
     },
   },

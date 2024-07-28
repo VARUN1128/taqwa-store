@@ -54,6 +54,7 @@ export const TopProductDetail = ({ title, onCopy }) => {
   return (
     <div
       className="w-100 h-[5em] flex justify-center items-center relative px-4"
+      id="top"
       style={{
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
       }}

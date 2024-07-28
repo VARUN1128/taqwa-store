@@ -98,7 +98,7 @@ const ProductCard = ({
   const isInWishlist = wishlist.includes(id);
 
   const handleClick = () => {
-    navigate(`/product/${id}`);
+    navigate(`/product/${id}#top`);
   };
 
   const toggleWishlist = async () => {

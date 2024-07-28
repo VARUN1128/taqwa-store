@@ -29,7 +29,8 @@
 - SEO
 - Edge functions for imagekit auth
 - All the remaining pages in client side including orders tab
-
+- Login redirection fix for admin or change to email and password
+- Before login stuff and add new products
 ### Small features
 
 - Login page image is late loading
