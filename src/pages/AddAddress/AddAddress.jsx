@@ -181,7 +181,7 @@ export default function AddAddress() {
           <span className="text-red-500">This field is required</span>
         )}
         <input
-          type="text"
+          type="number"
           placeholder="Phone Number"
           {...register("phone", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
