@@ -138,8 +138,10 @@ const ProductDetail = () => {
         const randomProducts = [];
         for (let i = 0; i < 4; i++) {
           const randomIndex = Math.floor(Math.random() * relatedData.length);
-          randomProducts.push(relatedData[randomIndex]);
-          relatedData.splice(randomIndex, 1);
+          if (relatedData[randomIndex]) {
+            randomProducts.push(relatedData[randomIndex]);
+            relatedData.splice(randomIndex, 1);
+          }
         }
 
         setRelatedProducts(randomProducts);

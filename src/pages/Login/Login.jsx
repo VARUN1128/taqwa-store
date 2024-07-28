@@ -43,7 +43,7 @@ export default function Login() {
   ];
   return (
     <div className="page page-login flex flex-col justify-between items-center h-screen bg-black">
-      <Marquee velocity={80}>
+      <Marquee velocity={70}>
         {items.map((item, index) => (
           <div key={index} style={{ marginRight: "10em", paddingTop: "5em" }}>
             {item}
