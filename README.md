@@ -55,6 +55,8 @@
 - Scroll to top
 - Image loading animation fix
 
+# also add session.user.email
+
 ```javascript
 
   // When the user confirms the order get all the data and sent to a whatsapp number well formated about the address and the product details including link, then clear the cart

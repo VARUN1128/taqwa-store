@@ -1,16 +1,197 @@
 import React, { useContext, useEffect, useState } from "react";
-import TopPageDetail from "../../components/TopPageDetail";
 import { useNavigate } from "react-router-dom";
+import TopPageDetail from "../../components/TopPageDetail";
+import { MdDeleteForever } from "react-icons/md";
+import { TbTruckDelivery } from "react-icons/tb";
 import supabase from "../../supabase";
 import { SessionContext } from "../../components/SessionContext";
 import { useDispatch, useSelector } from "react-redux";
 import { removeEntireItem } from "../../components/cartSlice";
-import { MdDeleteForever } from "react-icons/md";
-import { TbTruckDelivery } from "react-icons/tb";
+import axios from "axios";
+import { useCallback } from "react";
+import useRazorpay from "react-razorpay";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_ORDER_URL;
+
 export default function OrderConfirm() {
   const [address, setAddress] = useState(null);
   const { session } = useContext(SessionContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [Razorpay] = useRazorpay();
+  const [paymentloadscreenmessage, setPaymentLoadScreenMessage] = useState("");
+  const [completed, setCompleted] = useState(false);
+
+  const dispatch = useDispatch();
+  const avatarInfo = session?.user.user_metadata;
+  const cart = useSelector((state) => state.cart);
+  const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  const getPaymentResponseOnSuccess = async (paymentId, orderId, signature) => {
+    const { data } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("order_id", orderId)
+      .eq("status", "paid")
+      .single();
+
+    if (data) {
+      console.log("Order already captured");
+      setCompleted(true);
+      dispatch(removeEntireItem());
+    } else {
+      const paymentResponse = await axios
+        .post(
+          `${BACKEND_URL}/create-order/capture`,
+          {
+            paymentId,
+            signature,
+            orderId,
+            status: "paid",
+            items: cart,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.access_token}`,
+            },
+          }
+        )
+        .catch((error) => {
+          console.error("Error capturing payment");
+          setPaymentLoadScreenMessage(
+            `Payment Failed, 
+          Use the order id to contact the support team: ${orderId},
+          Payment Id: ${paymentId}`
+          );
+        });
+
+      if (paymentResponse && paymentResponse.status === 200) {
+        console.log(paymentResponse);
+        setCompleted(true);
+        dispatch(removeEntireItem());
+      }
+    }
+  };
+
+  const createOrder = async () => {
+    const response = await axios.post(
+      `${BACKEND_URL}/create-order`,
+      {
+        description: "Payment for food",
+        user_id: session.user.id,
+        user_name: avatarInfo.full_name,
+        items: cart,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      }
+    );
+    if (response.status !== 200) {
+      console.error("Error creating order");
+    }
+    console.log(response);
+    return response;
+  };
+
+  const handlePayment = useCallback(async () => {
+    if (!Razorpay) {
+      return;
+    }
+    if (itemCount === 0) {
+      alert("Please add items to cart");
+      return;
+    }
+    if (!loading) {
+      setLoading(true);
+    } else {
+      return;
+    }
+    let response = null;
+    try {
+      response = await createOrder();
+    } catch (error) {
+      console.error("Error creating order");
+      setLoading(false);
+      return;
+    }
+
+    if (response.status !== 200) {
+      console.error("Error creating order");
+      return;
+    }
+
+    const order = response.data;
+    const options = {
+      key: process.env.REACT_APP_RAZORPAY_KEY,
+      amount: order.amount,
+      currency: order.currency,
+      name: "Taqwa Fashion Store",
+      description: "Payment for accessories",
+      order_id: order.id,
+      prefill: {
+        name: avatarInfo.full_name,
+        email: session.user.email,
+        contact: avatarInfo.phone_number,
+      },
+      handler: async (response) => {
+        console.log(response);
+        const paymentId = response.razorpay_payment_id;
+        const signature = response.razorpay_signature;
+        const orderId = response.razorpay_order_id;
+        await getPaymentResponseOnSuccess(paymentId, orderId, signature);
+      },
+      modal: {
+        ondismiss: function () {
+          setPaymentLoadScreenMessage("Payment Cancelled");
+          setTimeout(() => {
+            setPaymentLoadScreenMessage("");
+            setLoading(false);
+          }, 500);
+        },
+      },
+      theme: {
+        color: "#1CA672",
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on("payment.failed", function (response) {
+      console.log(response.error.code);
+      console.log(response.error.description);
+      console.log(response.error.source);
+      console.log(response.error.step);
+      console.log(response.error.reason);
+      console.log(response.error.metadata.order_id);
+      console.log(response.error.metadata.payment_id);
+
+      setPaymentLoadScreenMessage("Payment Failed");
+      setTimeout(() => {
+        setPaymentLoadScreenMessage("");
+        setLoading(false);
+      }, 500);
+    });
+
+    rzp.open();
+  }, [Razorpay]);
+
+  let convenienceFees = (
+    Object.values(cart).reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    ) * 0.02
+  ).toFixed(2);
+
+  convenienceFees = parseFloat(convenienceFees);
+
+  const total =
+    Object.values(cart).reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    ) + convenienceFees;
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -37,41 +218,11 @@ export default function OrderConfirm() {
     fetchAddress();
   }, [session]);
 
-  // When the user confirms the order get all the data and sent to a whatsapp number well formated about the address and the product details including link, then clear the cart
-  const confirmOrder = async () => {
-    const message = `🛒 Order Confirmed 🛒\n\n📦 Shipping Address 📦\n\nName: ${
-      address.name
-    }\nPhone: ${address.phone}\nAddress: ${address.address}\nZip: ${
-      address.zip
-    }\nCity: ${address.city}\nState: ${address.state || ""}\nCountry: ${
-      address.country || ""
-    }\n\n📦 Order Details 📦\n\n${cart
-      .map(
-        (product) =>
-          `Product: ${product.name}\nQuantity: ${product.quantity}\nPrice: ₹ ${
-            product.price * product.quantity
-          }\nCategory: ${
-            product.category
-          }\nLink: https://taqwafashionstore.com/product/${product.id}`
-      )
-      .join("\n\n")}\n\nTotal: ₹ ${cart.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    )}`;
+  // window.open(url, "_blank");
 
-    const url = `https://api.whatsapp.com/send?phone=+918281931488&text=${encodeURIComponent(
-      message
-    )}`;
-
-    window.open(url, "_blank");
-
-    // Clear the cart
-    dispatch(removeEntireItem());
-    navigate("/");
-  };
-
-  const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart);
+  // Clear the cart
+  // dispatch(removeEntireItem());
+  // navigate("/");
 
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
@@ -187,7 +338,8 @@ export default function OrderConfirm() {
             boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
           className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
-          onClick={confirmOrder}
+          // onClick={confirmOrder}
+          onClick={handlePayment}
         >
           <TbTruckDelivery
             size={20}
