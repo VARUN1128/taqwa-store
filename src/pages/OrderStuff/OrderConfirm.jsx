@@ -10,6 +10,8 @@ import { removeEntireItem } from "../../components/cartSlice";
 import axios from "axios";
 import { useCallback } from "react";
 import useRazorpay from "react-razorpay";
+import { SiRazorpay } from "react-icons/si";
+import PaymentProcessLoadScreen from "../../components/PaymentProcessLoadScreen";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_ORDER_URL;
 
@@ -70,11 +72,13 @@ export default function OrderConfirm() {
         console.log(paymentResponse);
         setCompleted(true);
         dispatch(removeEntireItem());
+        // navigate("/orders");
       }
     }
   };
 
   const createOrder = async () => {
+    console.log(address);
     const response = await axios.post(
       `${BACKEND_URL}/create-order`,
       {
@@ -82,6 +86,7 @@ export default function OrderConfirm() {
         user_id: session.user.id,
         user_name: avatarInfo.full_name,
         items: cart,
+        address: address,
       },
       {
         headers: {
@@ -101,6 +106,22 @@ export default function OrderConfirm() {
     if (!Razorpay) {
       return;
     }
+
+    let convenienceFees = (
+      Object.values(cart).reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      ) * 0.02
+    ).toFixed(2);
+
+    convenienceFees = parseFloat(convenienceFees);
+
+    const total =
+      Object.values(cart).reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      ) + convenienceFees;
+
     if (itemCount === 0) {
       alert("Please add items to cart");
       return;
@@ -176,7 +197,7 @@ export default function OrderConfirm() {
     });
 
     rzp.open();
-  }, [Razorpay]);
+  }, [Razorpay, cart]);
 
   let convenienceFees = (
     Object.values(cart).reduce(
@@ -216,13 +237,37 @@ export default function OrderConfirm() {
     };
 
     fetchAddress();
+    console.log(typeof address);
   }, [session]);
 
-  // window.open(url, "_blank");
+  const whatsAppPayment = async () => {
+    const message = `🛒 Order Confirmed 🛒\n\n📦 Shipping Address 📦\n\nName: ${
+      address.name
+    }\nPhone: ${address.phone}\nEmail: ${session.user.email}\\nAddress: ${
+      address.address
+    }\nZip: ${address.zip}\nCity: ${address.city}\nState: ${
+      address.state || ""
+    }\nCountry: ${address.country || ""}\n\n📦 Order Details 📦\n\n${cart
+      .map(
+        (product) =>
+          `Product: ${product.name}\nQuantity: ${product.quantity}\nPrice: ₹ ${
+            product.price * product.quantity
+          }\nCategory: ${
+            product.category
+          }\nLink: https://taqwafashionstore.com/product/${product.id}`
+      )
+      .join("\n\n")}\n\nTotal: ₹ ${cart.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    )}`;
 
-  // Clear the cart
-  // dispatch(removeEntireItem());
-  // navigate("/");
+    const url = `https://api.whatsapp.com/send?phone=+918281931488&text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(url, "_blank");
+    dispatch(removeEntireItem());
+    navigate("/");
+  };
 
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
@@ -330,23 +375,39 @@ export default function OrderConfirm() {
       </div>
       {cart.reduce((total, item) => total + item.price * item.quantity, 0) >
       0 ? (
-        <div
-          style={{
-            backgroundColor: "#ff9f00",
-            color: "white",
-            transition: "transform 0.1s",
-            boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-          }}
-          className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
-          // onClick={confirmOrder}
-          onClick={handlePayment}
-        >
-          <TbTruckDelivery
-            size={20}
-            className="mr-2 inline-block align-middle"
-            color="white"
-          />
-          <span>Confirm Order</span>
+        <div className="flex flex-col gap-4 p-4">
+          <h1 className="text-2xl font-semibold ">Choose Payment Method</h1>
+          <div
+            style={{
+              marginTop: "1em",
+              backgroundColor: "#ff9f00",
+              color: "white",
+              transition: "transform 0.1s",
+              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+            }}
+            className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
+            onClick={whatsAppPayment}
+          >
+            <TbTruckDelivery
+              size={20}
+              className="mr-2 inline-block align-middle"
+              color="white"
+            />
+            <span>Pay on Delivery</span>
+          </div>
+          <div
+            style={{
+              backgroundColor: "#1CA672",
+              color: "white",
+              transition: "transform 0.1s",
+              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+            }}
+            className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
+            onClick={handlePayment}
+          >
+            <SiRazorpay size={20} className="mr-2 inline-block align-middle" />
+            <span>Online Payment</span>
+          </div>
         </div>
       ) : (
         <div
@@ -361,6 +422,14 @@ export default function OrderConfirm() {
         >
           <span>Cart is Empty</span>
         </div>
+      )}
+      {loading && (
+        <PaymentProcessLoadScreen
+          paymentloadscreenmessage={paymentloadscreenmessage}
+          completed={completed}
+          setCompleted={setCompleted}
+          setLoading={setLoading}
+        />
       )}
     </div>
   );
