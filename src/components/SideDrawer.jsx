@@ -24,7 +24,7 @@ const AccountRelatedItems = {
     icon: <PiHeart size={30} color="black" />,
   },
   "My Orders": {
-    path: "/order",
+    path: "/orders",
     icon: <IoBagCheckOutline color="black" size={30} />,
   },
   "My Profile": {

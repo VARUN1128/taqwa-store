@@ -31,6 +31,7 @@
 - All the remaining pages in client side including orders tab
 - Login redirection fix for admin or change to email and password
 - Before login stuff and add new products
+- Verify order
 
 ### Small features
 
@@ -54,6 +55,7 @@
 - Fix categories length in card horizontal scrolling
 - Scroll to top
 - Image loading animation fix
+- Address issue
 
 # also add session.user.email
 

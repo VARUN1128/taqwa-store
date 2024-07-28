@@ -59,7 +59,10 @@ const Profile = () => {
           <PiHeart size={30} color="black" />
           <span className="pt-1 font-bold">My Wishlist</span>
         </div>
-        <div className="flex gap-2 cursor-pointer ">
+        <div
+          className="flex gap-2 cursor-pointer "
+          onClick={() => navigate("/orders")}
+        >
           <IoBagCheckOutline size={30} color="black" />
           <span className="pt-1 font-bold "> My Orders</span>
         </div>

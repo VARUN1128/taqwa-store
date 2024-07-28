@@ -17,6 +17,7 @@ import Wishlist from "./pages/Wishlist/Wishlist";
 import Cart from "./pages/Cart/Cart";
 import AddAddress from "./pages/AddAddress/AddAddress";
 import OrderConfirm from "./pages/OrderStuff/OrderConfirm";
+import Orders from "./pages/Orders/Orders";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -103,6 +104,10 @@ function App() {
               <Route
                 path="/confirmorder"
                 element={session ? <OrderConfirm /> : <Login />}
+              />
+              <Route
+                path="/orders"
+                element={session ? <Orders /> : <Login />}
               />
             </Routes>
           </Router>

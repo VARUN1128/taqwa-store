@@ -88,6 +88,7 @@ export default function BottomNavigator({ avatarInfo }) {
                 <IoBagCheckOutline size={25} />
               )
             }
+            onClick={() => navigate("/orders")}
           />
 
           <BottomNavigationAction

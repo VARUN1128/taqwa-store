@@ -78,7 +78,7 @@ export default function OrderConfirm() {
   };
 
   const createOrder = async () => {
-    console.log(address);
+    console.log("Address", address);
     const response = await axios.post(
       `${BACKEND_URL}/create-order`,
       {
@@ -213,33 +213,28 @@ export default function OrderConfirm() {
       (total, item) => total + item.price * item.quantity,
       0
     ) + convenienceFees;
+  useEffect(() => {
+    if (session) {
+      const fetchAddress = async () => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("address")
+          .eq("id", session.user.id)
+          .single();
+        if (error) {
+          console.error("Error fetching address");
+          return;
+        }
+        setAddress(JSON.parse(data.address));
+      };
+      fetchAddress();
+      console.log("Address", address);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchAddress = async () => {
-      if (session && session.user) {
-        try {
-          const { data, error } = await supabase
-            .from("users")
-            .select("address")
-            .eq("id", session.user.id)
-            .single();
-
-          if (error) {
-            console.error("Error fetching address: ", error);
-          } else if (data && data.address) {
-            const address = JSON.parse(data.address);
-            setAddress(address);
-          }
-        } catch (err) {
-          console.error("Unexpected error: ", err);
-        }
-      }
-    };
-
-    fetchAddress();
-    console.log(typeof address);
+    console.log("Session changed");
   }, [session]);
-
   const whatsAppPayment = async () => {
     const message = `🛒 Order Confirmed 🛒\n\n📦 Shipping Address 📦\n\nName: ${
       address.name
@@ -375,40 +370,45 @@ export default function OrderConfirm() {
       </div>
       {cart.reduce((total, item) => total + item.price * item.quantity, 0) >
       0 ? (
-        <div className="flex flex-col gap-4 p-4">
-          <h1 className="text-2xl font-semibold ">Choose Payment Method</h1>
-          <div
-            style={{
-              marginTop: "1em",
-              backgroundColor: "#ff9f00",
-              color: "white",
-              transition: "transform 0.1s",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            }}
-            className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
-            onClick={whatsAppPayment}
-          >
-            <TbTruckDelivery
-              size={20}
-              className="mr-2 inline-block align-middle"
-              color="white"
-            />
-            <span>Pay on Delivery</span>
+        address && (
+          <div className="flex flex-col gap-4 p-4">
+            <h1 className="text-2xl font-semibold ">Choose Payment Method</h1>
+            <div
+              style={{
+                marginTop: "1em",
+                backgroundColor: "#ff9f00",
+                color: "white",
+                transition: "transform 0.1s",
+                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+              }}
+              className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
+              onClick={whatsAppPayment}
+            >
+              <TbTruckDelivery
+                size={20}
+                className="mr-2 inline-block align-middle"
+                color="white"
+              />
+              <span>Pay on Delivery</span>
+            </div>
+            <div
+              style={{
+                backgroundColor: "#1CA672",
+                color: "white",
+                transition: "transform 0.1s",
+                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+              }}
+              className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
+              onClick={handlePayment}
+            >
+              <SiRazorpay
+                size={20}
+                className="mr-2 inline-block align-middle"
+              />
+              <span>Online Payment</span>
+            </div>
           </div>
-          <div
-            style={{
-              backgroundColor: "#1CA672",
-              color: "white",
-              transition: "transform 0.1s",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            }}
-            className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
-            onClick={handlePayment}
-          >
-            <SiRazorpay size={20} className="mr-2 inline-block align-middle" />
-            <span>Online Payment</span>
-          </div>
-        </div>
+        )
       ) : (
         <div
           style={{
