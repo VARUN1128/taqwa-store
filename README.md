@@ -49,6 +49,8 @@
 - Back button on admin portal page
 - valav poy
 - Delete image on admin panel should delete on imagekit
+- entire component remounts, either store address in state, or fetch again
+- temporarly fixed the above with useRef, neeeds testing for confirmation
 
 # For vaishak:
 
@@ -56,6 +58,7 @@
 - Scroll to top
 - Image loading animation fix
 - Address issue
+- Doublie split experiment issue
 
 # also add session.user.email
 

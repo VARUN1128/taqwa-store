@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TopPageDetail from "../../components/TopPageDetail";
 import { MdDeleteForever } from "react-icons/md";
@@ -16,7 +16,10 @@ import PaymentProcessLoadScreen from "../../components/PaymentProcessLoadScreen"
 const BACKEND_URL = process.env.REACT_APP_BACKEND_ORDER_URL;
 
 export default function OrderConfirm() {
-  const [address, setAddress] = useState(null);
+  const [addressLoaded, setAddressLoaded] = useState(false);
+
+  const address = useRef(null);
+
   const { session } = useContext(SessionContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -28,6 +31,7 @@ export default function OrderConfirm() {
   const avatarInfo = session?.user.user_metadata;
   const cart = useSelector((state) => state.cart);
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const [test, setTest] = useState(null);
 
   const getPaymentResponseOnSuccess = async (paymentId, orderId, signature) => {
     const { data } = await supabase
@@ -44,7 +48,7 @@ export default function OrderConfirm() {
     } else {
       const paymentResponse = await axios
         .post(
-          `${BACKEND_URL}/create-order/capture`,
+          `${BACKEND_URL}create-order/capture`,
           {
             paymentId,
             signature,
@@ -77,8 +81,23 @@ export default function OrderConfirm() {
     }
   };
 
+  let convenienceFees = (
+    Object.values(cart).reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    ) * 0.02
+  ).toFixed(2);
+
+  convenienceFees = parseFloat(convenienceFees);
+
+  const totalFinalPrice =
+    Object.values(cart).reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    ) + convenienceFees;
+
   const createOrder = async () => {
-    console.log("Address", address);
+    console.log("Address", address.current);
     const response = await axios.post(
       `${BACKEND_URL}/create-order`,
       {
@@ -86,7 +105,7 @@ export default function OrderConfirm() {
         user_id: session.user.id,
         user_name: avatarInfo.full_name,
         items: cart,
-        address: address,
+        address: address.current,
       },
       {
         headers: {
@@ -103,24 +122,14 @@ export default function OrderConfirm() {
   };
 
   const handlePayment = useCallback(async () => {
+    // console.log(address.current);
+    // console.log(avatarInfo);
+    // console.log(session);
+    // console.log(cart);
+    // console.log(test);
     if (!Razorpay) {
       return;
     }
-
-    let convenienceFees = (
-      Object.values(cart).reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      ) * 0.02
-    ).toFixed(2);
-
-    convenienceFees = parseFloat(convenienceFees);
-
-    const total =
-      Object.values(cart).reduce(
-        (total, item) => total + item.price * item.quantity,
-        0
-      ) + convenienceFees;
 
     if (itemCount === 0) {
       alert("Please add items to cart");
@@ -198,23 +207,10 @@ export default function OrderConfirm() {
 
     rzp.open();
   }, [Razorpay, cart]);
-
-  let convenienceFees = (
-    Object.values(cart).reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    ) * 0.02
-  ).toFixed(2);
-
-  convenienceFees = parseFloat(convenienceFees);
-
-  const total =
-    Object.values(cart).reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    ) + convenienceFees;
   useEffect(() => {
+    console.log("Component mounted");
     if (session) {
+      console.log("Session at mount:", session);
       const fetchAddress = async () => {
         const { data, error } = await supabase
           .from("users")
@@ -225,24 +221,30 @@ export default function OrderConfirm() {
           console.error("Error fetching address");
           return;
         }
-        setAddress(JSON.parse(data.address));
+        console.log("Fetched address:", data.address);
+        address.current = JSON.parse(data.address);
+        setAddressLoaded(true); // Trigger a re-render
       };
       fetchAddress();
-      console.log("Address", address);
     }
   }, []);
-
   useEffect(() => {
     console.log("Session changed");
+    console.log("New session:", session);
+    setTest("test");
   }, [session]);
   const whatsAppPayment = async () => {
     const message = `🛒 Order Confirmed 🛒\n\n📦 Shipping Address 📦\n\nName: ${
-      address.name
-    }\nPhone: ${address.phone}\nEmail: ${session.user.email}\\nAddress: ${
-      address.address
-    }\nZip: ${address.zip}\nCity: ${address.city}\nState: ${
-      address.state || ""
-    }\nCountry: ${address.country || ""}\n\n📦 Order Details 📦\n\n${cart
+      address.current.name
+    }\nPhone: ${address.current.phone}\nEmail: ${
+      session.user.email
+    }\nAddress: ${address.current.address.current}\nZip: ${
+      address.current.zip
+    }\nCity: ${address.current.city}\nState: ${
+      address.current.state || ""
+    }\nCountry: ${
+      address.current.country || ""
+    }\n\n📦 Order Details 📦\n\n${cart
       .map(
         (product) =>
           `Product: ${product.name}\nQuantity: ${product.quantity}\nPrice: ₹ ${
@@ -267,19 +269,19 @@ export default function OrderConfirm() {
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopPageDetail title="Confirm Order" />
-      {address && (
+      {address.current && (
         <div className="p-4">
           <h1 className="text-2xl font-semibold">Order Summary</h1>
           <div className="mt-4">
             <h2 className="text-lg font-semibold">Shipping Address</h2>
             <div className="mt-2">
-              <p className="text-sm font-semibold">{address.name}</p>
-              <p className="text-sm">{address.phone}</p>
-              <p className="text-sm">{address.address}</p>
-              <p className="text-sm">{address.zip}</p>
-              <p className="text-sm">{address.city}</p>
-              <p className="text-sm">{address.state || ""}</p>
-              <p className="text-sm">{address.country || ""}</p>
+              <p className="text-sm font-semibold">{address.current.name}</p>
+              <p className="text-sm">{address.current.phone}</p>
+              <p className="text-sm">{address.current.address.current}</p>
+              <p className="text-sm">{address.current.zip}</p>
+              <p className="text-sm">{address.current.city}</p>
+              <p className="text-sm">{address.current.state || ""}</p>
+              <p className="text-sm">{address.current.country || ""}</p>
             </div>
           </div>
         </div>
@@ -348,6 +350,12 @@ export default function OrderConfirm() {
           </div>
         </div>
       ))}
+      <div className="w-full text-right pr-4 pt-2">
+        <span className="text-md ">
+          Payment Processing Fee : ₹ {convenienceFees}
+        </span>
+      </div>
+
       <div className="flex justify-between items-center p-4">
         <p
           className="text-lg font-semibold"
@@ -358,21 +366,21 @@ export default function OrderConfirm() {
         >
           Total
         </p>
+
         <p
           className="text-2xl font-semibold"
           style={{
             color: "#ff0054",
           }}
         >
-          ₹{" "}
-          {cart.reduce((total, item) => total + item.price * item.quantity, 0)}
+          ₹ {totalFinalPrice}
         </p>
       </div>
       {cart.reduce((total, item) => total + item.price * item.quantity, 0) >
       0 ? (
-        address && (
+        address.current && (
           <div className="flex flex-col gap-4 p-4">
-            <h1 className="text-2xl font-semibold ">Choose Payment Method</h1>
+            <h1 className="text-xl font-semibold ">Choose Payment Method</h1>
             <div
               style={{
                 marginTop: "1em",
