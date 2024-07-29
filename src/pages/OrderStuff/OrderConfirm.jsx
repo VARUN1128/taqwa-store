@@ -328,7 +328,7 @@ export default function OrderConfirm() {
   };
 
   return (
-    <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
+    <div className="page overflow-y-auto hide-scrollbar pb-[6em]">
       <TopPageDetail title="Confirm Order" />
       <Modal
         isOpen={isModalOpen}

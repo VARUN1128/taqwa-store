@@ -14,7 +14,7 @@ import PlaceholderLoading from "react-placeholder-loading";
 import { WishlistContext } from "../../components/WishlListContext";
 import { useSelector } from "react-redux";
 import { selectTotalQuantity } from "../../components/cartSlice";
-
+import Marquee from "react-marquee-slider";
 export const TopBar = ({ avatarInfo }) => {
   const itemCount = useSelector(selectTotalQuantity);
 
@@ -207,7 +207,7 @@ export const CategoryCard = ({ index, category, thumbnail, loading }) => {
 
   return (
     <div
-      className="category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer transform transition-transform duration-150 active:scale-95"
+      className="category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer transform transition-transform duration-150 active:scale-95 hover:shadow-lg p-4 m-2 rounded-lg"
       onClick={handleClick}
     >
       {!imageLoaded && (
@@ -219,8 +219,12 @@ export const CategoryCard = ({ index, category, thumbnail, loading }) => {
         className="rounded-full w-[5em] h-[5em] object-cover"
         style={{ display: imageLoaded ? "block" : "none" }}
         onLoad={() => setImageLoaded(true)}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "path/to/default/image.jpg"; // replace with your default image path
+        }}
       />
-      <p className="category-name text-center">{category}</p>
+      <p className="category-name text-center mt-2">{category}</p>
     </div>
   );
 };
@@ -287,14 +291,16 @@ export default function Landing() {
 
       <h3 className="text-xl text-left ml-4 mt-10">Categories</h3>
       <div className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap ">
-        {categories.map((category, index) => (
-          <CategoryCard
-            category={category.category}
-            thumbnail={category.thumbnail}
-            index={index}
-            key={category.id}
-          />
-        ))}
+        <Marquee velocity={15}>
+          {[...categories, ...categories].map((category, index) => (
+            <CategoryCard
+              category={category.category}
+              thumbnail={category.thumbnail}
+              index={index}
+              key={category.id}
+            />
+          ))}
+        </Marquee>
       </div>
 
       <CardList title="New Arrivals" products={newArrivals} session={session} />
