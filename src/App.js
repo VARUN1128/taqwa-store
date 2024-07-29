@@ -1,4 +1,4 @@
-import Login from "./pages/Login/Login";
+import Login, { BeforeLogin } from "./pages/Login/Login";
 import "./App.css";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -75,11 +75,13 @@ function App() {
       <WishlistContext.Provider value={{ wishlist, setWishlist }}>
         <SessionContext.Provider value={{ session, setSession }}>
           <Router>
-            {session && (
+            {session && window.location.pathname !== "/" && (
               <BottomNavigator avatarInfo={session?.user.user_metadata} />
             )}
             <Routes>
-              <Route path="/" element={session ? <Landing /> : <Login />} />
+              <Route path="/" element={<BeforeLogin />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/home" element={session ? <Landing /> : <Login />} />
               <Route
                 path="/profile"
                 element={session ? <Profile /> : <Login />}

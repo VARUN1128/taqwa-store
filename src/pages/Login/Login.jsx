@@ -6,7 +6,6 @@ import { FaGoogle } from "react-icons/fa";
 import { GiConverseShoe } from "react-icons/gi";
 import { PiSneakerMove } from "react-icons/pi";
 import { GiWatch } from "react-icons/gi";
-import Crocs from "../../images/crocs.svg";
 import Marquee from "react-marquee-slider";
 import { TbPerfume } from "react-icons/tb";
 import { GiDelicatePerfume } from "react-icons/gi";
@@ -14,12 +13,51 @@ import { PiBaseballCap } from "react-icons/pi";
 import { PiBaseballCapThin } from "react-icons/pi";
 import { IoWalletOutline } from "react-icons/io5";
 import { TbShoe } from "react-icons/tb";
+import FragnanceImage from "../../images/fragnance.jpg";
+import Accessories from "../../images/accessories.jpg";
+import { useNavigate } from "react-router-dom";
 
-const url = new URL(window.origin).href;
+export const BeforeLogin = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="page">
+      <div
+        className="grid md:grid-cols-2 h-screen overflow-hidden cursor-pointer "
+        style={{
+          fontFamily: "Grifter",
+          letterSpacing: "0.05em",
+        }}
+      >
+        <div
+          className="relative bg-cover bg-center"
+          style={{ backgroundImage: `url(${Accessories})` }}
+          onClick={() => navigate("/home")}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
+          <h2 className="absolute bottom-0 mb-4 ml-4 text-white text-2xl">
+            Fashion And Accessories
+          </h2>
+        </div>
+        <div
+          className="relative bg-cover bg-center"
+          style={{ backgroundImage: `url(${FragnanceImage})` }}
+          onClick={() => navigate("/search?category=Perfumes")}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-50"></div>
+          <h2 className="absolute bottom-0 mb-4 ml-4 text-white text-2xl">
+            Fragnance And Beauty
+          </h2>
+        </div>
+      </div>
+    </div>
+  );
+};
+// const url = new URL(window.origin).href;
 
 export default function Login() {
   const [loading, setLoading] = React.useState(false);
   async function signIn() {
+    const url = new URL(window.origin).href;
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
