@@ -6,7 +6,6 @@ import { FaGoogle } from "react-icons/fa";
 import { GiConverseShoe } from "react-icons/gi";
 import { PiSneakerMove } from "react-icons/pi";
 import { GiWatch } from "react-icons/gi";
-import Crocs from "../../images/crocs.svg";
 import Marquee from "react-marquee-slider";
 import { TbPerfume } from "react-icons/tb";
 import { GiDelicatePerfume } from "react-icons/gi";
