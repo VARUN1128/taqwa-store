@@ -56,7 +56,7 @@ export const TopBar = ({ avatarInfo }) => {
           cursor: "pointer",
         }}
         onClick={() => {
-          window.location.href = "/home";
+          window.location.href = "/";
         }}
       />
       <div className="flex justify-end items-center w-full relative">

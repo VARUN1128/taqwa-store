@@ -75,13 +75,11 @@ function App() {
       <WishlistContext.Provider value={{ wishlist, setWishlist }}>
         <SessionContext.Provider value={{ session, setSession }}>
           <Router>
-            {session && window.location.pathname !== "/" && (
+            {session && (
               <BottomNavigator avatarInfo={session?.user.user_metadata} />
             )}
             <Routes>
-              <Route path="/" element={<BeforeLogin />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/home" element={session ? <Landing /> : <Login />} />
+              <Route path="/" element={session ? <Landing /> : <Login />} />
               <Route
                 path="/profile"
                 element={session ? <Profile /> : <Login />}

@@ -19,7 +19,7 @@ export default function BottomNavigator({ avatarInfo }) {
   const [value, setValue] = React.useState(0);
   React.useEffect(() => {
     const currentPage = location.pathname;
-    if (currentPage === "/home") {
+    if (currentPage === "/") {
       setValue(0);
     } else if (currentPage === "/wishlist") {
       setValue(1);
@@ -58,7 +58,7 @@ export default function BottomNavigator({ avatarInfo }) {
             icon={
               value === 0 ? <TbHomeFilled size={25} /> : <TbHome size={25} />
             }
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/")}
           />
           <BottomNavigationAction
             label={

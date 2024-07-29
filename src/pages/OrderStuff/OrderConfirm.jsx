@@ -319,7 +319,7 @@ export default function OrderConfirm() {
     )}`;
     window.open(url, "_blank");
     dispatch(removeEntireItem());
-    navigate("/home");
+    navigate("/");
   };
 
   const handleModalConfirm = () => {
