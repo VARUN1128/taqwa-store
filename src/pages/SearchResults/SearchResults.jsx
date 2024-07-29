@@ -10,6 +10,62 @@ import SadCat from "../../images/sad_thumbsup.png";
 import { CategoryCard } from "../Landing/Landing";
 import Marquee from "react-marquee-slider";
 
+import { styled } from "@mui/material/styles";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+const IOSSwitch = styled((props) => (
+  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+))(({ theme }) => ({
+  width: 42,
+  height: 26,
+  padding: 0,
+  marginRight: "0.3em",
+  "& .MuiSwitch-switchBase": {
+    padding: 0,
+    margin: 2,
+    transitionDuration: "300ms",
+    "&.Mui-checked": {
+      transform: "translateX(16px)",
+      color: "#fff",
+      "& + .MuiSwitch-track": {
+        backgroundColor: theme.palette.mode === "dark" ? "#ff0054" : "#ff0054",
+        opacity: 1,
+        border: 0,
+      },
+      "&.Mui-disabled + .MuiSwitch-track": {
+        opacity: 0.5,
+      },
+    },
+    "&.Mui-focusVisible .MuiSwitch-thumb": {
+      color: "#ff0054",
+      border: "6px solid #fff",
+    },
+    "&.Mui-disabled .MuiSwitch-thumb": {
+      color:
+        theme.palette.mode === "light"
+          ? theme.palette.grey[100]
+          : theme.palette.grey[600],
+    },
+    "&.Mui-disabled + .MuiSwitch-track": {
+      opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    boxSizing: "border-box",
+    width: 22,
+    height: 22,
+  },
+  "& .MuiSwitch-track": {
+    borderRadius: 26 / 2,
+    backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
+    opacity: 1,
+    transition: theme.transitions.create(["background-color"], {
+      duration: 500,
+    }),
+  },
+}));
+
 export default function SearchResults() {
   const { session } = useContext(SessionContext);
   const location = useLocation();
@@ -20,6 +76,7 @@ export default function SearchResults() {
   const [hasFetched, setHasFetched] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [sortOrder, setSortOrder] = useState("asc"); // 'asc' for ascending, 'desc' for descending
 
   const navigate = useNavigate();
 
@@ -64,7 +121,7 @@ export default function SearchResults() {
         let productsQuery = supabase
           .from("products")
           .select("*")
-          .order("created_at", { ascending: false })
+          .order("price", { ascending: sortOrder === "asc" }) // Sort by price
           .range(page * itemsPerPage, (page + 1) * itemsPerPage - 1);
 
         if (query) {
@@ -101,11 +158,26 @@ export default function SearchResults() {
     };
 
     fetchProducts();
-  }, [location, query, category, page]);
+  }, [location, query, category, page, sortOrder]);
+
+  const toggleSortOrder = () => {
+    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  };
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar value={query && `${query}`} />
+      <div className="flex justify-between items-end flex-col mt-3">
+        <FormControlLabel
+          control={
+            <IOSSwitch
+              checked={sortOrder === "asc"}
+              onChange={toggleSortOrder}
+            />
+          }
+          label="Sort by price"
+        />
+      </div>
 
       {!isFetching && hasFetched && products.length === 0 ? (
         <>
@@ -160,6 +232,7 @@ export default function SearchResults() {
                 : "All Products"
             }
           />
+
           <div className="flex justify-center mt-5">
             <button
               className="m-auto mt-10 w-fit py-3 px-20 rounded-xl bg-gray-300 cursor-pointer"

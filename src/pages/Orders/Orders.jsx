@@ -158,23 +158,19 @@ const Orders = () => {
               <div className="ml-4 flex justify-center items-center">
                 {order.order_status === "waiting" &&
                   order.status === "paid" && (
-                    <img src={WaitingSvg} alt="Waiting" className="w-[10em]" />
+                    <img src={WaitingSvg} alt="Waiting" className="w-[8em]" />
                   )}
                 {order.order_status === "shipped" && (
-                  <img src={ShippedSvg} alt="Shipped" className="w-[10em]" />
+                  <img src={ShippedSvg} alt="Shipped" className="w-[8em]" />
                 )}
                 {order.order_status === "delivered" && (
-                  <img
-                    src={DeliveredSvg}
-                    alt="Delivered"
-                    className="w-[10em]"
-                  />
+                  <img src={DeliveredSvg} alt="Delivered" className="w-[8em]" />
                 )}
                 {order.status !== "paid" && (
                   <img
                     src={OrderErrorSvg}
                     alt="Order Error"
-                    className="w-[10em]"
+                    className="w-[8em]"
                   />
                 )}
               </div>
