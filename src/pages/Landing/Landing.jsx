@@ -290,7 +290,10 @@ export default function Landing() {
       <SearchBar />
 
       <h3 className="text-xl text-left ml-4 mt-10">Categories</h3>
-      <div className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap ">
+      <div
+        className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-hidden whitespace-nowrap"
+        style={{ width: "100%", padding: 0, margin: 0, border: 0 }}
+      >
         <Marquee velocity={15}>
           {[...categories, ...categories].map((category, index) => (
             <CategoryCard

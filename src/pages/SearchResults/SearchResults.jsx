@@ -8,6 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { VscGitFetch } from "react-icons/vsc";
 import SadCat from "../../images/sad_thumbsup.png";
 import { CategoryCard } from "../Landing/Landing";
+import Marquee from "react-marquee-slider";
 
 export default function SearchResults() {
   const { session } = useContext(SessionContext);
@@ -115,14 +116,16 @@ export default function SearchResults() {
               later or check out our other categories.
             </p>
             <div className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap ">
-              {categories.map((category, index) => (
-                <CategoryCard
-                  category={category.category}
-                  thumbnail={category.thumbnail}
-                  index={index}
-                  key={category.id}
-                />
-              ))}
+              <Marquee velocity={15}>
+                {[...categories, ...categories].map((category, index) => (
+                  <CategoryCard
+                    category={category.category}
+                    thumbnail={category.thumbnail}
+                    index={index}
+                    key={category.id}
+                  />
+                ))}
+              </Marquee>
             </div>
           </div>
           <img

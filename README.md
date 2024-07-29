@@ -14,6 +14,8 @@
 - Sign in flow, details edit on cloud console
 - Continue with google, make it correctly align
 - Icons and font alignation check on phone
+- scrolling right on landing
+- Cards in search
 
 ### Important ones
 
