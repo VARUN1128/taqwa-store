@@ -314,7 +314,7 @@ export default function OrderConfirm() {
       0
     )}`;
 
-    const url = `https://api.whatsapp.com/send?phone=+918281931488&text=${encodeURIComponent(
+    const url = `https://api.whatsapp.com/send?phone=+919495917116&text=${encodeURIComponent(
       message
     )}`;
     window.open(url, "_blank");
