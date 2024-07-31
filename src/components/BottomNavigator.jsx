@@ -34,7 +34,7 @@ export default function BottomNavigator({ avatarInfo }) {
   const userName = avatarInfo?.name.split(" ")[0] || "User";
   const avatarPic =
     avatarInfo?.avatar_url ||
-    `https://api.dicebear.com/8.x/fun-emoji/png?seed=${userName}`;
+    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=Felix&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
 
   return (
     <div

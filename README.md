@@ -35,3 +35,12 @@
 - Image loading animation fix
 - Change into secure version of razorpay payment with user rls disabled.
 - Like button around when unliking. if you liked a product (wishlisted) and then proceeded to unlike the product. clicking anywhere on product card except the image itself unlikes it. presstty sure this is not due to javascript propogration.
+- Whatsapp product sharing image nd name as meta tags
+
+## Todo
+
+- Order id billing
+- Login with email/password
+- Size Chart
+- Marque
+- Order pay on delivery on dashboard
