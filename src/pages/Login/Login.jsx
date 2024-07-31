@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TaqwaLogoRemoved from "../../images/taqwa-removed.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import supabase from "../../supabase";
-import { FaGoogle } from "react-icons/fa";
 import { GiConverseShoe } from "react-icons/gi";
 import { PiSneakerMove } from "react-icons/pi";
 import { GiWatch } from "react-icons/gi";
@@ -14,11 +13,27 @@ import { PiBaseballCapThin } from "react-icons/pi";
 import { IoWalletOutline } from "react-icons/io5";
 import { TbShoe } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
-
+import { IoLogIn } from "react-icons/io5";
+import ConversePNG from "../../images/converse.png";
+import CapPng from "../../images/cap.png";
+import PerfumePng from "../../images/perfume.png";
+import CrocsPng from "../../images/crocs.png";
 const url = new URL(window.origin).href;
 
 export default function Login() {
   const [loading, setLoading] = React.useState(false);
+  const [topPosition, setTopPosition] = useState("50%");
+  const [leftPosition, setLeftPosition] = useState("50%");
+
+  useEffect(() => {
+    // Generate a random value between 30% and 90% for the top position
+    const randomTop = Math.floor(Math.random() * (90 - 30 + 1)) + 30;
+    setTopPosition(`${randomTop}%`);
+
+    // Generate a random value between 0% and 90% for the left position
+    const randomLeft = Math.floor(Math.random() * (90 - 0 + 1)) + 0;
+    setLeftPosition(`${randomLeft}%`);
+  }, []);
   async function signIn() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
@@ -29,47 +44,125 @@ export default function Login() {
   }
 
   const items = [
-    <GiConverseShoe size={40} color="white" />,
-    <PiSneakerMove size={40} color="white" />,
-    <GiWatch size={40} color="white" />,
-    <PiBaseballCap size={40} color="white" />,
-    <TbShoe size={40} color="white" />,
-    <TbPerfume size={40} color="white" />,
-    <GiDelicatePerfume size={40} color="white" />,
-    <IoWalletOutline size={40} color="white" />,
-    <PiBaseballCapThin size={40} color="white" />,
-
-    // <img src={Crocs} alt="Crocs" className="w-30 bg-red-500" />,
+    <GiConverseShoe size={40} color="black" />,
+    <PiSneakerMove size={40} color="black" />,
+    <GiWatch size={40} color="black" />,
+    <PiBaseballCap size={40} color="black" />,
+    <TbShoe size={40} color="black" />,
+    <TbPerfume size={40} color="black" />,
+    <GiDelicatePerfume size={40} color="black" />,
+    <IoWalletOutline size={40} color="black" />,
+    <PiBaseballCapThin size={40} color="black" />,
   ];
   return (
-    <div className="page page-login flex flex-col justify-between items-center h-screen bg-black">
+    <div className="page overflow-x-hidden  page-login flex flex-col justify-between items-center h-screen bg-white relative">
+      <img
+        src={ConversePNG}
+        alt="Converse Image"
+        style={{
+          width: "8em",
+          position: "absolute",
+          bottom: "3em",
+          left: "3em",
+          transform: "rotate(20deg)",
+          zIndex: "1",
+        }}
+      />
+      <img
+        src={CapPng}
+        alt="Cap Image"
+        style={{
+          width: "6em",
+          position: "absolute",
+          bottom: "10em",
+          right: "3em",
+          transform: "rotate(20deg)",
+          zIndex: "1",
+        }}
+      />
+      <img
+        src={CrocsPng}
+        alt="Crocs Image"
+        style={{
+          width: "8em",
+          position: "absolute",
+          bottom: "10em",
+          left: "3em",
+          transform: "rotate(-20deg)",
+          zIndex: "1",
+        }}
+      />
+
+      <img
+        src={PerfumePng}
+        alt="Perfume Image"
+        style={{
+          width: "6em",
+          position: "absolute",
+          bottom: "20em",
+          right: "3em",
+          transform: "rotate(-10deg)",
+          zIndex: "1",
+        }}
+      />
       <Marquee velocity={70}>
         {items.map((item, index) => (
-          <div key={index} style={{ marginRight: "10em", paddingTop: "5em" }}>
+          <div
+            key={index}
+            style={{
+              marginRight: "10em",
+              paddingTop: "5em",
+              zIndex: "10",
+              position: "relative",
+            }}
+          >
             {item}
           </div>
         ))}
       </Marquee>
-      <div className="cont-google text-center ">
-        <img src={TaqwaLogoRemoved} alt="TAQWA" className="m-auto" />
-        <span className="block logo-label text-white ">FASHION STORE</span>
-        <span className="block text-right text-[0.9em] text-white ">
+      <div className="cont-google text-center  ">
+        <img
+          src={TaqwaLogoRemoved}
+          alt="TAQWA"
+          className="m-auto "
+          style={{
+            zIndex: "10",
+            position: "relative",
+          }}
+        />
+        <span
+          className="block logo-label text-black "
+          style={{
+            zIndex: "10",
+            position: "relative",
+          }}
+        >
+          FASHION STORE
+        </span>
+        <span
+          style={{ zIndex: "10" }}
+          className="block text-right text-[0.9em] text-black "
+        >
           Walk out in style
         </span>
       </div>
-      <div style={{ transform: "rotate(180deg)" }}></div>
+
       <span
-        className="flex justify-center items-center gap-2 cont-google-btn mb-20 absolute bottom-2 px-6 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap"
+        className="flex justify-center items-center gap-2 cont-google-btn mb-20 absolute bottom-2 px-6 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap border-2 border-black"
         onClick={signIn}
+        style={{
+          zIndex: "10",
+          position: "relative",
+        }}
       >
         {loading ? (
           <CircularProgress style={{ color: "black" }} size={18} />
         ) : (
           <>
-            <FaGoogle style={{ display: "block" }} size={20} color="black" />
+            <IoLogIn style={{ display: "block" }} size={23} color="black" />
           </>
         )}
-        Continue With Google
+        Login to Continue
       </span>
     </div>
   );

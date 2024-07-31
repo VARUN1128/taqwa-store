@@ -1,4 +1,4 @@
-import Login, { BeforeLogin } from "./pages/Login/Login";
+import Login from "./pages/Login/Login";
 import "./App.css";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -136,6 +136,7 @@ function App() {
                   path="/orders"
                   element={session ? <Orders /> : <Login />}
                 />
+                <Route path="/login" element={<Login />} />
               </Routes>
             </Router>
           </SessionContext.Provider>

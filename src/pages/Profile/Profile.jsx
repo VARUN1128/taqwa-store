@@ -40,13 +40,17 @@ const Profile = () => {
         </div>
       </div>
       <div
-        onClick={logout}
+        onClick={() => {
+          session ? logout() : navigate("/login");
+        }}
         className="m-auto mt-10 w-fit py-3 px-20 rounded-xl bg-gray-300 cursor-pointer "
       >
         {loading ? (
           <CircularProgress style={{ color: "#000" }} size={20} />
-        ) : (
+        ) : session ? (
           "Log Out"
+        ) : (
+          "Log In / Sign Up"
         )}
       </div>
       <div className="w-full bg-gray-500 h-[1px] mt-5"></div>
