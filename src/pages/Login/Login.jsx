@@ -44,15 +44,15 @@ export default function Login() {
     <PiBaseballCapThin size={40} color="black" />,
   ];
   return (
-    <div className="page overflow-x-hidden page-login flex flex-col justify-between items-center h-screen bg-white relative pb-4">
+    <div className="page overflow-x-hidden page-login flex flex-col justify-between items-center h-screen bg-white relative pb-[3em] mb-[3em] ">
       <img
         src={ConversePNG}
         alt="Converse Image"
         style={{
           width: "8em",
           position: "absolute",
-          bottom: "3em",
-          left: "3em",
+          bottom: "6em",
+          left: "1em",
           transform: "rotate(20deg)",
           zIndex: "1",
         }}
@@ -75,7 +75,7 @@ export default function Login() {
         style={{
           width: "8em",
           position: "absolute",
-          bottom: "10em",
+          bottom: "13em",
           left: "3em",
           transform: "rotate(-20deg)",
           zIndex: "1",
@@ -88,7 +88,7 @@ export default function Login() {
         style={{
           width: "6em",
           position: "absolute",
-          bottom: "20em",
+          bottom: "27em",
           right: "3em",
           transform: "rotate(-10deg)",
           zIndex: "1",
@@ -109,7 +109,7 @@ export default function Login() {
           </div>
         ))}
       </Marquee>
-      <div className="cont-google text-center  ">
+      <div className="cont-google text-center">
         <img
           src={TaqwaLogoRemoved}
           alt="TAQWA"
