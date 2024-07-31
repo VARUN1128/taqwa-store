@@ -90,11 +90,11 @@ export default function OrderConfirm() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const getPaymentResponseOnSuccess = async (paymentId, orderId, signature) => {
+  const getPaymentResponseOnSuccess = async (paymentId, razorpay_order_id, signature) => {
     const { data } = await supabase
       .from("orders")
       .select("*")
-      .eq("order_id", orderId)
+      .eq("razorpay_order_id", razorpay_order_id)
       .eq("status", "paid")
       .single();
 
@@ -109,7 +109,7 @@ export default function OrderConfirm() {
           {
             paymentId,
             signature,
-            orderId,
+            razorpay_order_id,
             status: "paid",
             items: cart,
           },
@@ -124,7 +124,7 @@ export default function OrderConfirm() {
           console.error("Error capturing payment");
           setPaymentLoadScreenMessage(
             `Payment Failed, 
-          Use the order id to contact the support team: ${orderId},
+          Use the order id to contact the support team: ${razorpay_order_id},
           Payment Id: ${paymentId}`
           );
         });
@@ -228,8 +228,9 @@ export default function OrderConfirm() {
         console.log(response);
         const paymentId = response.razorpay_payment_id;
         const signature = response.razorpay_signature;
+        const razorpay_order_id = response.razorpay_order_id;
         const orderId = response.razorpay_order_id;
-        await getPaymentResponseOnSuccess(paymentId, orderId, signature);
+        await getPaymentResponseOnSuccess(paymentId, razorpay_order_id, signature);
       },
       modal: {
         ondismiss: function () {

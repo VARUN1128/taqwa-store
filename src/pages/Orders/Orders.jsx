@@ -64,7 +64,7 @@ const Orders = () => {
                 <h2 className="text-base font-bold mb-2">
                   Order ID: {order.order_id}
                 </h2>
-                <p className="text-sm">Payment ID: {order.payment_id}</p>
+                <p className="text-sm">Payment ID: {order.razorpay_payment_id}</p>
                 <p className="text-sm">
                   Payment Status:{" "}
                   <span
