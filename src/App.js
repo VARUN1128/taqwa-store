@@ -18,6 +18,7 @@ import Cart from "./pages/Cart/Cart";
 import AddAddress from "./pages/AddAddress/AddAddress";
 import OrderConfirm from "./pages/OrderStuff/OrderConfirm";
 import Orders from "./pages/Orders/Orders";
+import { Helmet } from "react-helmet-async";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -71,49 +72,86 @@ function App() {
   }
 
   return (
-    <Provider store={store}>
-      <WishlistContext.Provider value={{ wishlist, setWishlist }}>
-        <SessionContext.Provider value={{ session, setSession }}>
-          <Router>
-            {session && (
-              <BottomNavigator avatarInfo={session?.user.user_metadata} />
-            )}
-            <Routes>
-              <Route path="/" element={session ? <Landing /> : <Login />} />
-              <Route
-                path="/profile"
-                element={session ? <Profile /> : <Login />}
-              />
-              <Route
-                path="/product/:productId"
-                element={session ? <ProductDetail /> : <Login />}
-              />
-              <Route
-                path="/search"
-                element={session ? <SearchResults /> : <Login />}
-              />
-              <Route
-                path="/wishlist"
-                element={session ? <Wishlist /> : <Login />}
-              />
-              <Route path="/cart" element={session ? <Cart /> : <Login />} />
-              <Route
-                path="/address"
-                element={session ? <AddAddress /> : <Login />}
-              />
-              <Route
-                path="/confirmorder"
-                element={session ? <OrderConfirm /> : <Login />}
-              />
-              <Route
-                path="/orders"
-                element={session ? <Orders /> : <Login />}
-              />
-            </Routes>
-          </Router>
-        </SessionContext.Provider>
-      </WishlistContext.Provider>
-    </Provider>
+    <>
+      <Helmet>
+        <title>TAQWA Fashion Store. Fashion Accessoires and Fragnance</title>
+        <meta
+          name="description"
+          content="TAQWA Fashion Store. Buy Fashion Accessoires, Watches, Shoes, Caps, Wallets, Perfumes and Fragnance. Home Delivery Available"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:image"
+          content="https://ik.imagekit.io/taqwafashionstore/SEO/TF_Logo.jpg"
+        />
+        <meta
+          name="twitter:title"
+          content="TAQWA Fashion Store. Fashion Accessoires and Fragnance"
+        />
+        <meta
+          name="twitter:description"
+          content="TAQWA Fashion Store. Buy Fashion Accessoires, Watches, Shoes, Caps, Wallets, Perfumes and Fragnance. Home Delivery Available"
+        />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="taqwafashionstore.com/" />
+        <meta
+          property="og:title"
+          content="TAQWA Fashion Store. Fashion Accessoires and Fragnance"
+        />
+        <meta
+          property="og:description"
+          content="TAQWA Fashion Store. Buy Fashion Accessoires, Watches, Shoes, Caps, Wallets, Perfumes and Fragnance. Home Delivery Available"
+        />
+        <meta
+          property="og:image"
+          content="https://ik.imagekit.io/taqwafashionstore/SEO/TF_Logo.jpg"
+        />
+      </Helmet>
+      <Provider store={store}>
+        <WishlistContext.Provider value={{ wishlist, setWishlist }}>
+          <SessionContext.Provider value={{ session, setSession }}>
+            <Router>
+              {session && (
+                <BottomNavigator avatarInfo={session?.user.user_metadata} />
+              )}
+              <Routes>
+                <Route path="/" element={session ? <Landing /> : <Login />} />
+                <Route
+                  path="/profile"
+                  element={session ? <Profile /> : <Login />}
+                />
+                <Route
+                  path="/product/:productId"
+                  element={session ? <ProductDetail /> : <Login />}
+                />
+                <Route
+                  path="/search"
+                  element={session ? <SearchResults /> : <Login />}
+                />
+                <Route
+                  path="/wishlist"
+                  element={session ? <Wishlist /> : <Login />}
+                />
+                <Route path="/cart" element={session ? <Cart /> : <Login />} />
+                <Route
+                  path="/address"
+                  element={session ? <AddAddress /> : <Login />}
+                />
+                <Route
+                  path="/confirmorder"
+                  element={session ? <OrderConfirm /> : <Login />}
+                />
+                <Route
+                  path="/orders"
+                  element={session ? <Orders /> : <Login />}
+                />
+              </Routes>
+            </Router>
+          </SessionContext.Provider>
+        </WishlistContext.Provider>
+      </Provider>
+    </>
   );
 }
 

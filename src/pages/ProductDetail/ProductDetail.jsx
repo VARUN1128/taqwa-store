@@ -19,7 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addItem, removeItem } from "../../components/cartSlice";
 import { PiMinusCircleFill } from "react-icons/pi";
 import { PiPlusCircleFill } from "react-icons/pi";
-
+import { Helmet } from "react-helmet-async";
 const Slideshow = ({ slideImages }) => {
   return (
     <div className="slide-container">
@@ -210,6 +210,18 @@ const ProductDetail = () => {
 
   return (
     <div className="page overflow-x-hidden pb-[5em]">
+      {product && (
+        <Helmet>
+          <title>{product.name} - TAQWA Fashion Store</title>
+          <meta
+            name="description"
+            content={`Buy ${product.name} at the best price on TAQWA Fashion Store. Home Delivery and 100% satisfaction guaranteed.`}
+          />
+          <meta property="og:title" content={product.name} />
+          <meta property="og:image" content={product.images[0]} />
+          <meta property="og:url" content={window.location.href} />
+        </Helmet>
+      )}
       <TopProductDetail title={product.name} onCopy={handleCopy} />
       <ToastContainer />
 
