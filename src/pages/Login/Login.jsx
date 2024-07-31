@@ -22,18 +22,7 @@ const url = new URL(window.origin).href;
 
 export default function Login() {
   const [loading, setLoading] = React.useState(false);
-  const [topPosition, setTopPosition] = useState("50%");
-  const [leftPosition, setLeftPosition] = useState("50%");
 
-  useEffect(() => {
-    // Generate a random value between 30% and 90% for the top position
-    const randomTop = Math.floor(Math.random() * (90 - 30 + 1)) + 30;
-    setTopPosition(`${randomTop}%`);
-
-    // Generate a random value between 0% and 90% for the left position
-    const randomLeft = Math.floor(Math.random() * (90 - 0 + 1)) + 0;
-    setLeftPosition(`${randomLeft}%`);
-  }, []);
   async function signIn() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithOAuth({
@@ -55,7 +44,7 @@ export default function Login() {
     <PiBaseballCapThin size={40} color="black" />,
   ];
   return (
-    <div className="page overflow-x-hidden  page-login flex flex-col justify-between items-center h-screen bg-white relative">
+    <div className="page overflow-x-hidden page-login flex flex-col justify-between items-center h-screen bg-white relative pb-4">
       <img
         src={ConversePNG}
         alt="Converse Image"
@@ -153,6 +142,8 @@ export default function Login() {
         style={{
           zIndex: "10",
           position: "relative",
+          boxShadow:
+            "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
         }}
       >
         {loading ? (

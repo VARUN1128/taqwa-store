@@ -41,7 +41,7 @@ const CategoryItems = {
     icon: <GrAppsRounded size={35} color="black" />,
   },
   Crocs: {
-    path: "/search?category=crocs",
+    path: "/search?category=Crocs",
     icon: (
       <div
         style={{
@@ -70,7 +70,7 @@ const CategoryItems = {
   },
 
   Converse: {
-    path: "/search?category=converse",
+    path: "/search?category=Converse",
     icon: <GiConverseShoe size={30} color="black" />,
   },
   Watches: {
