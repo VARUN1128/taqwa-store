@@ -20,10 +20,10 @@ export const TopBar = ({ avatarInfo }) => {
 
   const [open, setOpen] = useState(false);
 
-  const userName = avatarInfo?.name.split(" ")[0] || "User";
+  const userName = avatarInfo?.name.split(" ")[0] || "Anonymous";
   const avatarPic =
     avatarInfo?.avatar_url ||
-    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=Felix&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
+    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
 
   const navigate = useNavigate();
   return (
@@ -163,7 +163,9 @@ const ProductCard = ({
       <div className="product-details mt-3 w-100 ">
         <div className="flex justify-between">
           <p className=" ">{productName}</p>
-          <Like checked={isInWishlist} size="1em" onClick={toggleWishlist} />
+          {session && (
+            <Like checked={isInWishlist} size="1em" onClick={toggleWishlist} />
+          )}
         </div>
         <p
           style={{

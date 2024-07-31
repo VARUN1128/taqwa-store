@@ -31,10 +31,10 @@ export default function BottomNavigator({ avatarInfo }) {
       setValue(0);
     }
   }, [location]); // Empty dependency array means this effect runs once on mount
-  const userName = avatarInfo?.name.split(" ")[0] || "User";
+  const userName = avatarInfo?.name.split(" ")[0] || "Anonymous";
   const avatarPic =
     avatarInfo?.avatar_url ||
-    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=Felix&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
+    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
 
   return (
     <div

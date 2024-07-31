@@ -13,8 +13,6 @@ import { PiBaseballCap } from "react-icons/pi";
 import { PiBaseballCapThin } from "react-icons/pi";
 import { IoWalletOutline } from "react-icons/io5";
 import { TbShoe } from "react-icons/tb";
-import FragnanceImage from "../../images/fragnance.jpg";
-import Accessories from "../../images/accessories.jpg";
 import { useNavigate } from "react-router-dom";
 
 const url = new URL(window.origin).href;

@@ -245,7 +245,13 @@ const ProductDetail = () => {
         <div className="product-details mt-1 w-full p-4 ">
           <div className="flex justify-between mb-3">
             <p className="text-2xl ">{product.name}</p>
-            <Like checked={isInWishlist} size="2em" onClick={toggleWishlist} />
+            {session && (
+              <Like
+                checked={isInWishlist}
+                size="1em"
+                onClick={toggleWishlist}
+              />
+            )}
           </div>
           <p
             style={{

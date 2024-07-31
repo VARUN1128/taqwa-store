@@ -11,12 +11,14 @@ import { PiHeart } from "react-icons/pi";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { VscAccount } from "react-icons/vsc";
 import { GrAppsRounded } from "react-icons/gr";
-import { GiConverseShoe } from "react-icons/gi";
+import { GiConverseShoe, GiPerfumeBottle } from "react-icons/gi";
 import { PiSneakerMove } from "react-icons/pi";
 import { GiWatch } from "react-icons/gi";
 import Crocs from "../images/crocs.svg";
 import { TbMenu2 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import { PiBaseballCapThin } from "react-icons/pi";
+import { IoWalletOutline } from "react-icons/io5";
 
 const AccountRelatedItems = {
   "My Wishlist": {
@@ -36,19 +38,7 @@ const AccountRelatedItems = {
 const CategoryItems = {
   "All Products": {
     path: "/search",
-    icon: <GrAppsRounded size={30} color="black" />,
-  },
-  Shoes: {
-    path: "/search?category=Shoes",
-    icon: <PiSneakerMove size={30} color="black" />,
-  },
-  Converse: {
-    path: "/search?category=converse",
-    icon: <GiConverseShoe size={30} color="black" />,
-  },
-  Watches: {
-    path: "/search?category=Watch",
-    icon: <GiWatch size={30} color="black" />,
+    icon: <GrAppsRounded size={35} color="black" />,
   },
   Crocs: {
     path: "/search?category=crocs",
@@ -64,6 +54,32 @@ const CategoryItems = {
         }}
       ></div>
     ),
+  },
+  Shoes: {
+    path: "/search?category=Shoes",
+    icon: <PiSneakerMove size={30} color="black" />,
+  },
+
+  Caps: {
+    path: "/search?category=Caps",
+    icon: <PiBaseballCapThin color="black" size={30} />,
+  },
+  Wallets: {
+    path: "/search?category=Wallets",
+    icon: <IoWalletOutline color="black" size={30} />,
+  },
+
+  Converse: {
+    path: "/search?category=converse",
+    icon: <GiConverseShoe size={30} color="black" />,
+  },
+  Watches: {
+    path: "/search?category=Watch",
+    icon: <GiWatch size={30} color="black" />,
+  },
+  Perfumes: {
+    path: "/search?category=Perfumes",
+    icon: <GiPerfumeBottle color="black" size={30} />,
   },
 };
 

@@ -44,3 +44,5 @@
 - Size Chart
 - Marque
 - Order pay on delivery on dashboard
+- Price range
+- More products on Sidebar
