@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState,useRef } from "react";
 import { TopProductDetail } from "../../components/TopPageDetail";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -50,6 +50,12 @@ const ProductDetail = () => {
   const location = useLocation();
   const { productId } = useParams();
 
+  const scroll = () => {
+    const section = document.querySelector( '#top' );
+    section.scrollIntoView( { behavior: 'smooth', block: 'start' ,} );
+  };
+
+
   // Wishlist functionality
   const { wishlist, setWishlist } = useContext(WishlistContext);
   const isInWishlist = wishlist.includes(product.id);
@@ -97,6 +103,8 @@ const ProductDetail = () => {
 
   useEffect(() => {
     setLocalQuantity(0);
+    scroll();
+    
   }, [productId]);
 
   const navigate = useNavigate();
@@ -122,12 +130,17 @@ const ProductDetail = () => {
       setIsLoading(false);
 
       const fetchRelatedProducts = async () => {
+
+        //exclding the current product
         const { data: relatedData, error } = await supabase
           .from("products")
           .select("*")
           .limit(10)
           .order("category", { ascending: true })
+          .neq("id", data[0].id)
           .eq("category", data[0].category);
+          
+          
         if (error) {
           console.log(error);
         }

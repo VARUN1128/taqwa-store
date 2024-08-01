@@ -1,20 +1,20 @@
-import React, { useState, useContext, useEffect } from "react";
-import { SessionContext } from "../../components/SessionContext";
-import "./Landing.css";
-import TopLogo from "../../images/TAQWA.png";
-import { TbMenu2 } from "react-icons/tb";
-import { PiShoppingCartSimpleLight } from "react-icons/pi";
-import SideDrawer from "../../components/SideDrawer";
-import SearchBar from "../../components/SearchBar";
-import Like from "../../components/Like";
+import React, { useContext, useEffect, useState } from "react";
 import { AiFillStar } from "react-icons/ai";
-import supabase from "../../supabase";
-import { useNavigate } from "react-router-dom";
-import PlaceholderLoading from "react-placeholder-loading";
-import { WishlistContext } from "../../components/WishlListContext";
-import { useSelector } from "react-redux";
-import { selectTotalQuantity } from "../../components/cartSlice";
+import { PiShoppingCartSimpleLight } from "react-icons/pi";
+import { TbMenu2 } from "react-icons/tb";
 import Marquee from "react-marquee-slider";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { selectTotalQuantity } from "../../components/cartSlice";
+import Like from "../../components/Like";
+import SearchBar from "../../components/SearchBar";
+import { SessionContext } from "../../components/SessionContext";
+import SideDrawer from "../../components/SideDrawer";
+import { WishlistContext } from "../../components/WishlListContext";
+import TopLogo from "../../images/TAQWA.png";
+import supabase from "../../supabase";
+import ResponsiveContentLoader from "../../components/ResponseContentLoader";
+import "./Landing.css";
 export const TopBar = ({ avatarInfo }) => {
   const itemCount = useSelector(selectTotalQuantity);
 
@@ -94,6 +94,9 @@ const ProductCard = ({
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const navigate = useNavigate();
 
+
+
+
   const { wishlist, setWishlist } = useContext(WishlistContext);
   const isInWishlist = wishlist.includes(id);
 
@@ -137,7 +140,7 @@ const ProductCard = ({
   return (
     <div
       onClick={handleClick}
-      className="product-card p-3 mb-3 bg-white rounded-lg flex flex-col"
+      className="p-3 mb-3 bg-white rounded-lg flex flex-col"
       style={{
         width: "calc(50% - 2rem)", // This ensures that at least two cards are displayed in a row on small screens
         boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
@@ -151,16 +154,23 @@ const ProductCard = ({
       }}
     >
       {!thumbnailLoaded && (
-        <PlaceholderLoading shape="square" width={35} height={35} />
+        <ResponsiveContentLoader />
       )}
+
       <img
         src={thumbnail}
         alt={productName}
         className="w-35 h-35 object-cover rounded-lg"
-        onLoad={() => setThumbnailLoaded(true)}
+        onLoad={() => {
+          setTimeout(() => {  
+            setThumbnailLoaded(true);
+          } , 1000) 
+          }}
         style={{ display: thumbnailLoaded ? "block" : "none" }}
       />
-      <div className="product-details mt-3 w-100 ">
+      <div className="product-details mt-3 w-100 "
+      style={{ display: thumbnailLoaded ? "block" : "none" }}
+      >
         <div className="flex justify-between">
           <p className=" ">{productName}</p>
           {session && (
@@ -213,14 +223,18 @@ export const CategoryCard = ({ index, category, thumbnail, loading }) => {
       onClick={handleClick}
     >
       {!imageLoaded && (
-        <PlaceholderLoading shape="circle" width="5em" height="5em" />
-      )}
+        <ResponsiveContentLoader />
+         )}
       <img
         src={thumbnail}
         alt="Category Thumbnail"
         className="rounded-full w-[5em] h-[5em] object-cover"
         style={{ display: imageLoaded ? "block" : "none" }}
-        onLoad={() => setImageLoaded(true)}
+        onLoad={() => {
+          setTimeout(() => {  
+            setImageLoaded(true);
+          } , 300) 
+          }}
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = "path/to/default/image.jpg"; // replace with your default image path
