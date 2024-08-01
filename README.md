@@ -61,3 +61,4 @@
 - Address autofill issue
 - https://supabase.com/docs/guides/platform/going-into-prod
 - https://supabase.com/docs/guides/auth/phone-login
+- Razorpay verification

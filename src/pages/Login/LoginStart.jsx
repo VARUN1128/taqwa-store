@@ -19,6 +19,7 @@ import CapPng from "../../images/cap.png";
 import PerfumePng from "../../images/perfume.png";
 import CrocsPng from "../../images/crocs.png";
 import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
+import { AiFillGoogleCircle } from "react-icons/ai";
 const url = new URL(window.origin).href;
 
 export default function LoginStart() {
@@ -28,6 +29,20 @@ export default function LoginStart() {
     setLoading(true);
   }
   const navigate = useNavigate();
+
+  const signInGoogle = async () => {
+    const { user, session, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: url,
+      },
+    });
+    if (error) {
+      console.log(error);
+      return;
+    }
+    console.log("User", user);
+  };
 
   const items = [
     <GiConverseShoe size={40} color="black" />,
@@ -155,7 +170,7 @@ export default function LoginStart() {
             position: "relative", // Remove absolute positioning
           }}
         />
-        <div className=" mb-10  text-center w-[22em] text-xs text-black">
+        <div className=" mb-5  text-center w-[22em] text-xs text-black">
           Don't have an account?{" "}
           <span
             className="text-blue-500 cursor-pointer"
@@ -163,6 +178,18 @@ export default function LoginStart() {
           >
             Register
           </span>{" "}
+          <AiFillGoogleCircle
+            size={30}
+            color="black"
+            style={{
+              textAlign: "center",
+              margin: "auto",
+              zIndex: "10",
+              marginTop: "1em",
+              cursor: "pointer",
+            }}
+            onClick={signInGoogle}
+          />
         </div>
         <span
           className="flex justify-center items-center gap-2 cont-google-btn  absolute bottom-2 px-16 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap border-2 border-black"

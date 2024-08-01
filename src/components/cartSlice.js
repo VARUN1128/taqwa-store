@@ -39,10 +39,20 @@ const cartSlice = createSlice({
         return [];
       }
     },
+    addSize: (state, action) => {
+      const itemIndex = state.findIndex(
+        (item) => item.id === action.payload.id
+      );
+      if (itemIndex >= 0) {
+        // If item exists in the cart, add size to it
+        state[itemIndex].size = action.payload.size;
+      }
+    },
   },
 });
 
-export const { addItem, removeItem, removeEntireItem } = cartSlice.actions;
+export const { addSize, addItem, removeItem, removeEntireItem } =
+  cartSlice.actions;
 
 export const selectTotalQuantity = createSelector(
   (state) => state.cart,

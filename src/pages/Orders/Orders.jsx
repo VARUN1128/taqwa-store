@@ -9,6 +9,7 @@ import WaitingSvg from "../../images/order_recieved.svg";
 import Clock from "../../components/clock";
 import NoOrder from "../../images/noOrder.svg";
 import OrderErrorSvg from "../../images/order_error.svg";
+import { ListItem } from "@mui/material";
 
 const Orders = () => {
   const { session } = useContext(SessionContext);
@@ -64,7 +65,9 @@ const Orders = () => {
                 <h2 className="text-base font-bold mb-2">
                   Order ID: {order.order_id}
                 </h2>
-                <p className="text-sm">Payment ID: {order.razorpay_payment_id}</p>
+                <p className="text-sm">
+                  Payment ID: {order.razorpay_payment_id}
+                </p>
                 <p className="text-sm">
                   Payment Status:{" "}
                   <span
@@ -115,8 +118,18 @@ const Orders = () => {
                 <h3 className="text-base font-bold mt-4 mb-2">Items:</h3>
                 {order.items.map((item, itemIndex) => (
                   <div key={itemIndex}>
-                    <p className="text-sm">Name: {item.name}</p>
-                    <p className="text-sm">Quantity: {item.quantity}</p>
+                    <p className="text-sm ">
+                      Name: <span className="font-bold">{item.name}</span>
+                    </p>
+                    <p className="text-sm ">
+                      Quantity:{" "}
+                      <span className="font-bold">{item.quantity}</span>
+                    </p>
+                    {ListItem.size && (
+                      <p className="text-sm ">
+                        Size: <span className="font-bold">{item.size}</span>
+                      </p>
+                    )}
                   </div>
                 ))}
                 {order.address && (

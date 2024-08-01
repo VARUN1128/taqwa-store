@@ -21,6 +21,7 @@ import Orders from "./pages/Orders/Orders";
 import { Helmet } from "react-helmet-async";
 import LoginStart from "./pages/Login/LoginStart";
 import RegisterStart from "./pages/Login/Register";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -110,6 +111,7 @@ function App() {
           content="https://ik.imagekit.io/taqwafashionstore/SEO/TF_Logo.jpg"
         />
       </Helmet>
+
       <Provider store={store}>
         <WishlistContext.Provider value={{ wishlist, setWishlist }}>
           <SessionContext.Provider value={{ session, setSession }}>

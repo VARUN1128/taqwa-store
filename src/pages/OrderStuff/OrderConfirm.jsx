@@ -90,7 +90,11 @@ export default function OrderConfirm() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const getPaymentResponseOnSuccess = async (paymentId, razorpay_order_id, signature) => {
+  const getPaymentResponseOnSuccess = async (
+    paymentId,
+    razorpay_order_id,
+    signature
+  ) => {
     const { data } = await supabase
       .from("orders")
       .select("*")
@@ -230,7 +234,11 @@ export default function OrderConfirm() {
         const signature = response.razorpay_signature;
         const razorpay_order_id = response.razorpay_order_id;
         const orderId = response.razorpay_order_id;
-        await getPaymentResponseOnSuccess(paymentId, razorpay_order_id, signature);
+        await getPaymentResponseOnSuccess(
+          paymentId,
+          razorpay_order_id,
+          signature
+        );
       },
       modal: {
         ondismiss: function () {
@@ -396,6 +404,12 @@ export default function OrderConfirm() {
           >
             ₹ {product.price * product.quantity}
           </p>
+
+          {product.size && (
+            <div className="absolute top-5 right-5">
+              <span className="font-bold mr-2">Size: {product.size} </span>
+            </div>
+          )}
           <div
             className="px-2 py-1 cursor-pointer rounded-lg absolute bottom-2 right-2 text-sm sm:text-base active:scale-95 transform transition-transform"
             style={{

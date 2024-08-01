@@ -2,10 +2,13 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TopPageDetail from "../../components/TopPageDetail";
 import { MdDeleteForever } from "react-icons/md";
-import { removeEntireItem } from "../../components/cartSlice";
+import { removeEntireItem, addSize } from "../../components/cartSlice";
 import EmptyCart from "../../images/empty_cart.svg";
 import { TbTruckDelivery } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
@@ -36,24 +39,30 @@ const Cart = () => {
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopPageDetail title="Cart" />
+      <ToastContainer />
       {/* Render your cart items here */}
       {cart.map((product) => (
         <div
           key={product.id}
-          className="flex justify-between items-center p-4 relative cursor-pointer"
+          className="flex justify-between items-center p-4 relative "
           style={{
             boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px",
-          }}
-          onClick={() => {
-            navigate(`/product/${product.id}`);
           }}
         >
           <img
             src={product.images[0]}
             alt={product.name}
-            className="w-[30%] h-[30%] lg:w-[13%] lg:h-[13%] object-cover rounded-lg"
+            className="w-[30%] h-[30%] lg:w-[13%] lg:h-[13%] object-cover rounded-lg cursor-pointer"
+            onClick={() => {
+              navigate(`/product/${product.id}`);
+            }}
           />
-          <div className="flex flex-col justify-center items-start ml-4 gap-1">
+          <div
+            className="flex flex-col justify-center items-start ml-4 gap-1 cursor-pointe"
+            onClick={() => {
+              navigate(`/product/${product.id}`);
+            }}
+          >
             <p
               className="text-lg font-semibold text-gray-800"
               style={{
@@ -96,6 +105,32 @@ const Cart = () => {
           >
             <MdDeleteForever size={20} color="white" />
           </div>
+          {product.available_sizes && (
+            <div className="absolute top-5 right-5">
+              <span className="font-bold mr-2">Size:</span>
+              <select
+                className="p-2 cursor-pointer rounded-lg border border-gray-200"
+                value={product.size || ""}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  dispatch(addSize({ id: product.id, size: e.target.value }));
+                }}
+              >
+                <option value="">Select size</option>
+                {product.available_sizes.map((size, index) => (
+                  <option
+                    key={index}
+                    value={size}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    {size}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
       ))}
       <div className="flex justify-between items-center p-4">
@@ -127,7 +162,23 @@ const Cart = () => {
         }}
         className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
         onClick={() => {
-          navigate("/address");
+          console.log(cart);
+
+          let productsWithoutSize = cart.filter(
+            (product) => product.available_sizes && !product.size
+          );
+          if (productsWithoutSize.length > 0) {
+            console.log("error", productsWithoutSize);
+            toast.error(
+              "Before checkout, please select a size for the following products:\n" +
+                productsWithoutSize.map((product) => product.name).join(", ") +
+                "."
+            );
+            // alert(1);
+            return;
+          } else {
+            navigate("/address");
+          }
         }}
       >
         <TbTruckDelivery

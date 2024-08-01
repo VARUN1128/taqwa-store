@@ -176,6 +176,7 @@ export default function AddAddress() {
           {...register("name", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
           onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
+          onBlur={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.name && (
           <span className="text-red-500">This field is required</span>
@@ -197,6 +198,7 @@ export default function AddAddress() {
           {...register("address", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
           onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
+          onBlur={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.address && (
           <span className="text-red-500">This field is required</span>
@@ -207,6 +209,7 @@ export default function AddAddress() {
           {...register("zip", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
           onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
+          onBlur={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.zip && (
           <span className="text-red-500">This field is required</span>
@@ -217,6 +220,7 @@ export default function AddAddress() {
           {...register("city", { required: true })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
           onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
+          onBlur={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.city && (
           <span className="text-red-500">This field is required</span>
