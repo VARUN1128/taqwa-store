@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState,useRef } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { TopProductDetail } from "../../components/TopPageDetail";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -61,10 +61,9 @@ const ProductDetail = () => {
   const { productId } = useParams();
 
   const scroll = () => {
-    const section = document.querySelector( '#top' );
-    section.scrollIntoView( { behavior: 'smooth', block: 'start' ,} );
+    const section = document.querySelector("#top");
+    section.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-
 
   // Wishlist functionality
   const { wishlist, setWishlist } = useContext(WishlistContext);
@@ -114,7 +113,6 @@ const ProductDetail = () => {
   useEffect(() => {
     setLocalQuantity(0);
     scroll();
-    
   }, [productId]);
 
   const navigate = useNavigate();
@@ -153,7 +151,6 @@ const ProductDetail = () => {
       };
 
       const fetchRelatedProducts = async () => {
-
         //exclding the current product
         const { data: relatedData, error } = await supabase
           .from("products")
@@ -162,8 +159,7 @@ const ProductDetail = () => {
           .order("category", { ascending: true })
           .neq("id", data[0].id)
           .eq("category", data[0].category);
-          
-          
+
         if (error) {
           console.log(error);
         }
@@ -329,7 +325,7 @@ const ProductDetail = () => {
               >
                 Available Sizes
               </label>
-              <div className="flex flex-row justify-center align-middle items-center overflow-x-auto flex-wrap">
+              <div className=" pb-2 flex flex-row justify-center align-middle items-center overflow-x-auto flex-wrap">
                 {categories
                   .find((category) => category.category === product.category)
                   .sizes.map((size, index) => (
@@ -337,14 +333,14 @@ const ProductDetail = () => {
                       <span
                         style={{
                           boxShadow: availableSizes.includes(size)
-                            ? null
-                            : "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+                            ? "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px"
+                            : null,
                           fontSize: "0.8em",
                         }}
-                        className={`inline-block w-10 h-10  flex items-center justify-center text-center rounded-full cursor-pointer ${
+                        className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
                           availableSizes.includes(size)
                             ? "bg-[#ff0054] text-white font-bold"
-                            : "bg-gray-500 cursor-wait"
+                            : "bg-gray-300 cursor-wait"
                         }`}
                         onClick={() => handleSizeClick(size)}
                         disabled={
