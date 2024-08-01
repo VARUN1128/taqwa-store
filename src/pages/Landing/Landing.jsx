@@ -217,7 +217,7 @@ export const CategoryCard = ({ index, category, thumbnail, loading }) => {
 
   return (
     <div
-      className=" category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer transform transition-transform duration-150 active:scale-95 p-3 rounded-lg"
+      className="card category-item cursor-pointer transform transition-transform duration-150 active:scale-95 p-3 rounded-lg"
       onClick={handleClick}
       key={index}
     >
@@ -322,7 +322,7 @@ export default function Landing() {
 
       <h3 className="text-xl text-left ml-4 mt-10">Categories</h3>
       <div
-        className="hide-scrollbar m-auto justify-around w-100  flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap"
+        className="hide-scrollbar m-auto xl:flex xl:justify-center w-100  mt-5  scrolling-wrapper "
         style={{ width: "100%", padding: 0, margin: 0, border: 0 }}
       >
         {[...categories].map((category, index) => (
