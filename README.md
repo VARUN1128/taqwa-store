@@ -31,11 +31,11 @@
 
 # For vaishak:
 
-- Scroll to top
-- Image loading animation fix
-- Change into secure version of razorpay payment with user rls disabled.
+- ~~Scroll to top~~
+- ~~Image loading animation fix~~
+- ~~Change into secure version of razorpay payment with user rls disabled.~~
 - Like button around when unliking. if you liked a product (wishlisted) and then proceeded to unlike the product. clicking anywhere on product card except the image itself unlikes it. presstty sure this is not due to javascript propogration.
-- Whatsapp product sharing image nd name as meta tags
+- ~~Whatsapp product sharing image nd name as meta tags~~ obsolete
 
 ## Todo
 
