@@ -46,6 +46,16 @@ const ProductDetail = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [relatedProducts, setRelatedProducts] = React.useState([]);
   const { session } = useContext(SessionContext);
+
+  //-----Size Selection Functionality-----
+
+  const [availableSizes, setavailableSizes] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  const handleSizeClick = (size) => {
+    console.log("Size clicked: ", size);
+  };
+
   //-----------------------------------
   const location = useLocation();
   const { productId } = useParams();
@@ -127,7 +137,20 @@ const ProductDetail = () => {
         console.log(error);
       }
       setProduct(data[0]);
+      console.log("Product: ", data[0]);
+      setavailableSizes(data[0].available_sizes || []);
+      console.log("Available sizes", availableSizes);
       setIsLoading(false);
+
+      const fetchCategories = async () => {
+        const { data, error } = await supabase.from("categories").select("*");
+        if (error) {
+          console.error("Error fetching categories: ", error);
+        } else {
+          setCategories(data);
+          console.log(categories);
+        }
+      };
 
       const fetchRelatedProducts = async () => {
 
@@ -160,6 +183,7 @@ const ProductDetail = () => {
         setRelatedProducts(randomProducts);
       };
 
+      fetchCategories();
       fetchRelatedProducts();
     };
 
@@ -290,6 +314,51 @@ const ProductDetail = () => {
               ))}
           </span>
         </div>
+        {categories &&
+          categories.find(
+            (category) => category.category === product.category
+          ) &&
+          categories.find((category) => category.category === product.category)
+            .sizes &&
+          categories.find((category) => category.category === product.category)
+            .sizes.length > 0 && (
+            <div className="mb-4">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2 text-center"
+                htmlFor="size"
+              >
+                Available Sizes
+              </label>
+              <div className="flex flex-row justify-center align-middle items-center overflow-x-auto flex-wrap">
+                {categories
+                  .find((category) => category.category === product.category)
+                  .sizes.map((size, index) => (
+                    <div key={index} className="items-center m-2">
+                      <span
+                        style={{
+                          boxShadow: availableSizes.includes(size)
+                            ? null
+                            : "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
+                          fontSize: "0.8em",
+                        }}
+                        className={`inline-block w-10 h-10  flex items-center justify-center text-center rounded-full cursor-pointer ${
+                          availableSizes.includes(size)
+                            ? "bg-[#ff0054] text-white font-bold"
+                            : "bg-gray-500 cursor-wait"
+                        }`}
+                        onClick={() => handleSizeClick(size)}
+                        disabled={
+                          !product.available_sizes ||
+                          !product.available_sizes.includes(size)
+                        } // Disable the size if it's not in product.available_sizes
+                      >
+                        {size}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         <div className="  product-action justify-center items-center  w-full flex m-auto gap-3">
           <div
             style={{

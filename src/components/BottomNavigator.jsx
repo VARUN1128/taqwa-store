@@ -28,7 +28,7 @@ export default function BottomNavigator({ avatarInfo }) {
     } else if (currentPage === "/profile") {
       setValue(3);
     } else {
-      setValue(0);
+      setValue(5);
     }
   }, [location]); // Empty dependency array means this effect runs once on mount
   const userName = avatarInfo?.name.split(" ")[0] || "Anonymous";

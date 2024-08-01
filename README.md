@@ -46,3 +46,18 @@
 - Order pay on delivery on dashboard
 - Price range
 - More products on Sidebar
+- Category fix
+- Realtime on admins orders
+- Size chart
+- Category card scrolling
+- Clock
+
+## Changes made to supabase
+
+- new column - payment method
+- fragnance and accessories
+- category
+- thin and thick
+- Address autofill issue
+- https://supabase.com/docs/guides/platform/going-into-prod
+- https://supabase.com/docs/guides/auth/phone-login

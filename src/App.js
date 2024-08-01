@@ -19,6 +19,8 @@ import AddAddress from "./pages/AddAddress/AddAddress";
 import OrderConfirm from "./pages/OrderStuff/OrderConfirm";
 import Orders from "./pages/Orders/Orders";
 import { Helmet } from "react-helmet-async";
+import LoginStart from "./pages/Login/LoginStart";
+import RegisterStart from "./pages/Login/Register";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -136,7 +138,18 @@ function App() {
                   path="/orders"
                   element={session ? <Orders /> : <Login />}
                 />
-                <Route path="/login" element={<Login />} />
+                <Route
+                  path="/login"
+                  element={session ? <Profile /> : <Login />}
+                />
+                <Route
+                  path="/loginStart"
+                  element={session ? <Profile /> : <LoginStart />}
+                />
+                <Route
+                  path="/register"
+                  element={session ? <Profile /> : <RegisterStart />}
+                />
               </Routes>
             </Router>
           </SessionContext.Provider>

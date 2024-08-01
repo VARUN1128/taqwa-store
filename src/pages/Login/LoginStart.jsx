@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TaqwaLogoRemoved from "../../images/taqwa-removed.png";
 import CircularProgress from "@mui/material/CircularProgress";
+import supabase from "../../supabase";
 import { GiConverseShoe } from "react-icons/gi";
 import { PiSneakerMove } from "react-icons/pi";
 import { GiWatch } from "react-icons/gi";
@@ -17,13 +18,16 @@ import ConversePNG from "../../images/converse.png";
 import CapPng from "../../images/cap.png";
 import PerfumePng from "../../images/perfume.png";
 import CrocsPng from "../../images/crocs.png";
+import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
+const url = new URL(window.origin).href;
 
-export default function Login() {
-  const navigate = useNavigate();
+export default function LoginStart() {
+  const [loading, setLoading] = React.useState(false);
 
-  function signIn() {
-    navigate("/loginStart");
+  async function signIn() {
+    setLoading(true);
   }
+  const navigate = useNavigate();
 
   const items = [
     <GiConverseShoe size={40} color="black" />,
@@ -37,7 +41,7 @@ export default function Login() {
     <PiBaseballCapThin size={40} color="black" />,
   ];
   return (
-    <div className="page overflow-x-hidden page-login flex flex-col justify-between items-center h-screen bg-white relative pb-[3em] mb-[3em] ">
+    <div className="page overflow-x-hidden overflow-y-scroll page-login flex flex-col justify-between items-center h-screen bg-white relative pb-[3em] mb-[3em] ">
       <img
         src={ConversePNG}
         alt="Converse Image"
@@ -102,18 +106,25 @@ export default function Login() {
           </div>
         ))}
       </Marquee>
-      <div className="cont-google text-center">
+      <div className=" cont-google mb-32 border-2 rounded-lg border-black py-2 px-5 bg-white z-20 flex flex-col justify-center items-center gap-2">
+        <LiaArrowAltCircleLeftSolid
+          size={30}
+          color="black"
+          className="absolute top-2 left-2 cursor-pointer"
+          onClick={() => navigate(-1)}
+        />
         <img
           src={TaqwaLogoRemoved}
           alt="TAQWA"
-          className="m-auto "
+          className="m-auto"
           style={{
             zIndex: "10",
             position: "relative",
+            width: "10em", // Set the width to 13em
           }}
         />
         <span
-          className="block logo-label text-black "
+          className="block logo-label text-black"
           style={{
             zIndex: "10",
             position: "relative",
@@ -123,25 +134,56 @@ export default function Login() {
         </span>
         <span
           style={{ zIndex: "10" }}
-          className="block text-right text-[0.9em] text-black "
+          className="block text-right text-[0.9em] text-black"
         >
           Walk out in style
         </span>
-      </div>
 
-      <span
-        className="flex justify-center items-center gap-2 cont-google-btn mb-20 absolute bottom-16 px-6 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap border-2 border-black"
-        onClick={signIn}
-        style={{
-          zIndex: "10",
-          position: "relative",
-          boxShadow:
-            "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
-        }}
-      >
-        <IoLogIn style={{ display: "block" }} size={23} color="black" />
-        Login to Continue
-      </span>
+        <input
+          type="number"
+          placeholder="Phone Number"
+          className="  z-20  cont-google-btn px-5 w-[22em] mb-3 py-4 text-black bg-white rounded-2xl text-xs  border-2 border-black outline-none"
+          style={{
+            position: "relative", // Remove absolute positioning
+          }}
+        />
+        <input
+          type="number"
+          placeholder="OTP"
+          className="z-20  cont-google-btn px-5 w-[22em]   py-4 text-blac bg-white rounded-2xl text-xs  border-2 border-black outline-none"
+          style={{
+            position: "relative", // Remove absolute positioning
+          }}
+        />
+        <div className=" mb-10  text-center w-[22em] text-xs text-black">
+          Don't have an account?{" "}
+          <span
+            className="text-blue-500 cursor-pointer"
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </span>{" "}
+        </div>
+        <span
+          className="flex justify-center items-center gap-2 cont-google-btn  absolute bottom-2 px-16 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap border-2 border-black"
+          onClick={signIn}
+          style={{
+            zIndex: "10",
+            position: "relative",
+            boxShadow:
+              "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
+          }}
+        >
+          {loading ? (
+            <CircularProgress style={{ color: "black" }} size={18} />
+          ) : (
+            <>
+              <IoLogIn style={{ display: "block" }} size={23} color="black" />
+            </>
+          )}
+          Login
+        </span>
+      </div>
     </div>
   );
 }
