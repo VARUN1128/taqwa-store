@@ -94,9 +94,6 @@ const ProductCard = ({
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const navigate = useNavigate();
 
-
-
-
   const { wishlist, setWishlist } = useContext(WishlistContext);
   const isInWishlist = wishlist.includes(id);
 
@@ -153,23 +150,22 @@ const ProductCard = ({
         },
       }}
     >
-      {!thumbnailLoaded && (
-        <ResponsiveContentLoader />
-      )}
+      {!thumbnailLoaded && <ResponsiveContentLoader />}
 
       <img
         src={thumbnail}
         alt={productName}
         className="w-35 h-35 object-cover rounded-lg"
         onLoad={() => {
-          setTimeout(() => {  
+          setTimeout(() => {
             setThumbnailLoaded(true);
-          } , 1000) 
-          }}
+          }, 1000);
+        }}
         style={{ display: thumbnailLoaded ? "block" : "none" }}
       />
-      <div className="product-details mt-3 w-100 "
-      style={{ display: thumbnailLoaded ? "block" : "none" }}
+      <div
+        className="product-details mt-3 w-100 "
+        style={{ display: thumbnailLoaded ? "block" : "none" }}
       >
         <div className="flex justify-between">
           <p className=" ">{productName}</p>
@@ -219,28 +215,45 @@ export const CategoryCard = ({ index, category, thumbnail, loading }) => {
 
   return (
     <div
-      className="category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer transform transition-transform duration-150 active:scale-95 hover:shadow-lg p-4 m-2 rounded-lg"
+      className=" category-item flex flex-col items-center justify-center flex-shrink-0 cursor-pointer transform transition-transform duration-150 active:scale-95 p-3 rounded-lg"
       onClick={handleClick}
+      key={index}
     >
       {!imageLoaded && (
-        <ResponsiveContentLoader />
-         )}
-      <img
-        src={thumbnail}
-        alt="Category Thumbnail"
-        className="rounded-full w-[5em] h-[5em] object-cover"
-        style={{ display: imageLoaded ? "block" : "none" }}
-        onLoad={() => {
-          setTimeout(() => {  
-            setImageLoaded(true);
-          } , 300) 
+        <div className="w-[10em] h-[15em]">
+          <ResponsiveContentLoader />
+        </div>
+      )}
+      <div className="relative w-[10em] h-[15em]">
+        <img
+          src={thumbnail}
+          alt="Category Thumbnail"
+          className="object-cover rounded-lg w-[10em] h-[15em]"
+          style={{
+            display: imageLoaded ? "block" : "none",
+            boxShadow:
+              "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
           }}
-        onError={(e) => {
-          e.target.onerror = null;
-          e.target.src = "path/to/default/image.jpg"; // replace with your default image path
-        }}
-      />
-      <p className="category-name text-center mt-2">{category}</p>
+          onLoad={() => {
+            setTimeout(() => {
+              setImageLoaded(true);
+            }, 300);
+          }}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "path/to/default/image.jpg"; // replace with your default image path
+          }}
+        />
+        <p
+          style={{
+            fontFamily: "Grifter",
+            letterSpacing: "0.05em",
+          }}
+          className="category-name text-center mt-2 absolute bottom-1 left-2 text-white font-bold"
+        >
+          {category}
+        </p>
+      </div>
     </div>
   );
 };
@@ -307,19 +320,17 @@ export default function Landing() {
 
       <h3 className="text-xl text-left ml-4 mt-10">Categories</h3>
       <div
-        className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-hidden whitespace-nowrap"
+        className="hide-scrollbar m-auto justify-around w-100  flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap"
         style={{ width: "100%", padding: 0, margin: 0, border: 0 }}
       >
-        <Marquee velocity={15}>
-          {[...categories, ...categories].map((category, index) => (
-            <CategoryCard
-              category={category.category}
-              thumbnail={category.thumbnail}
-              index={index}
-              key={category.id}
-            />
-          ))}
-        </Marquee>
+        {[...categories].map((category, index) => (
+          <CategoryCard
+            category={category.category}
+            thumbnail={category.thumbnail}
+            index={index}
+            key={category.id}
+          />
+        ))}
       </div>
 
       <CardList title="New Arrivals" products={newArrivals} session={session} />
@@ -331,7 +342,7 @@ export default function Landing() {
 export const CardList = ({ title, products, session }) => {
   return (
     <>
-      <h3 className="text-xl text-left ml-4 mt-10">{title}</h3>
+      <h3 className="text-xl text-left ml-4 mt-2">{title}</h3>
       <div className="flex flex-wrap justify-evenly m-auto mt-5">
         {products.map((product) => (
           <ProductCard

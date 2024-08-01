@@ -190,23 +190,17 @@ export default function SearchResults() {
               later or check out our other categories.
             </p>
             <div className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap ">
-              <Marquee velocity={15}>
-                {[...categories, ...categories].map((category, index) => (
-                  <CategoryCard
-                    category={category.category}
-                    thumbnail={category.thumbnail}
-                    index={index}
-                    key={category.id}
-                  />
-                ))}
-              </Marquee>
+              {[...categories].map((category, index) => (
+                <CategoryCard
+                  category={category.category}
+                  thumbnail={category.thumbnail}
+                  index={index}
+                  key={category.id}
+                />
+              ))}
             </div>
           </div>
-          <img
-            src={SadCat}
-            alt="Sad Cat"
-            className="absolute right-0 bottom-[3em] w-[12em]"
-          />
+
           <div className="flex justify-center mt-5">
             <span
               className="text-white cursor-pointer hover:bg-blue-500 transition-colors duration-300 ease-in-out py-2 px-4 rounded-full"
