@@ -140,7 +140,9 @@ const ProductCard = ({
       className="p-3 mb-3 bg-white rounded-lg flex flex-col"
       style={{
         width: "calc(50% - 2rem)", // This ensures that at least two cards are displayed in a row on small screens
-        boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+        boxShadow:
+          "rgba(14, 63, 126, 0.06) 0px 0px 0px 1px, rgba(42, 51, 70, 0.03) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 2px 2px -1px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.03) 0px 5px 5px -2.5px, rgba(42, 51, 70, 0.03) 0px 10px 10px -5px, rgba(42, 51, 70, 0.03) 0px 24px 24px -8px",
+
         cursor: "pointer",
         "@media (min-width: 1024px)": {
           width: "80%", // This sets the width to 80% on larger screens
