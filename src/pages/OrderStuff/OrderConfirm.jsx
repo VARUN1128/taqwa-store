@@ -12,17 +12,50 @@ import { useCallback } from "react";
 import useRazorpay from "react-razorpay";
 import { SiRazorpay } from "react-icons/si";
 import PaymentProcessLoadScreen from "../../components/PaymentProcessLoadScreen";
+import CircularProgress from '@mui/material/CircularProgress';
+import { MdCheckCircleOutline } from "react-icons/md";
+import { BsCartCheckFill } from "react-icons/bs";
 
-import { FaWhatsapp } from "react-icons/fa";
+
+
+
+
 
 function Modal({ isOpen, onClose, onConfirm }) {
+  const [confirming, setConfirming] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+
+  const handleConfirm = async () => {
+    setConfirming(true);
+    setErrorMessage('');
+    try {
+      const status = await onConfirm();
+      if (status === 'success') {
+        setConfirmed(true);
+        setTimeout(() => {
+          onClose();
+          navigate("/orders");
+
+        }, 2000);
+      } else {
+        setErrorMessage('Something went wrong, please try again.');
+      }
+    } catch (error) {
+      setErrorMessage('Something went wrong, please try again.');
+    } finally {
+      setConfirming(false);
+    } 
+  };
+
   if (!isOpen) {
     return null;
   }
 
   return (
-    <div className="fixed z-10 inset-0 overflow-y-auto ">
-      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0 ">
+    <div className="fixed z-10 inset-0 overflow-y-auto">
+      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
@@ -34,35 +67,52 @@ function Modal({ isOpen, onClose, onConfirm }) {
           &#8203;
         </span>
 
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full mb-8 ">
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full mb-8">
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3
-                  className="text-lg leading-6 font-medium text-gray-900"
-                  id="modal-title"
-                >
-                  Pay on Delivery requires Whatsapp based Confirmation. Proceed?
+                <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                  Pay on Delivery, You can track the order in Orders Page
                 </h3>
               </div>
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button
-              type="button"
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={onConfirm}
-            >
-              <FaWhatsapp className="mr-2" size={25} /> Yes
-            </button>
+            {!confirming && !confirmed && (
+              <button
+                type="button"
+                className="w-full inline-flex text-bold justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+                onClick={handleConfirm}
+              >
+                <BsCartCheckFill size={20} className="mr-2" />
+                Confirm
+              </button>
+            )}
+            {confirming && (
+              <div className="flex justify-center items-center w-full">
+                <CircularProgress style={{ color: "#10B981" }} size={24} />
+              </div>
+            )}
+            {confirmed && (
+              <div className="flex flex-col justify-center items-center w-full">
+                <MdCheckCircleOutline style={{ color: "#10B981", fontSize: 40 }} />
+                <p className="mt-2 text-green-700 font-medium">Order Confirmed</p>
+              </div>
+            )}
+          {!confirming && !confirmed &&  (  
             <button
               type="button"
               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
               onClick={onClose}
+              disabled={confirming}
             >
               No
             </button>
+          )}
           </div>
+          {errorMessage && (
+            <div className="text-center text-red-500 mt-2">{errorMessage}</div>
+          )}
         </div>
       </div>
     </div>
@@ -89,6 +139,7 @@ export default function OrderConfirm() {
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [OrderConfirmed, setOrderConfirmed] = useState(true);
 
   const getPaymentResponseOnSuccess = async (
     paymentId,
@@ -162,11 +213,12 @@ export default function OrderConfirm() {
     const response = await axios.post(
       `${BACKEND_URL}/create-order`,
       {
-        description: "Payment for food",
+        description: "Payment for accessories",
         user_id: session.user.id,
         user_name: avatarInfo.full_name,
         items: cart,
         address: address.current,
+        payment_method: "Razorpay",
       },
       {
         headers: {
@@ -298,43 +350,37 @@ export default function OrderConfirm() {
     console.log("Session changed");
     console.log("New session:", session);
   }, [session]);
-  const whatsAppPayment = async () => {
-    const message = `🛒 Order Confirmed 🛒\n\n📦 Shipping Address 📦\n\nName: ${
-      address.current.name
-    }\nPhone: ${address.current.phone}\nEmail: ${
-      session.user.email
-    }\nAddress: ${address.current.address.current}\nZip: ${
-      address.current.zip
-    }\nCity: ${address.current.city}\nState: ${
-      address.current.state || ""
-    }\nCountry: ${
-      address.current.country || ""
-    }\n\n📦 Order Details 📦\n\n${cart
-      .map(
-        (product) =>
-          `Product: ${product.name}\nQuantity: ${product.quantity}\nPrice: ₹ ${
-            product.price * product.quantity
-          }\nCategory: ${
-            product.category
-          }\nLink: https://taqwafashionstore.com/product/${product.id}`
-      )
-      .join("\n\n")}\n\nTotal: ₹ ${cart.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    )}`;
 
-    const url = `https://api.whatsapp.com/send?phone=+919495917116&text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(url, "_blank");
+
+  const cashOnDelivey = async () => {
+    const response = await axios.post(
+      `${BACKEND_URL}/create-order`,
+      {
+        description: "Payment for accessories",
+        user_id: session.user.id,
+        user_name: avatarInfo.full_name,
+        items: cart,
+        address: address.current,
+        status: "paid",
+        payment_method: "COD",
+      },
+      {
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      }
+    );
+    if (response.status !== 200) {
+      console.error("Error creating order");
+    }
+    console.log(response);
     dispatch(removeEntireItem());
-    navigate("/");
+    return response.status === 200 ? "success" : "error";
   };
 
-  const handleModalConfirm = () => {
-    setIsModalOpen(false);
-    whatsAppPayment();
-  };
+
 
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[6em]">
@@ -342,7 +388,8 @@ export default function OrderConfirm() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={handleModalConfirm}
+        onConfirm={cashOnDelivey}
+        
       />
       {address.current && (
         <div className="p-4">
@@ -524,6 +571,7 @@ export default function OrderConfirm() {
           setLoading={setLoading}
         />
       )}
+
     </div>
   );
 }

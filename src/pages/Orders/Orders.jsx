@@ -53,6 +53,8 @@ const Orders = () => {
       ) : (
         <div className="p-4">
           {orders.map((order, index) => (
+
+            // Order Card
             <div
               key={index}
               className="bg-white rounded-lg p-6 mb-4 flex"
@@ -65,9 +67,15 @@ const Orders = () => {
                 <h2 className="text-base font-bold mb-2">
                   Order ID: {order.order_id}
                 </h2>
-                <p className="text-sm">
+                { order.payment_method != "COD" && (<p className="text-sm">
                   Payment ID: {order.razorpay_payment_id}
+                </p>)}
+
+                <p className="text-sm">
+                  Payment Method:{" "}
+                  <span className="font-bold">{order.payment_method}</span>
                 </p>
+                
                 <p className="text-sm">
                   Payment Status:{" "}
                   <span
@@ -83,13 +91,14 @@ const Orders = () => {
                       : "Failed"}
                   </span>
                 </p>
-                <p className="text-sm">
+                {order.payment_method != "COD" &&
+                 (<p className="text-sm">
                   Order Status:{" "}
                   <span
                     className="font-bold"
                     style={{
                       color:
-                        order.order_status === "waiting" &&
+                        order.order_status === "waiting"  &&
                         order.status === "paid"
                           ? "#f77f00"
                           : order.order_status === "shipped"
@@ -97,6 +106,8 @@ const Orders = () => {
                           : order.order_status === "delivered"
                           ? "green"
                           : "red",
+
+                        
                     }}
                   >
                     {order.order_status === "waiting" && order.status === "paid"
@@ -109,7 +120,35 @@ const Orders = () => {
                       ? "Payment Failed"
                       : "Something went wrong. Please contact support."}
                   </span>
-                </p>
+                </p>)}
+
+                {order.payment_method === "COD" &&
+                 (<p className="text-sm">
+                  Order Status:{" "}
+                  <span
+                    className="font-bold"
+                    style={{
+                      color:
+                        order.order_status === "waiting"
+                          ? "#f77f00"
+                          : order.order_status === "shipped"
+                          ? "blue"
+                          : order.order_status === "delivered"
+                          ? "green"
+                          : "red",
+                    }}
+                  >
+                    {order.order_status === "waiting"
+                      ? "Order Recieved"
+                      : order.order_status === "shipped"
+                      ? "Order Shipped"
+                      : order.order_status === "delivered"
+                      ? "Order Delivered"
+                      : "Something went wrong. Please contact support."}
+                  </span>
+                </p>  
+                  )
+                  }
                 <p className="text-sm">Amount Paid: ₹ {order.amount}</p>
                 <p className="text-sm">
                   Ordered At:{" "}
