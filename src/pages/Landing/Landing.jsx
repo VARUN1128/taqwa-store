@@ -344,7 +344,7 @@ export default function Landing() {
 export const CardList = ({ title, products, session }) => {
   return (
     <>
-      <h3 className="text-xl text-left ml-4 mt-2">{title}</h3>
+      <h3 className="text-xl text-left ml-7 mt-2">{title}</h3>
       <div className="flex flex-wrap justify-evenly m-auto mt-5">
         {products.map((product) => (
           <ProductCard

@@ -6,13 +6,14 @@ import SearchBar from "../../components/SearchBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { VscGitFetch } from "react-icons/vsc";
-import SadCat from "../../images/sad_thumbsup.png";
 import { CategoryCard } from "../Landing/Landing";
-import Marquee from "react-marquee-slider";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { BiMenuAltRight } from "react-icons/bi";
 
 const IOSSwitch = styled((props) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
@@ -76,7 +77,20 @@ export default function SearchResults() {
   const [hasFetched, setHasFetched] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [sortOrder, setSortOrder] = useState("asc"); // 'asc' for ascending, 'desc' for descending
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const options = [
+    { value: "price_asc", label: "Price: Low to High" },
+    { value: "price_desc", label: "Price: High to Low" },
+    { value: "rating_asc", label: "Rating: Low to High" },
+    { value: "rating_desc", label: "Rating: High to Low" },
+  ];
+
+  const [sortOption, setSortOption] = useState("price_asc");
+  const [selectedOption, setSelectedOption] = useState(
+    options.find((option) => option.value === sortOption).label
+  );
 
   const navigate = useNavigate();
 
@@ -121,7 +135,14 @@ export default function SearchResults() {
         let productsQuery = supabase
           .from("products")
           .select("*")
-          .order("price", { ascending: sortOrder === "asc" }) // Sort by price
+          .order(
+            sortOption.split("_")[0] === "rating"
+              ? "avg_rating"
+              : sortOption.split("_")[0],
+            {
+              ascending: sortOption.endsWith("asc"),
+            }
+          )
           .range(page * itemsPerPage, (page + 1) * itemsPerPage - 1);
 
         if (query) {
@@ -158,27 +179,55 @@ export default function SearchResults() {
     };
 
     fetchProducts();
-  }, [location, query, category, page, sortOrder]);
+  }, [location, query, category, page, sortOption]);
 
-  const toggleSortOrder = () => {
-    setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  };
+  // const toggleSortOrder = () => {
+  //   setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+  // };
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar value={query && `${query}`} />
-      <div className="flex justify-between items-end flex-col mt-3">
-        <FormControlLabel
-          control={
-            <IOSSwitch
-              checked={sortOrder === "asc"}
-              onChange={toggleSortOrder}
-            />
-          }
-          label="Sort by price"
-        />
-      </div>
+      {products.length > 0 && (
+        <div className="relative m-auto inline-block outline-0 mt-4">
+          <div>
+            <button
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              className="ml-10 inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 outline-0"
+            >
+              {selectedOption}
+              <BiMenuAltRight className="ml-2 h-5 w-5" />
+            </button>
+          </div>
 
+          {isOpen && (
+            <div className="origin-top-right outline-0 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ml-10">
+              <div
+                className="py-1"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="options-menu"
+              >
+                {options.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => {
+                      setSortOption(option.value);
+                      setSelectedOption(option.label);
+                      setIsOpen(false);
+                    }}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    role="menuitem"
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       {!isFetching && hasFetched && products.length === 0 ? (
         <>
           <div className="mt-20 relative">
