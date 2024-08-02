@@ -390,7 +390,14 @@ export default function OrderConfirm() {
             >
               {product.name}
             </p>
-            <p>Quantity: x{product.quantity}</p>
+            <p>
+              Quantity: <span className="font-bold">x{product.quantity}</span>
+            </p>
+            {product.size && (
+              <p>
+                Size: <span className="font-bold">{product.size}</span>
+              </p>
+            )}
 
             <p className="text-sm text-gray-500">
               Category: {product.category}
@@ -405,11 +412,6 @@ export default function OrderConfirm() {
             ₹ {product.price * product.quantity}
           </p>
 
-          {product.size && (
-            <div className="absolute top-5 right-5">
-              <span className="font-bold mr-2">Size: {product.size} </span>
-            </div>
-          )}
           <div
             className="px-2 py-1 cursor-pointer rounded-lg absolute bottom-2 right-2 text-sm sm:text-base active:scale-95 transform transition-transform"
             style={{

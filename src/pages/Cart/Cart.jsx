@@ -72,8 +72,14 @@ const Cart = () => {
             >
               {product.name}
             </p>
-            <p>Quantity: x{product.quantity}</p>
-
+            <p>
+              Quantity: <span className="font-bold">x{product.quantity}</span>
+            </p>
+            {product.size && (
+              <p>
+                Size: <span className="font-bold">{product.size}</span>
+              </p>
+            )}
             <p className="text-sm text-gray-500">
               Category: {product.category}
             </p>
@@ -105,32 +111,6 @@ const Cart = () => {
           >
             <MdDeleteForever size={20} color="white" />
           </div>
-          {product.available_sizes && (
-            <div className="absolute top-5 right-5">
-              <span className="font-bold mr-2">Size:</span>
-              <select
-                className="p-2 cursor-pointer rounded-lg border border-gray-200"
-                value={product.size || ""}
-                onChange={(e) => {
-                  e.stopPropagation();
-                  dispatch(addSize({ id: product.id, size: e.target.value }));
-                }}
-              >
-                <option value="">Select size</option>
-                {product.available_sizes.map((size, index) => (
-                  <option
-                    key={index}
-                    value={size}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    {size}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
         </div>
       ))}
       <div className="flex justify-between items-center p-4">
@@ -163,22 +143,7 @@ const Cart = () => {
         className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
         onClick={() => {
           console.log(cart);
-
-          let productsWithoutSize = cart.filter(
-            (product) => product.available_sizes && !product.size
-          );
-          if (productsWithoutSize.length > 0) {
-            console.log("error", productsWithoutSize);
-            toast.error(
-              "Before checkout, please select a size for the following products:\n" +
-                productsWithoutSize.map((product) => product.name).join(", ") +
-                "."
-            );
-            // alert(1);
-            return;
-          } else {
-            navigate("/address");
-          }
+          navigate("/address");
         }}
       >
         <TbTruckDelivery

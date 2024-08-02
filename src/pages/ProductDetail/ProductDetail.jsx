@@ -20,6 +20,8 @@ import { addItem, removeItem } from "../../components/cartSlice";
 import { PiMinusCircleFill } from "react-icons/pi";
 import { PiPlusCircleFill } from "react-icons/pi";
 import { Helmet } from "react-helmet-async";
+import { addSize } from "../../components/cartSlice";
+
 const Slideshow = ({ slideImages }) => {
   return (
     <div className="slide-container">
@@ -51,9 +53,14 @@ const ProductDetail = () => {
 
   const [availableSizes, setavailableSizes] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [selectedSize, setSelectedSize] = useState(null);
 
   const handleSizeClick = (size) => {
-    console.log("Size clicked: ", size);
+    if (availableSizes.includes(size)) {
+      setSelectedSize(size);
+    } else {
+      toast.error("This size is not available for this product yet!");
+    }
   };
 
   //-----------------------------------
@@ -91,10 +98,15 @@ const ProductDetail = () => {
   const [localQuantity, setLocalQuantity] = useState(quantity);
 
   const handleAddToCart = () => {
-    console.log("Product added to cart");
-    setLocalQuantity(quantity + 1);
-    dispatch(addItem(product));
-    console.log(quantity);
+    if (!selectedSize && availableSizes.length > 0) {
+      toast.error("Please select a size first!");
+    } else {
+      console.log("Product added to cart");
+      setLocalQuantity(quantity + 1);
+      dispatch(addItem(product));
+      dispatch(addSize({ id: product.id, size: selectedSize }));
+      console.log(quantity);
+    }
   };
   const handleIncrement = (event) => {
     event.stopPropagation();
@@ -118,8 +130,13 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   const handleBuyNow = () => {
-    dispatch(addItem(product));
-    navigate("/cart");
+    if (!selectedSize && availableSizes.length > 0) {
+      toast.error("Please select a size first!");
+    } else {
+      dispatch(addItem(product));
+      dispatch(addSize({ id: product.id, size: selectedSize }));
+      navigate("/cart");
+    }
   };
 
   //-----------------------------------
@@ -325,7 +342,7 @@ const ProductDetail = () => {
               >
                 Available Sizes
               </label>
-              <div className=" pb-2 flex flex-row justify-center align-middle items-center overflow-x-auto flex-wrap">
+              <div className="pb-2 flex flex-row justify-center align-middle items-center overflow-x-auto flex-wrap">
                 {categories
                   .find((category) => category.category === product.category)
                   .sizes.map((size, index) => (
@@ -338,9 +355,11 @@ const ProductDetail = () => {
                           fontSize: "0.8em",
                         }}
                         className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
-                          availableSizes.includes(size)
+                          size === selectedSize
                             ? "bg-[#ff0054] text-white font-bold"
-                            : "bg-gray-300 cursor-wait"
+                            : availableSizes.includes(size)
+                            ? "bg-gray-200 cursor-pointer"
+                            : "bg-gray-500 cursor-wait"
                         }`}
                         onClick={() => handleSizeClick(size)}
                         disabled={
