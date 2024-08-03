@@ -39,26 +39,26 @@
 
 ## Todo
 
-- Order id billing
-- Login with email/password
-- Size Chart
-- Marque
+- ~~Order id billing~~
+- ~~Login with email/password~~
+- ~~Size Chart~~
+- ~~Marque~~
 - Order pay on delivery on dashboard
-- Price range
-- More products on Sidebar
-- Category fix
+- ~~Price range~~
+- ~~More products on Sidebar~~
+- ~~Category fix~~
 - Realtime on admins orders
-- Size chart
-- Category card scrolling
+- ~~Size chart~~
+- ~~Category card scrolling~~
 - Clock
 
 ## Changes made to supabase
 
-- new column - payment method
+- ~~new column - payment method~~
 - fragnance and accessories
-- category
-- thin and thick
+- ~~category~~
+- ~~thin and thick~~
 - Address autofill issue
 - https://supabase.com/docs/guides/platform/going-into-prod
 - https://supabase.com/docs/guides/auth/phone-login
-- Razorpay verification
+- ~~Razorpay verification~~
