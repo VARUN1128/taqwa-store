@@ -181,7 +181,7 @@ export default function RegisterStart() {
           </span>
           <span
             className="text-blue-500 cursor-pointer"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
           >
             Continue without login
           </span>{" "}

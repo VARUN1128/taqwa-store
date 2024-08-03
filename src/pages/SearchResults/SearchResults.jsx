@@ -253,7 +253,7 @@ export default function SearchResults() {
           <div className="flex justify-center mt-5">
             <span
               className="text-white cursor-pointer hover:bg-blue-500 transition-colors duration-300 ease-in-out py-2 px-4 rounded-full"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/home")}
               style={{
                 backgroundColor: "#3669C9",
               }}

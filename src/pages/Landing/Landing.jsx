@@ -56,7 +56,7 @@ export const TopBar = ({ avatarInfo }) => {
           cursor: "pointer",
         }}
         onClick={() => {
-          window.location.href = "/";
+          window.location.href = "/home";
         }}
       />
       <div className="flex justify-end items-center w-full relative">
@@ -223,7 +223,7 @@ export const CategoryCard = ({ index, category, thumbnail, loading }) => {
     >
       {!imageLoaded && (
         <div className="w-[10em] h-[15em]">
-          <ResponsiveContentLoader />
+          <ResponsiveContentLoader height="15em" />
         </div>
       )}
       <div className="relative w-[10em] h-[15em]">

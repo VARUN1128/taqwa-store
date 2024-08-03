@@ -24,7 +24,7 @@ const Profile = () => {
     setLoading(true);
     await supabase.auth.signOut();
     setLoading(false);
-    navigate("/");
+    navigate("/home");
   };
 
   return (

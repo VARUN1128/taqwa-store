@@ -1,4 +1,4 @@
-import Login from "./pages/Login/Login";
+import Login, { BeforeLogin } from "./pages/Login/Login";
 import "./App.css";
 import { Provider } from "react-redux";
 import store from "./redux/store";
@@ -119,7 +119,7 @@ function App() {
               <BottomNavigator avatarInfo={session?.user.user_metadata} />
 
               <Routes>
-                <Route path="/" element={<Landing />} />
+                <Route path="/home" element={<Landing />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/product/:productId" element={<ProductDetail />} />
                 <Route path="/search" element={<SearchResults />} />
@@ -152,6 +152,7 @@ function App() {
                   path="/register"
                   element={session ? <Profile /> : <RegisterStart />}
                 />
+                <Route path="/" element={<BeforeLogin />} />
               </Routes>
             </Router>
           </SessionContext.Provider>

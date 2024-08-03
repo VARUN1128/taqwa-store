@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import TaqwaLogoRemoved from "../../images/taqwa-removed.png";
-import CircularProgress from "@mui/material/CircularProgress";
 import { GiConverseShoe } from "react-icons/gi";
 import { PiSneakerMove } from "react-icons/pi";
 import { GiWatch } from "react-icons/gi";
@@ -17,7 +16,65 @@ import ConversePNG from "../../images/converse.png";
 import CapPng from "../../images/cap.png";
 import PerfumePng from "../../images/perfume.png";
 import CrocsPng from "../../images/crocs.png";
+import { TopBar } from "../Landing/Landing";
 
+export const BeforeLogin = () => {
+  const navigate = useNavigate();
+  const transitionDuration = 500;
+
+  const delayedNavigate = (path) => {
+    setTimeout(() => {
+      navigate(path);
+    }, transitionDuration);
+  };
+
+  return (
+    <div className="flex flex-col overflow-x-hidden overflow-y-scroll">
+      <TopBar />
+      <div
+        className="w-screen grid md:grid-cols-2 grid-rows-2 md:grid-rows-1 overflow-y-scroll overflow-x-hidden"
+        style={{ height: "calc(100vh - 60px)" }}
+      >
+        <div
+          className="relative bg-cover bg-center cursor-pointer transform transition duration-500 hover:scale-105 active:scale-95 h-full"
+          style={{
+            backgroundImage:
+              "url('https://ik.imagekit.io/taqwafashionstore/category/wristwatch-407096_1280.jpg')",
+            zIndex: "1001",
+          }}
+          onClick={() => delayedNavigate("/home")}
+        >
+          <div
+            className="absolute bottom-0 left-2-- m-4 text-white text-2xl"
+            style={{
+              fontFamily: "Grifter",
+            }}
+          >
+            Fashion and Accessories
+          </div>
+        </div>
+        <div
+          className="relative bg-cover bg-center cursor-pointer transform transition duration-500 hover:scale-105 active:scale-95 h-full"
+          style={{
+            backgroundImage:
+              "url('https://ik.imagekit.io/taqwafashionstore/category/pexels-pixabay-258244.jpg')",
+            zIndex: "1001",
+          }}
+          onClick={() => delayedNavigate("/search?category=Perfumes")}
+        >
+          <div
+            className="absolute bottom-20 left-2 m-4 text-white text-2xl"
+            style={{
+              fontFamily: "Grifter",
+            }}
+          >
+            Fragrances
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 export default function Login() {
   const navigate = useNavigate();
 
