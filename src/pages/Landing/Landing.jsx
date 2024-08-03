@@ -14,7 +14,68 @@ import { WishlistContext } from "../../components/WishlListContext";
 import TopLogo from "../../images/TAQWA.png";
 import supabase from "../../supabase";
 import ResponsiveContentLoader from "../../components/ResponseContentLoader";
+import { Slide } from "react-slideshow-image";
 import "./Landing.css";
+
+const properties = {
+  duration: 2000,
+  transitionDuration: 500,
+  infinite: true,
+  indicators: true,
+  arrows: false,
+  pauseOnHover: false,
+  autoplay: true,
+  easing: "ease",
+};
+
+const BannerSlideShow = () => {
+  const [slideImages, setSlideImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      const { data, error } = await supabase.from("banners").select("*");
+      console.log("Slides", data);
+      if (error) {
+        console.log(error);
+      } else {
+        setSlideImages(data.map((banner) => banner.image_url));
+        setIsLoading(false);
+      }
+    };
+
+    fetchBanners();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // replace with your preferred loading indicator
+  }
+
+  return (
+    <div className="slide-container ">
+      <Slide {...properties}>
+        {slideImages.map((image, index) => (
+          <div key={index} className="each-slide pb-2">
+            <div
+              className="rounded-md w-[96%] m-auto"
+              style={{
+                backgroundImage: `url(${image})`,
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                height: "18em",
+                borderRadius: "10px",
+                boxShadow:
+                  "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+              }}
+            ></div>
+          </div>
+        ))}
+      </Slide>
+    </div>
+  );
+};
+
 export const TopBar = ({ avatarInfo }) => {
   const itemCount = useSelector(selectTotalQuantity);
 
@@ -334,6 +395,8 @@ export default function Landing() {
           />
         ))}
       </div>
+
+      <BannerSlideShow />
 
       <CardList title="New Arrivals" products={newArrivals} session={session} />
       <CardList title="Top Rated" products={topRated} session={session} />
