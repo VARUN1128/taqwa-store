@@ -85,7 +85,7 @@ const Cart = () => {
             </p>
           </div>
           <p
-            className="text-lg font-semibold"
+            className="text-md font-semibold "
             style={{
               color: "#ff0054",
             }}

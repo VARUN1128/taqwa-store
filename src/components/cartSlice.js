@@ -8,7 +8,8 @@ const cartSlice = createSlice({
   reducers: {
     addItem: (state, action) => {
       const itemIndex = state.findIndex(
-        (item) => item.id === action.payload.id
+        (item) =>
+          item.id === action.payload.id && item.size === action.payload.size
       );
       if (itemIndex >= 0) {
         // If item already exists in the cart, increment its quantity
@@ -20,7 +21,8 @@ const cartSlice = createSlice({
     },
     removeItem: (state, action) => {
       const itemIndex = state.findIndex(
-        (item) => item.id === action.payload.id
+        (item) =>
+          item.id === action.payload.id && item.size === action.payload.size
       );
       if (itemIndex >= 0) {
         // If item's quantity is more than 1, decrement it
@@ -34,14 +36,18 @@ const cartSlice = createSlice({
     },
     removeEntireItem: (state, action) => {
       if (action.payload && action.payload.id) {
-        return state.filter((item) => item.id !== action.payload.id);
+        return state.filter(
+          (item) =>
+            item.id !== action.payload.id || item.size !== action.payload.size
+        );
       } else {
         return [];
       }
     },
     addSize: (state, action) => {
       const itemIndex = state.findIndex(
-        (item) => item.id === action.payload.id
+        (item) =>
+          item.id === action.payload.id && item.size === action.payload.size
       );
       if (itemIndex >= 0) {
         // If item exists in the cart, add size to it
@@ -60,3 +66,13 @@ export const selectTotalQuantity = createSelector(
 );
 
 export default cartSlice.reducer;
+
+export const selectItemQuantity = createSelector(
+  (state) => state.cart,
+  (cartItems, itemId, itemSize) => {
+    const item = cartItems.find(
+      (item) => item.id === itemId && item.size === itemSize
+    );
+    return item ? item.quantity : 0;
+  }
+);

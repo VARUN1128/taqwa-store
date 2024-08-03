@@ -43,7 +43,6 @@
 - ~~Login with email/password~~
 - ~~Size Chart~~
 - ~~Marque~~
-- Order pay on delivery on dashboard
 - ~~Price range~~
 - ~~More products on Sidebar~~
 - ~~Category fix~~
@@ -55,10 +54,20 @@
 ## Changes made to supabase
 
 - ~~new column - payment method~~
-- fragnance and accessories
+- ~~fragnance and accessories~~
 - ~~category~~
 - ~~thin and thick~~
+- ~~Banner~~
 - Address autofill issue
+- Description
+- Order pay on delivery on dashboard
+- cart size issue
+- Card animation for banners
+- images webp aakkanam
+- realtime on admin
+- image deletion from server
+- Admin side order page fix.
+- Order page fix
 - https://supabase.com/docs/guides/platform/going-into-prod
 - https://supabase.com/docs/guides/auth/phone-login
 - ~~Razorpay verification~~

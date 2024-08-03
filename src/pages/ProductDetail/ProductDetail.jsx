@@ -103,7 +103,7 @@ const ProductDetail = () => {
     } else {
       console.log("Product added to cart");
       setLocalQuantity(quantity + 1);
-      dispatch(addItem(product));
+      dispatch(addItem({ ...product, size: selectedSize }));
       dispatch(addSize({ id: product.id, size: selectedSize }));
       console.log(quantity);
     }
@@ -111,14 +111,15 @@ const ProductDetail = () => {
   const handleIncrement = (event) => {
     event.stopPropagation();
     setLocalQuantity(quantity + 1);
-    dispatch(addItem(product));
+    dispatch(addItem({ ...product, size: selectedSize }));
   };
 
   const handleDecrement = (event) => {
     event.stopPropagation();
     if (quantity > 0) {
       setLocalQuantity(quantity - 1);
-      dispatch(removeItem(product));
+      dispatch(removeItem({ ...product, size: selectedSize }));
+      console.log("Decremented");
     }
   };
 
@@ -133,7 +134,7 @@ const ProductDetail = () => {
     if (!selectedSize && availableSizes.length > 0) {
       toast.error("Please select a size first!");
     } else {
-      dispatch(addItem(product));
+      dispatch(addItem({ ...product, size: selectedSize }));
       dispatch(addSize({ id: product.id, size: selectedSize }));
       navigate("/cart");
     }
