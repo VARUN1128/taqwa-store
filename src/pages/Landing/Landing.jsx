@@ -18,7 +18,7 @@ import { Slide } from "react-slideshow-image";
 import "./Landing.css";
 
 const properties = {
-  duration: 2000,
+  duration: 4000,
   transitionDuration: 500,
   infinite: true,
   indicators: true,

@@ -97,6 +97,13 @@ const ProductDetail = () => {
   const quantity = productInCart ? productInCart.quantity : 0;
   const [localQuantity, setLocalQuantity] = useState(quantity);
 
+  useEffect(() => {
+    const productInCart = cartItems.find(
+      (item) => item.id === product.id && item.size === selectedSize
+    );
+    setLocalQuantity(productInCart ? productInCart.quantity : 0);
+  }, [cartItems, product.id, selectedSize]);
+
   const handleAddToCart = () => {
     if (!selectedSize && availableSizes.length > 0) {
       toast.error("Please select a size first!");
@@ -394,7 +401,7 @@ const ProductDetail = () => {
                   color="white"
                   onClick={handleDecrement}
                 />
-                {quantity}
+                {localQuantity}
                 <PiPlusCircleFill
                   size={20}
                   className="ml-3 inline-block align-middle z-10"
