@@ -64,7 +64,6 @@
 - Address autofill issue
 - Description
 - Order pay on delivery on dashboard
-- cart size issue
 - Card animation for banners
 - images webp aakkanam
 - realtime on admin
@@ -75,5 +74,6 @@
 - Webp
 - Order page, print thing
 - Video client side test
-- Cart front
+- Orders admin side
 - Banner loading
+- banner order

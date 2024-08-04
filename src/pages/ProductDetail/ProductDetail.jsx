@@ -376,6 +376,20 @@ const ProductDetail = () => {
           >
             ₹ {product.price}
           </p>
+          <p>
+            {product.description
+              ? product.description
+              : `Buy ${product.name} at only ${
+                  product.price
+                } from Taqwa Fashion Store Before it stocks out. ${
+                  product.available_sizes
+                    ? "Available sizes are: " +
+                      product.available_sizes.join(", ")
+                    : ""
+                } . The product is rated ${
+                  product.avg_rating
+                } stars by our customers.`}
+          </p>
           <span className="block mt-1 text-yellow-500">
             {Array(Math.round(product.avg_rating))
               .fill()
