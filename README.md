@@ -58,6 +58,9 @@
 - ~~category~~
 - ~~thin and thick~~
 - ~~Banner~~
+- https://supabase.com/docs/guides/platform/going-into-prod
+- https://supabase.com/docs/guides/auth/phone-login
+- ~~Razorpay verification~~
 - Address autofill issue
 - Description
 - Order pay on delivery on dashboard
@@ -68,6 +71,7 @@
 - image deletion from server
 - Admin side order page fix.
 - Order page fix
-- https://supabase.com/docs/guides/platform/going-into-prod
-- https://supabase.com/docs/guides/auth/phone-login
-- ~~Razorpay verification~~
+- Description - required
+- Webp
+- Order page, print thing
+- Video client side test

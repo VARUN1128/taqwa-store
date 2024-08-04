@@ -367,7 +367,7 @@ const ProductDetail = () => {
                             ? "bg-[#ff0054] text-white font-bold"
                             : availableSizes.includes(size)
                             ? "bg-gray-200 cursor-pointer"
-                            : "bg-gray-500 cursor-wait"
+                            : "bg-gray-400 cursor-wait"
                         }`}
                         onClick={() => handleSizeClick(size)}
                         disabled={
