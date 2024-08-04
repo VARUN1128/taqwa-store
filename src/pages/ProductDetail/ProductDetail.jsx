@@ -20,6 +20,7 @@ import { addItem, removeItem } from "../../components/cartSlice";
 import { PiMinusCircleFill } from "react-icons/pi";
 import { PiPlusCircleFill } from "react-icons/pi";
 import { Helmet } from "react-helmet-async";
+import { addSize } from "../../components/cartSlice";
 
 const getContentType = async (url) => {
   try {
@@ -31,8 +32,6 @@ const getContentType = async (url) => {
     return null;
   }
 };
-
-import { addSize } from "../../components/cartSlice";
 
 const Slideshow = ({ slideImages }) => {
   const [mediaTypes, setMediaTypes] = useState({});
@@ -421,7 +420,7 @@ const ProductDetail = () => {
                           fontSize: "0.8em",
                           outline: availableSizes.includes(size)
                             ? null
-                            : "0.3em solid red",
+                            : "0.1em solid black",
                         }}
                         className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
                           size === selectedSize
@@ -439,7 +438,7 @@ const ProductDetail = () => {
                         {size}
                       </span>
                       {!availableSizes.includes(size) && (
-                        <div className="absolute top-1/2 left-0 w-full transform rotate-45 border-t-4 border-red-600"></div>
+                        <div className="absolute top-1/2 left-0 w-full transform rotate-45 border-t-[0.1em] border-black"></div>
                       )}
                     </div>
                   ))}
