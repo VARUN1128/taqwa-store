@@ -20,26 +20,87 @@ import { addItem, removeItem } from "../../components/cartSlice";
 import { PiMinusCircleFill } from "react-icons/pi";
 import { PiPlusCircleFill } from "react-icons/pi";
 import { Helmet } from "react-helmet-async";
+
+const getContentType = async (url) => {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    const contentType = response.headers.get('Content-Type');
+    return contentType;
+  } catch (error) {
+    console.error('Error fetching content type:', error);
+    return null;
+  }
+};
+
+
+
 const Slideshow = ({ slideImages }) => {
+  const [mediaTypes, setMediaTypes] = useState({});
+
+  useEffect(() => {
+    const fetchMediaTypes = async () => {
+      const types = {};
+      for (const url of slideImages) {
+        const contentType = await getContentType(url);
+        types[url] = contentType;
+      }
+      setMediaTypes(types);
+    };
+
+    fetchMediaTypes();
+  }, [slideImages]);
+
+  const getMediaType = (contentType) => {
+    if (contentType.startsWith('image')) {
+      return 'image';
+    } else if (contentType.startsWith('video')) {
+      return 'video';
+    } else {
+      return 'unknown';
+    }
+  };
+
   return (
     <div className="slide-container">
-      <Slide>
+      <Slide indicators={true}>
         {slideImages.map((slideImage, index) => {
+          const mediaType = getMediaType(mediaTypes[slideImage] || '');
+
           return (
             <div
               key={index}
               className="flex items-center justify-center bg-cover h-96 w-[96%] mx-auto rounded-lg bg-center bg-no-repeat mt-4 cursor-zoom-in lg:object-contain"
               style={{
-                backgroundImage: `url("${slideImage}")`,
-                boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
+                boxShadow: 'rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px',
               }}
-            ></div>
+            >
+              {mediaType === 'image' && (
+                <img
+                  src={slideImage}
+                  alt={`slide-${index}`}
+                  className="h-full w-full object-contain rounded-lg"
+                />
+              )}
+              {mediaType === 'video' && (
+                <video
+                  className="h-full w-full object-contain rounded-lg"
+                  controls
+                >
+                  <source src={slideImage} type={mediaTypes[slideImage]} />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+              {mediaType === 'unknown' && (
+                <p className="text-white">Unsupported media type</p>
+              )}
+            </div>
           );
         })}
       </Slide>
     </div>
   );
 };
+
 
 const ProductDetail = () => {
   const [product, setProduct] = React.useState({});
@@ -337,7 +398,7 @@ const ProductDetail = () => {
                             : null,
                           fontSize: "0.8em",
                         }}
-                        className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
+                        className={`inline-block w-10 h-10 font-mono items-center justify-center text-center rounded-full cursor-pointer ${
                           availableSizes.includes(size)
                             ? "bg-[#ff0054] text-white font-bold"
                             : "bg-gray-300 cursor-wait"
