@@ -48,7 +48,7 @@ const BannerSlideShow = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>; // replace with your preferred loading indicator
+    return <div></div>; // replace with your preferred loading indicator
   }
 
   return (
@@ -333,7 +333,10 @@ export default function Landing() {
         return;
       }
 
-      const { data, error } = await supabase.from("categories").select("*");
+      const { data, error } = await supabase
+        .from("categories")
+        .select("*")
+        .order("id", { ascending: true });
       if (error) {
         console.log(error);
       } else {
