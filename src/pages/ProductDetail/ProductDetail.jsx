@@ -354,20 +354,23 @@ const ProductDetail = () => {
                 {categories
                   .find((category) => category.category === product.category)
                   .sizes.map((size, index) => (
-                    <div key={index} className="items-center m-2">
+                    <div key={index} className="items-center m-2 relative">
                       <span
                         style={{
                           boxShadow: availableSizes.includes(size)
                             ? "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px"
                             : null,
                           fontSize: "0.8em",
+                          outline: availableSizes.includes(size)
+                            ? null
+                            : "0.3em solid red",
                         }}
                         className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
                           size === selectedSize
                             ? "bg-[#ff0054] text-white font-bold"
                             : availableSizes.includes(size)
                             ? "bg-gray-200 cursor-pointer"
-                            : "bg-gray-400 cursor-wait"
+                            : "bg-gray-200 cursor-wait"
                         }`}
                         onClick={() => handleSizeClick(size)}
                         disabled={
@@ -377,6 +380,9 @@ const ProductDetail = () => {
                       >
                         {size}
                       </span>
+                      {!availableSizes.includes(size) && (
+                        <div className="absolute top-1/2 left-0 w-full transform rotate-45 border-t-4 border-red-600"></div>
+                      )}
                     </div>
                   ))}
               </div>
