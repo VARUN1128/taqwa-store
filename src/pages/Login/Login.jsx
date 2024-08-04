@@ -17,6 +17,7 @@ import CapPng from "../../images/cap.png";
 import PerfumePng from "../../images/perfume.png";
 import CrocsPng from "../../images/crocs.png";
 import { TopBar } from "../Landing/Landing";
+import { PiInstagramLogoDuotone } from "react-icons/pi";
 
 export const BeforeLogin = () => {
   const navigate = useNavigate();
@@ -29,48 +30,74 @@ export const BeforeLogin = () => {
   };
 
   return (
-    <div className="flex flex-col overflow-x-hidden overflow-y-scroll">
+    <div>
       <TopBar />
-      <div
-        className="w-screen grid md:grid-cols-2 grid-rows-2 md:grid-rows-1 overflow-y-scroll overflow-x-hidden"
-        style={{ height: "calc(100vh - 60px)" }}
-      >
+      <div className="flex flex-col overflow-x-hidden">
         <div
-          className="relative bg-cover bg-center cursor-pointer transform transition duration-500 hover:scale-105 active:scale-95 h-full"
-          style={{
-            backgroundImage:
-              "url('https://ik.imagekit.io/taqwafashionstore/category/wristwatch-407096_1280.jpg')",
-            zIndex: "1001",
-          }}
-          onClick={() => delayedNavigate("/home")}
+          className="w-screen grid md:grid-cols-2 grid-rows-2 md:grid-rows-1 overflow-x-hidden"
+          style={{ height: "calc(100vh - 160px)" }} // Subtract the accurate combined height of the footer and the top bar
         >
           <div
-            className="absolute bottom-0 left-2-- m-4 text-white text-2xl"
+            className="relative bg-cover bg-center cursor-pointer transform transition duration-500 hover:scale-105 active:scale-95 h-full"
             style={{
-              fontFamily: "Grifter",
+              backgroundImage:
+                "url('https://ik.imagekit.io/taqwafashionstore/category/wristwatch-407096_1280.jpg')",
+              zIndex: "1001",
             }}
+            onClick={() => delayedNavigate("/home")}
           >
-            Fashion and Accessories
+            <div
+              className="absolute bottom-0 left-2-- m-4 text-white text-2xl"
+              style={{
+                fontFamily: "Grifter",
+              }}
+            >
+              Fashion and Accessories
+            </div>
           </div>
-        </div>
-        <div
-          className="relative bg-cover bg-center cursor-pointer transform transition duration-500 hover:scale-105 active:scale-95 h-full"
-          style={{
-            backgroundImage:
-              "url('https://ik.imagekit.io/taqwafashionstore/category/pexels-pixabay-258244.jpg')",
-            zIndex: "1001",
-          }}
-          onClick={() => delayedNavigate("/search?category=Perfumes")}
-        >
           <div
-            className="absolute bottom-20 left-2 m-4 text-white text-2xl"
+            className="relative bg-cover bg-center cursor-pointer transform transition duration-500 hover:scale-105 active:scale-95 h-full"
             style={{
-              fontFamily: "Grifter",
+              backgroundImage:
+                "url('https://ik.imagekit.io/taqwafashionstore/category/pexels-pixabay-258244.jpg')",
+              zIndex: "1001",
             }}
+            onClick={() => delayedNavigate("/search?category=Perfumes")}
           >
-            Fragrances
+            <div
+              className="absolute bottom-2 left-2 m-4 text-white text-2xl"
+              style={{
+                fontFamily: "Grifter",
+              }}
+            >
+              Fragrances
+            </div>
           </div>
         </div>
+        <footer className="bg-gray-800 text-white p-2">
+          <div className="mx-auto px-6">
+            <div className="flex justify-between items-center text-sm">
+              <div>
+                <h3 className="text-base">Contact Us</h3>
+                <p className="mt-1">Phone: +91 9496990907</p>
+                <p>
+                  Address: Shopping Complex, Amballoor - Kanjiramattom Rd,
+                  Kunnumpuram, Kanjiramattom, Kerala 682315
+                </p>
+              </div>
+              <div>
+                <a
+                  href="https://www.instagram.com/taqwa_fashionstore_ekm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-block"
+                >
+                  <PiInstagramLogoDuotone size={30} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );

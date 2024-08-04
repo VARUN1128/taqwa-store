@@ -17,6 +17,7 @@ export default function BottomNavigator({ avatarInfo }) {
   const location = useLocation();
 
   const [value, setValue] = React.useState(0);
+
   React.useEffect(() => {
     const currentPage = location.pathname;
     if (currentPage === "/home") {
@@ -28,13 +29,17 @@ export default function BottomNavigator({ avatarInfo }) {
     } else if (currentPage === "/profile") {
       setValue(3);
     } else {
-      setValue(5);
+      setValue(null); // Set the value to null or some other default value
     }
   }, [location]); // Empty dependency array means this effect runs once on mount
   const userName = avatarInfo?.name.split(" ")[0] || "Anonymous";
   const avatarPic =
     avatarInfo?.avatar_url ||
     `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
+
+  if (location.pathname === "/") {
+    return null;
+  }
 
   return (
     <div
