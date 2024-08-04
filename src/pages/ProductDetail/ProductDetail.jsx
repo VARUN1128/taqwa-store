@@ -393,7 +393,7 @@ const ProductDetail = () => {
             onClick={handleAddToCart}
             className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
           >
-            {quantity > 0 ? (
+            {localQuantity > 0 ? (
               <>
                 <PiMinusCircleFill
                   size={20}
