@@ -368,14 +368,47 @@ const ProductDetail = () => {
               />
             )}
           </div>
-          <p
-            style={{
-              color: "#ff0054",
-            }}
-            className="mt-1 mb-3 text-lg"
-          >
-            ₹ {product.price}
-          </p>
+          <div style={{ display: "flex", alignItems: "baseline" }}>
+            {product.prev_price && (
+              <p
+                style={{
+                  color: "black",
+                  marginRight: "10px",
+                  textDecoration: "line-through",
+                  opacity: 0.8,
+                }}
+                className="mt-1 mb-3 text-lg"
+              >
+                ₹ {product.prev_price}
+              </p>
+            )}
+            <p
+              style={{
+                color: "#ff0054",
+                fontWeight: "bold",
+              }}
+              className="mt-1 mb-3 text-lg"
+            >
+              ₹ {product.price}
+            </p>
+            {product.prev_price && product.prev_price > product.price && (
+              <div
+                style={{
+                  background: "#ff0054",
+                  color: "white",
+                  transform: "skew(-15deg)",
+                  padding: "5px",
+                  marginLeft: "10px",
+                }}
+              >
+                {Math.round(
+                  ((product.prev_price - product.price) / product.prev_price) *
+                    100
+                )}
+                % OFF!
+              </div>
+            )}
+          </div>
           <p>
             {product.description
               ? product.description

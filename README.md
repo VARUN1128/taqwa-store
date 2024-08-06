@@ -62,9 +62,9 @@
 - https://supabase.com/docs/guides/auth/phone-login
 - ~~Razorpay verification~~
 - Address autofill issue
-- Description
+- ~~Description~~
 - Order pay on delivery on dashboard
-- Card animation for banners
+- ~~Card animation for banners~~
 - images webp aakkanam
 - realtime on admin
 - image deletion from server

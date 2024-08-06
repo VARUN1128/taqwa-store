@@ -9,7 +9,6 @@ import WaitingSvg from "../../images/order_recieved.svg";
 import Clock from "../../components/clock";
 import NoOrder from "../../images/noOrder.svg";
 import OrderErrorSvg from "../../images/order_error.svg";
-import { ListItem } from "@mui/material";
 
 const Orders = () => {
   const { session } = useContext(SessionContext);
@@ -53,7 +52,6 @@ const Orders = () => {
       ) : (
         <div className="p-4">
           {orders.map((order, index) => (
-
             // Order Card
             <div
               key={index}
@@ -67,88 +65,74 @@ const Orders = () => {
                 <h2 className="text-base font-bold mb-2">
                   Order ID: {order.order_id}
                 </h2>
-                { order.payment_method != "COD" && (<p className="text-sm">
-                  Payment ID: {order.razorpay_payment_id}
-                </p>)}
+                {order.payment_method != "COD" && (
+                  <p className="text-sm">
+                    Payment ID: {order.razorpay_payment_id}
+                  </p>
+                )}
 
                 <p className="text-sm">
                   Payment Method:{" "}
                   <span className="font-bold">{order.payment_method}</span>
                 </p>
-                
-                <p className="text-sm">
-                  Payment Status:{" "}
-                  <span
-                    style={{
-                      color: order.status === "paid" ? "green" : "red",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {order.status === "paid"
-                      ? "Paid"
-                      : order.status === "pending"
-                      ? "Pending"
-                      : "Failed"}
-                  </span>
-                </p>
-                {order.payment_method != "COD" &&
-                 (<p className="text-sm">
-                  Order Status:{" "}
-                  <span
-                    className="font-bold"
-                    style={{
-                      color:
-                        order.order_status === "waiting"  &&
-                        order.status === "paid"
-                          ? "#f77f00"
-                          : order.order_status === "shipped"
-                          ? "blue"
-                          : order.order_status === "delivered"
-                          ? "green"
-                          : "red",
 
-                        
-                    }}
-                  >
-                    {order.order_status === "waiting" && order.status === "paid"
-                      ? "Order Recieved"
-                      : order.order_status === "shipped"
-                      ? "Order Shipped"
-                      : order.order_status === "delivered"
-                      ? "Order Delivered"
-                      : order.status !== "paid"
-                      ? "Payment Failed"
-                      : "Something went wrong. Please contact support."}
-                  </span>
-                </p>)}
+                {order.payment_method != "COD" && (
+                  <p className="text-sm">
+                    Order Status:{" "}
+                    <span
+                      className="font-bold"
+                      style={{
+                        color:
+                          order.order_status === "waiting" &&
+                          order.status === "paid"
+                            ? "#f77f00"
+                            : order.order_status === "shipped"
+                            ? "blue"
+                            : order.order_status === "delivered"
+                            ? "green"
+                            : "red",
+                      }}
+                    >
+                      {order.order_status === "waiting" &&
+                      order.status === "paid"
+                        ? "Order Recieved"
+                        : order.order_status === "shipped"
+                        ? "Order Shipped"
+                        : order.order_status === "delivered"
+                        ? "Order Delivered"
+                        : order.status !== "paid"
+                        ? "Payment Failed"
+                        : "Something went wrong. Please contact support."}
+                    </span>
+                  </p>
+                )}
 
-                {order.payment_method === "COD" &&
-                 (<p className="text-sm">
-                  Order Status:{" "}
-                  <span
-                    className="font-bold"
-                    style={{
-                      color:
-                        order.order_status === "waiting"
-                          ? "#f77f00"
-                          : order.order_status === "shipped"
-                          ? "blue"
-                          : order.order_status === "delivered"
-                          ? "green"
-                          : "red",
-                    }}
-                  >
-                    {order.order_status === "waiting"
-                      ? "Order Recieved"
-                      : order.order_status === "shipped"
-                      ? "Order Shipped"
-                      : order.order_status === "delivered"
-                      ? "Order Delivered"
-                      : "Something went wrong. Please contact support."}
-                  </span>
-                </p>  
-                  )
-                  }
+                {order.payment_method === "COD" && (
+                  <p className="text-sm">
+                    Order Status:{" "}
+                    <span
+                      className="font-bold"
+                      style={{
+                        color:
+                          order.order_status === "waiting"
+                            ? "#f77f00"
+                            : order.order_status === "shipped"
+                            ? "blue"
+                            : order.order_status === "delivered"
+                            ? "green"
+                            : "red",
+                      }}
+                    >
+                      {order.order_status === "waiting"
+                        ? "Order Recieved"
+                        : order.order_status === "shipped"
+                        ? "Order Shipped"
+                        : order.order_status === "delivered"
+                        ? "Order Delivered"
+                        : "Something went wrong. Please contact support."}
+                    </span>
+                  </p>
+                )}
                 <p className="text-sm">Amount Paid: ₹ {order.amount}</p>
                 <p className="text-sm">
                   Ordered At:{" "}
@@ -208,17 +192,41 @@ const Orders = () => {
                 )}
               </div>
               <div className="ml-4 flex justify-center items-center">
-                {order.order_status === "waiting" &&
-                  order.status === "paid" && (
-                    <img src={WaitingSvg} alt="Waiting" className="w-[8em]" />
-                  )}
-                {order.order_status === "shipped" && (
-                  <img src={ShippedSvg} alt="Shipped" className="w-[8em]" />
-                )}
-                {order.order_status === "delivered" && (
-                  <img src={DeliveredSvg} alt="Delivered" className="w-[8em]" />
-                )}
-                {order.status !== "paid" && (
+                {order.payment_method === "Razorpay" &&
+                order.razorpay_payment_id &&
+                order.razorpay_order_id ? (
+                  <>
+                    {order.order_status === "waiting" && (
+                      <img src={WaitingSvg} alt="Waiting" className="w-[8em]" />
+                    )}
+                    {order.order_status === "shipped" && (
+                      <img src={ShippedSvg} alt="Shipped" className="w-[8em]" />
+                    )}
+                    {order.order_status === "delivered" && (
+                      <img
+                        src={DeliveredSvg}
+                        alt="Delivered"
+                        className="w-[8em]"
+                      />
+                    )}
+                  </>
+                ) : order.payment_method === "COD" ? (
+                  <>
+                    {order.order_status === "waiting" && (
+                      <img src={WaitingSvg} alt="Waiting" className="w-[8em]" />
+                    )}
+                    {order.order_status === "shipped" && (
+                      <img src={ShippedSvg} alt="Shipped" className="w-[8em]" />
+                    )}
+                    {order.order_status === "delivered" && (
+                      <img
+                        src={DeliveredSvg}
+                        alt="Delivered"
+                        className="w-[8em]"
+                      />
+                    )}
+                  </>
+                ) : (
                   <img
                     src={OrderErrorSvg}
                     alt="Order Error"
