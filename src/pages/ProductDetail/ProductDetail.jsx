@@ -383,7 +383,7 @@ const ProductDetail = () => {
             {session && (
               <Like
                 checked={isInWishlist}
-                size="1em"
+                size="2em"
                 onClick={toggleWishlist}
               />
             )}
