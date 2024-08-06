@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
 import { TbMenu2 } from "react-icons/tb";
-import Marquee from "react-marquee-slider";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectTotalQuantity } from "../../components/cartSlice";
@@ -78,6 +77,7 @@ const BannerSlideShow = () => {
 
 export const TopBar = ({ avatarInfo }) => {
   const itemCount = useSelector(selectTotalQuantity);
+  const [shine, setShine] = useState(false);
 
   const [open, setOpen] = useState(false);
 
@@ -87,6 +87,15 @@ export const TopBar = ({ avatarInfo }) => {
     `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShine((prevShine) => !prevShine);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div
       style={{
@@ -109,17 +118,23 @@ export const TopBar = ({ avatarInfo }) => {
           setOpen={setOpen}
         />
       </div>
-      <img
-        src={TopLogo}
-        alt="Taqwa Logo"
-        className="h-10"
-        style={{
-          cursor: "pointer",
-        }}
-        onClick={() => {
-          window.location.href = "/home";
-        }}
-      />
+      <div
+        className={`flex justify-center items-center w-full relative ${
+          shine ? "shine" : ""
+        }`}
+      >
+        <img
+          src={TopLogo}
+          alt="Taqwa Logo"
+          className="h-10"
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            window.location.href = "/home";
+          }}
+        />
+      </div>
       <div className="flex justify-end items-center w-full relative">
         <PiShoppingCartSimpleLight
           size={30}
@@ -226,6 +241,7 @@ const ProductCard = ({
         }}
         style={{ display: thumbnailLoaded ? "block" : "none" }}
       />
+
       <div
         className="product-details mt-3 w-100 "
         style={{ display: thumbnailLoaded ? "block" : "none" }}
@@ -238,7 +254,8 @@ const ProductCard = ({
         </div>
         <p
           style={{
-            color: "#ff0054",
+            color: "black",
+            fontFamily: "Grifter",
           }}
           className=" mt-1"
         >

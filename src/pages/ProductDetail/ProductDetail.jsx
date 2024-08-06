@@ -21,6 +21,7 @@ import { PiMinusCircleFill } from "react-icons/pi";
 import { PiPlusCircleFill } from "react-icons/pi";
 import { Helmet } from "react-helmet-async";
 import { addSize } from "../../components/cartSlice";
+import { PiStarFill } from "react-icons/pi";
 
 const getContentType = async (url) => {
   try {
@@ -33,7 +34,7 @@ const getContentType = async (url) => {
   }
 };
 
-const Slideshow = ({ slideImages }) => {
+const Slideshow = ({ slideImages, rating }) => {
   const [mediaTypes, setMediaTypes] = useState({});
 
   useEffect(() => {
@@ -71,15 +72,24 @@ const Slideshow = ({ slideImages }) => {
               className="flex items-center justify-center bg-cover h-96 w-[96%] mx-auto rounded-lg bg-center bg-no-repeat mt-4 cursor-zoom-in lg:object-contain"
               style={{
                 boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
+                position: "relative",
               }}
             >
               {mediaType === "image" && (
                 <img
                   src={slideImage}
                   alt={`slide-${index}`}
-                  className="h-full w-full object-contain rounded-lg"
+                  className="h-full w-full object-cover rounded-lg"
                 />
               )}
+              <span className="absolute bottom-2 left-2 bg-white z-10 px-3 rounded-xl text-black d-flex align-items-center">
+                {rating}
+                <PiStarFill
+                  size={20}
+                  color="#FF0054"
+                  className="inline-block align-middle pb-1"
+                />
+              </span>{" "}
               {mediaType === "video" && (
                 <video
                   className="h-full w-full object-contain rounded-lg"
@@ -342,19 +352,29 @@ const ProductDetail = () => {
 
       <div className="product-detail">
         {product.images.length === 1 ? (
-          <img
-            src={product.images[0]}
-            alt=""
-            className={`w-[96%] m-auto rounded-lg mt-4 mb-3 h-96 cursor-zoom-in ${
-              isCover ? "object-cover" : "object-contain"
-            }`}
-            style={{
-              boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-            }}
-            onClick={handleImageClick}
-          />
+          <div className="relative">
+            <img
+              src={product.images[0]}
+              alt=""
+              className={`w-[96%] m-auto rounded-lg mt-4 mb-3 h-96 cursor-zoom-in ${
+                isCover ? "object-cover" : "object-contain"
+              }`}
+              style={{
+                boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
+              }}
+              onClick={handleImageClick}
+            />
+            <span className="absolute bottom-2 left-5 bg-white z-10 px-3 rounded-xl text-black d-flex align-items-center">
+              {product.avg_rating}
+              <PiStarFill
+                size={20}
+                color="#FF0054"
+                className="inline-block align-middle pb-1"
+              />
+            </span>{" "}
+          </div>
         ) : (
-          <Slideshow slideImages={product.images} />
+          <Slideshow slideImages={product.images} rating={product.avg_rating} />
         )}
 
         <div className="product-details mt-1 w-full p-4 ">
@@ -386,6 +406,7 @@ const ProductDetail = () => {
               style={{
                 color: "#ff0054",
                 fontWeight: "bold",
+                fontFamily: "Grifter",
               }}
               className="mt-1 mb-3 text-lg"
             >
@@ -399,6 +420,8 @@ const ProductDetail = () => {
                   transform: "skew(-15deg)",
                   padding: "5px",
                   marginLeft: "10px",
+                  fontFamily: "Grifter",
+                  fontSize: "1em",
                 }}
               >
                 {Math.round(
@@ -423,21 +446,6 @@ const ProductDetail = () => {
                   product.avg_rating
                 } stars by our customers.`}
           </p>
-          <span className="block mt-1 text-yellow-500">
-            {Array(Math.round(product.avg_rating))
-              .fill()
-              .map((_, index) => (
-                <AiFillStar
-                  key={index}
-                  size={20}
-                  color="#FFD700"
-                  style={{
-                    display: "inline-block",
-                    verticalAlign: "middle",
-                  }}
-                />
-              ))}
-          </span>
         </div>
         {categories &&
           categories.find(
@@ -466,26 +474,26 @@ const ProductDetail = () => {
                             : null,
                           fontSize: "0.8em",
                           outline: availableSizes.includes(size)
-                            ? null
-                            : "0.1em solid black",
+                            ? "0.05em solid black "
+                            : "0.1em solid black ",
                         }}
                         className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
                           size === selectedSize
                             ? "bg-[#ff0054] text-white font-bold"
                             : availableSizes.includes(size)
-                            ? "bg-gray-200 cursor-pointer"
-                            : "bg-gray-200 cursor-wait"
+                            ? "bg-gray-100 cursor-pointer "
+                            : "bg-gray-300 cursor-wait opacity-30"
                         }`}
                         onClick={() => handleSizeClick(size)}
                         disabled={
                           !product.available_sizes ||
                           !product.available_sizes.includes(size)
-                        } // Disable the size if it's not in product.available_sizes
+                        }
                       >
                         {size}
                       </span>
                       {!availableSizes.includes(size) && (
-                        <div className="absolute top-1/2 left-0 w-full transform rotate-45 border-t-[0.1em] border-black"></div>
+                        <div className="absolute top-1/2 left-0 w-full transform rotate-45 border-t-[0.1em] border-black opacity-30"></div>
                       )}
                     </div>
                   ))}

@@ -77,3 +77,8 @@
 - Orders admin side
 - Banner loading
 - banner order
+- image shiine
+- image size varun
+- Iphone size issue and scrolling
+- Price black
+- Category name
