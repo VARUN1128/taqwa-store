@@ -377,7 +377,7 @@ const ProductDetail = () => {
           <Slideshow slideImages={product.images} rating={product.avg_rating} />
         )}
 
-        <div className="product-details mt-1 w-full p-4 ">
+        <div className="product-details  w-full p-4 ">
           <div className="flex justify-between mb-3">
             <p className="text-2xl ">{product.name}</p>
             {session && (
@@ -388,6 +388,7 @@ const ProductDetail = () => {
               />
             )}
           </div>
+          <p className="text-sm text-gray-500 ">{product.category}</p>
           <div style={{ display: "flex", alignItems: "baseline" }}>
             {product.prev_price && (
               <p

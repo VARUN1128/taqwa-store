@@ -61,24 +61,23 @@
 - https://supabase.com/docs/guides/platform/going-into-prod
 - https://supabase.com/docs/guides/auth/phone-login
 - ~~Razorpay verification~~
-- Address autofill issue
 - ~~Description~~
-- Order pay on delivery on dashboard
+- ~~Order pay on delivery on dashboard~~
 - ~~Card animation for banners~~
-- images webp aakkanam
-- realtime on admin
-- image deletion from server
-- Admin side order page fix.
-- Order page fix
-- Description - required
+- ~~realtime on admin~~
+- ~~Admin side order page fix.~~
+- ~~Order page fix~~
+- ~~Description - required~~
+- ~~Orders admin side~~
+- ~~Order page, print thing~~
+- ~~banner order~~
+- ~~image shiine~~
+- ~~Price black~~
 - Webp
-- Order page, print thing
+- image deletion from server
+- Address autofill issue
 - Video client side test
-- Orders admin side
 - Banner loading
-- banner order
-- image shiine
 - image size varun
 - Iphone size issue and scrolling
-- Price black
 - Category name
