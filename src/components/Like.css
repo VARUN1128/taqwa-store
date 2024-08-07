@@ -21,15 +21,17 @@
   align-items: center;
 }
 
-.heart-container .svg-outline,
-.heart-container .svg-filled {
-  fill: var(--heart-color);
+.heart-container .svg-heart {
+  fill: transparent;
+  stroke: black;
+  stroke-width: 1px;
   position: absolute;
+  transition: fill 0.3s;
 }
 
-.heart-container .svg-filled {
+.heart-container .checkbox:checked ~ .svg-container .svg-heart {
+  fill: var(--heart-color);
   animation: keyframes-svg-filled 1s;
-  display: none;
 }
 
 .heart-container .svg-celebrate {
@@ -42,10 +44,6 @@
   stroke-width: 2px;
 }
 
-.heart-container .checkbox:checked ~ .svg-container .svg-filled {
-  display: block;
-}
-
 .heart-container .checkbox:checked ~ .svg-container .svg-celebrate {
   display: block;
 }
@@ -54,11 +52,9 @@
   0% {
     transform: scale(0);
   }
-
   25% {
     transform: scale(1.2);
   }
-
   50% {
     transform: scale(1);
     filter: brightness(1.5);
@@ -69,12 +65,10 @@
   0% {
     transform: scale(0);
   }
-
   50% {
     opacity: 1;
     filter: brightness(1.5);
   }
-
   100% {
     transform: scale(1.4);
     opacity: 0;

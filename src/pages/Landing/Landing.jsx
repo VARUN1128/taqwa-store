@@ -249,7 +249,11 @@ const ProductCard = ({
         <div className="flex justify-between">
           <p className=" ">{productName}</p>
           {session && (
-            <Like checked={isInWishlist} size="1em" onClick={toggleWishlist} />
+            <Like
+              checked={isInWishlist}
+              size="1.2em"
+              onClick={toggleWishlist}
+            />
           )}
         </div>
         <p

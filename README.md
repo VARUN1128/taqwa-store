@@ -81,3 +81,4 @@
 - image size varun
 - Iphone size issue and scrolling
 - Category name
+- landing
