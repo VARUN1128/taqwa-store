@@ -36,6 +36,7 @@ const getContentType = async (url) => {
 
 const Slideshow = ({ slideImages, rating }) => {
   const [mediaTypes, setMediaTypes] = useState({});
+  const [tapped, setTapped] = useState(false);
 
   useEffect(() => {
     const fetchMediaTypes = async () => {
@@ -79,7 +80,9 @@ const Slideshow = ({ slideImages, rating }) => {
                 <img
                   src={slideImage}
                   alt={`slide-${index}`}
-                  className="h-full w-full object-cover rounded-lg"
+                  className={`h-full w-full rounded-lg
+                  ${tapped ? "object-contain" : "object-cover"}`}
+                  onClick={() => setTapped(!tapped)}
                 />
               )}
               <span className="absolute bottom-2 left-2 bg-white z-10 px-3 rounded-xl text-black d-flex align-items-center">
@@ -436,7 +439,7 @@ const ProductDetail = () => {
           <p>
             {product.description
               ? product.description
-              : `Buy ${product.name} at only ${
+              : `Buy ${product.name} at only ₹${
                   product.price
                 } from Taqwa Fashion Store Before it stocks out. ${
                   product.available_sizes
