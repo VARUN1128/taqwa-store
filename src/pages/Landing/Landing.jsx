@@ -213,7 +213,7 @@ const ProductCard = ({
   return (
     <div
       onClick={handleClick}
-      className="p-3 mb-3 bg-white rounded-lg flex flex-col"
+      className="p-1 mb-3 bg-white rounded-lg flex flex-col"
       style={{
         width: "calc(50% - 2rem)", // This ensures that at least two cards are displayed in a row on small screens
         boxShadow:
@@ -243,7 +243,7 @@ const ProductCard = ({
       />
 
       <div
-        className="product-details mt-3 w-100 "
+        className="product-details mt-3 w-100 p-2"
         style={{ display: thumbnailLoaded ? "block" : "none" }}
       >
         <div className="flex justify-between">
