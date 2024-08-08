@@ -14,7 +14,7 @@ export default function SearchBar({ value }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center justify-center mt-10"
+      className="flex items-center justify-center mt-3"
       style={{ fontFamily: "Product Sans", fontSize: "1em" }}
     >
       <div className="relative m-auto w-[90%]">

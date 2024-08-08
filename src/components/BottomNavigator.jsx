@@ -75,7 +75,7 @@ export default function BottomNavigator({ avatarInfo }) {
               value === 1 ? (
                 <PiHeartFill color="#ff0054" size={25} />
               ) : (
-                <PiHeart color="#ff0054" size={25} />
+                <PiHeart size={25} />
               )
             }
             onClick={() => navigate("/wishlist")}

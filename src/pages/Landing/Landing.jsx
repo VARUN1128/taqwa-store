@@ -15,6 +15,7 @@ import supabase from "../../supabase";
 import ResponsiveContentLoader from "../../components/ResponseContentLoader";
 import { Slide } from "react-slideshow-image";
 import "./Landing.css";
+import { PiHeart } from "react-icons/pi";
 
 const properties = {
   duration: 4000,
@@ -135,7 +136,14 @@ export const TopBar = ({ avatarInfo }) => {
           }}
         />
       </div>
-      <div className="flex justify-end items-center w-full relative">
+      <div className="flex justify-end items-center w-full relative gap-2">
+        <PiHeart
+          size={30}
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            navigate("/wishlist");
+          }}
+        />
         <PiShoppingCartSimpleLight
           size={30}
           style={{ cursor: "pointer" }}
@@ -372,7 +380,7 @@ export default function Landing() {
         .from("products")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(4);
+        .limit(6);
 
       if (error) {
         console.log(error);
@@ -387,7 +395,7 @@ export default function Landing() {
         .from("products")
         .select("*")
         .order("avg_rating", { ascending: false })
-        .limit(4);
+        .limit(6);
 
       if (error) {
         console.log(error);
@@ -405,7 +413,7 @@ export default function Landing() {
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar />
 
-      <h3 className="text-xl text-left ml-4 mt-10">Categories</h3>
+      <h3 className="text-xl text-left ml-4 mt-3">Categories</h3>
       <div
         className="hide-scrollbar m-auto xl:flex xl:justify-center w-100  mt-5  scrolling-wrapper "
         style={{ width: "100%", padding: 0, margin: 0, border: 0 }}

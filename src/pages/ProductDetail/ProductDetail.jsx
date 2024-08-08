@@ -391,6 +391,9 @@ const ProductDetail = () => {
               />
             )}
           </div>
+          {product.brand && (
+            <p className="text-lg text-gray-800 ">{product.brand}</p>
+          )}
           <p className="text-sm text-gray-500 ">{product.category}</p>
           <div style={{ display: "flex", alignItems: "baseline" }}>
             {product.prev_price && (
