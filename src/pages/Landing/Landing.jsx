@@ -14,8 +14,8 @@ import TopLogo from "../../images/TAQWA.png";
 import supabase from "../../supabase";
 import ResponsiveContentLoader from "../../components/ResponseContentLoader";
 import { Slide } from "react-slideshow-image";
-import "./Landing.css";
 import { PiHeart } from "react-icons/pi";
+import "./Landing.css";
 
 const properties = {
   duration: 4000,
@@ -28,13 +28,16 @@ const properties = {
   easing: "ease",
 };
 
-const BannerSlideShow = () => {
+const BannerSlideShow = ({ location }) => {
   const [slideImages, setSlideImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchBanners = async () => {
-      const { data, error } = await supabase.from("banners").select("*");
+      const { data, error } = await supabase
+        .from("banners")
+        .select("*")
+        .eq("location", location);
       console.log("Slides", data);
       if (error) {
         console.log(error);
@@ -428,9 +431,10 @@ export default function Landing() {
         ))}
       </div>
 
-      <BannerSlideShow />
+      <BannerSlideShow location="top" />
 
       <CardList title="New Arrivals" products={newArrivals} session={session} />
+      <BannerSlideShow location="bottom" />
       <CardList title="Top Rated" products={topRated} session={session} />
     </div>
   );
