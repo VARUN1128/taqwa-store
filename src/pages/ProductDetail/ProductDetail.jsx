@@ -23,6 +23,47 @@ import { Helmet } from "react-helmet-async";
 import { addSize } from "../../components/cartSlice";
 import { PiStarFill } from "react-icons/pi";
 
+const CommentComponent = ({ comment, profilePic, userName }) => {
+  const [isReadMore, setIsReadMore] = useState(true);
+  const toggleReadMore = () => {
+    setIsReadMore(!isReadMore);
+  };
+
+  const displayText = isReadMore ? comment.slice(0, 100) : comment;
+  const isLongComment = comment.length > 100;
+
+  return (
+    <div
+      className="bg-white p-4 rounded-lg  w-[90%] mx-auto mb-4"
+      style={{
+        boxShadow:
+          " rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
+      }}
+    >
+      <div className="flex items-center space-x-4">
+        <img
+          src={profilePic}
+          alt="Profile"
+          className="w-10 h-10 rounded-full"
+        />
+        <div className="text-sm font-semibold">{userName}</div>
+      </div>
+      <div className="mt-3 text-sm text-gray-700">
+        <p className="first-letter:text-lg first-letter:font-bold">
+          {displayText}
+        </p>
+        {isLongComment && (
+          <span
+            onClick={toggleReadMore}
+            className="text-blue-500 cursor-pointer"
+          >
+            {isReadMore ? "...read more" : " show less"}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+};
 const getContentType = async (url) => {
   try {
     const response = await fetch(url, { method: "HEAD" });
@@ -113,6 +154,14 @@ const Slideshow = ({ slideImages, rating }) => {
   );
 };
 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 const ProductDetail = () => {
   const [product, setProduct] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(true);
@@ -166,6 +215,8 @@ const ProductDetail = () => {
   const productInCart = cartItems.find((item) => item.id === product.id);
   const quantity = productInCart ? productInCart.quantity : 0;
   const [localQuantity, setLocalQuantity] = useState(quantity);
+  const [comments, setComments] = useState([]);
+  const [randomComments, setRandomComments] = useState([]);
 
   // select a size by default
   useEffect(() => {
@@ -209,6 +260,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     setLocalQuantity(0);
+    setRandomComments(shuffleArray(randomComment.slice(0, 3)));
     scroll();
   }, [productId]);
 
@@ -252,6 +304,28 @@ const ProductDetail = () => {
         }
       };
 
+      // Comment section
+
+      const fetchComments = async () => {
+        const { data, error } = await supabase
+          .from("comments")
+          .select("*")
+          .eq("product_id", productId);
+
+        if (error) {
+          console.log(error);
+        }
+        console.log("Comments");
+        console.log(data);
+        if (data.length === 0) {
+          setComments([]);
+          setRandomComments(shuffleArray(randomComment.slice(0, 3)));
+        } else {
+          setComments(data);
+          setRandomComments([]);
+        }
+      };
+
       const fetchRelatedProducts = async () => {
         //exclding the current product
         const { data: relatedData, error } = await supabase
@@ -283,6 +357,7 @@ const ProductDetail = () => {
 
       fetchCategories();
       fetchRelatedProducts();
+      fetchComments();
     };
 
     fetchProduct();
@@ -580,6 +655,19 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+      <div className=" mt-4">
+        <h2 className="text-xl text-left ml-3 my-3 ">Customer Reviews</h2>
+        {comments && comments.length > 0
+          ? comments.map((comment, index) => (
+              <CommentComponent
+                key={index}
+                comment={comment.comment}
+                profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${comment.username}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+                userName={comment.username}
+              />
+            ))
+          : randomComments}
+      </div>
       {relatedProducts.length > 0 && (
         <CardList
           session={session}
@@ -590,5 +678,68 @@ const ProductDetail = () => {
     </div>
   );
 };
+
+const randomComment = [
+  <CommentComponent
+    comment="This product is amazing! The quality is top-notch and it's worth every penny."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="I've been using this for a week now and I'm really satisfied with the design. Highly recommended!"
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="Fast delivery and excellent customer service. The product itself is of high quality and easy to use."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="This is a must-have for anyone in need of this product. It's durable, reliable, and worth the investment."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="The craftsmanship on this item is incredible. You can tell a lot of care went into it."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="I'm really impressed with the durability. It's held up well even with daily use."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="This item has become a staple in my daily routine. I can't imagine going without it now."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="I've received so many compliments on this. It's a real conversation starter."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="The craftsmanship on this item is incredible. You can tell a lot of care went into it."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="I'm really impressed with the durability. It's held up well even with daily use."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="This item has become a staple in my daily routine. I can't imagine going without it now."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+  <CommentComponent
+    comment="I've received so many compliments on this. It's a real conversation starter."
+    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
+    userName="Anonymous"
+  />,
+];
 
 export default ProductDetail;
