@@ -12,41 +12,35 @@ import { useCallback } from "react";
 import useRazorpay from "react-razorpay";
 import { SiRazorpay } from "react-icons/si";
 import PaymentProcessLoadScreen from "../../components/PaymentProcessLoadScreen";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { BsCartCheckFill } from "react-icons/bs";
-
-
-
-
-
 
 function Modal({ isOpen, onClose, onConfirm }) {
   const [confirming, setConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleConfirm = async () => {
     setConfirming(true);
-    setErrorMessage('');
+    setErrorMessage("");
     try {
       const status = await onConfirm();
-      if (status === 'success') {
+      if (status === "success") {
         setConfirmed(true);
         setTimeout(() => {
           onClose();
           navigate("/orders");
-
         }, 2000);
       } else {
-        setErrorMessage('Something went wrong, please try again.');
+        setErrorMessage("Something went wrong, please try again.");
       }
     } catch (error) {
-      setErrorMessage('Something went wrong, please try again.');
+      setErrorMessage("Something went wrong, please try again.");
     } finally {
       setConfirming(false);
-    } 
+    }
   };
 
   if (!isOpen) {
@@ -71,7 +65,10 @@ function Modal({ isOpen, onClose, onConfirm }) {
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                <h3
+                  className="text-lg leading-6 font-medium text-gray-900"
+                  id="modal-title"
+                >
                   Pay on Delivery, You can track the order in Orders Page
                 </h3>
               </div>
@@ -95,20 +92,24 @@ function Modal({ isOpen, onClose, onConfirm }) {
             )}
             {confirmed && (
               <div className="flex flex-col justify-center items-center w-full">
-                <MdCheckCircleOutline style={{ color: "#10B981", fontSize: 40 }} />
-                <p className="mt-2 text-green-700 font-medium">Order Confirmed</p>
+                <MdCheckCircleOutline
+                  style={{ color: "#10B981", fontSize: 40 }}
+                />
+                <p className="mt-2 text-green-700 font-medium">
+                  Order Confirmed
+                </p>
               </div>
             )}
-          {!confirming && !confirmed &&  (  
-            <button
-              type="button"
-              className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-              onClick={onClose}
-              disabled={confirming}
-            >
-              No
-            </button>
-          )}
+            {!confirming && !confirmed && (
+              <button
+                type="button"
+                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                onClick={onClose}
+                disabled={confirming}
+              >
+                No
+              </button>
+            )}
           </div>
           {errorMessage && (
             <div className="text-center text-red-500 mt-2">{errorMessage}</div>
@@ -194,17 +195,25 @@ export default function OrderConfirm() {
   };
 
   let convenienceFees = (
-    Object.values(cart).reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    ) * 0.02
+    cart.reduce((acc, product) => {
+      return (
+        acc +
+        (product.priceMap
+          ? product.priceMap[product.size] * product.quantity
+          : product.price * product.quantity)
+      );
+    }, 0) * 0.02
   ).toFixed(2);
 
   convenienceFees = parseFloat(convenienceFees);
 
   const totalFinalPrice =
     Object.values(cart).reduce(
-      (total, item) => total + item.price * item.quantity,
+      (total, item) =>
+        total +
+        (item.priceMap
+          ? item.priceMap[item.size] * item.quantity
+          : item.price * item.quantity),
       0
     ) + convenienceFees;
 
@@ -351,7 +360,6 @@ export default function OrderConfirm() {
     console.log("New session:", session);
   }, [session]);
 
-
   const cashOnDelivey = async () => {
     const response = await axios.post(
       `${BACKEND_URL}/create-order`,
@@ -365,7 +373,6 @@ export default function OrderConfirm() {
         payment_method: "COD",
       },
       {
-
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${session.access_token}`,
@@ -380,8 +387,6 @@ export default function OrderConfirm() {
     return response.status === 200 ? "success" : "error";
   };
 
-
-
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[6em]">
       <TopPageDetail title="Confirm Order" />
@@ -389,7 +394,6 @@ export default function OrderConfirm() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={cashOnDelivey}
-        
       />
       {address.current && (
         <div className="p-4">
@@ -456,7 +460,10 @@ export default function OrderConfirm() {
               color: "#ff0054",
             }}
           >
-            ₹ {product.price * product.quantity}
+            ₹{" "}
+            {product.priceMap
+              ? product.priceMap[product.size] * product.quantity
+              : product.price * product.quantity}
           </p>
 
           <div
@@ -506,8 +513,7 @@ export default function OrderConfirm() {
           ₹ {totalFinalPrice}
         </p>
       </div>
-      {cart.reduce((total, item) => total + item.price * item.quantity, 0) >
-      0 ? (
+      {cart.length > 0 ? (
         address.current && (
           <div className="flex flex-col gap-4 p-4">
             <h1 className="text-xl font-semibold ">Choose Payment Method</h1>
@@ -571,7 +577,6 @@ export default function OrderConfirm() {
           setLoading={setLoading}
         />
       )}
-
     </div>
   );
 }

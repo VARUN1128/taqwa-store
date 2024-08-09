@@ -450,7 +450,13 @@ export const CardList = ({ title, products, session }) => {
             id={product.id}
             productName={product.name}
             rating={product.avg_rating}
-            price={product.price}
+            price={
+              product.priceMap
+                ? `${product.priceMap[Object.keys(product.priceMap)[0]]} -  ₹ ${
+                    product.priceMap[Object.keys(product.priceMap).slice(-1)]
+                  }`
+                : product.price
+            }
             thumbnail={product.images[0]}
             key={product.id}
             session={session}

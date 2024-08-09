@@ -167,6 +167,13 @@ const ProductDetail = () => {
   const quantity = productInCart ? productInCart.quantity : 0;
   const [localQuantity, setLocalQuantity] = useState(quantity);
 
+  // select a size by default
+  useEffect(() => {
+    if (availableSizes.length > 0) {
+      setSelectedSize(availableSizes[0]);
+    }
+  }, [availableSizes]);
+
   useEffect(() => {
     const productInCart = cartItems.find(
       (item) => item.id === product.id && item.size === selectedSize
@@ -417,7 +424,10 @@ const ProductDetail = () => {
               }}
               className="mt-1 mb-3 text-lg"
             >
-              ₹ {product.price}
+              ₹{" "}
+              {product.priceMap
+                ? product.priceMap[selectedSize]
+                : product.price}
             </p>
             {product.prev_price && product.prev_price > product.price && (
               <div
@@ -432,7 +442,11 @@ const ProductDetail = () => {
                 }}
               >
                 {Math.round(
-                  ((product.prev_price - product.price) / product.prev_price) *
+                  ((product.prev_price -
+                    (product.priceMap
+                      ? product.priceMap[selectedSize]
+                      : product.price)) /
+                    product.prev_price) *
                     100
                 )}
                 % OFF!
@@ -443,7 +457,9 @@ const ProductDetail = () => {
             {product.description
               ? product.description
               : `Buy ${product.name} at only ₹${
-                  product.price
+                  product.priceMap
+                    ? product.priceMap[selectedSize]
+                    : product.price
                 } from Taqwa Fashion Store Before it stocks out. ${
                   product.available_sizes
                     ? "Available sizes are: " +

@@ -90,7 +90,10 @@ const Cart = () => {
               color: "#ff0054",
             }}
           >
-            ₹ {product.price * product.quantity}
+            ₹{" "}
+            {product.priceMap
+              ? product.priceMap[product.size] * product.quantity
+              : product.price * product.quantity}
           </p>
           <div
             className="px-2 py-1 cursor-pointer rounded-lg absolute bottom-2 right-2 text-sm sm:text-base active:scale-95 transform transition-transform"
@@ -130,7 +133,14 @@ const Cart = () => {
           }}
         >
           ₹{" "}
-          {cart.reduce((total, item) => total + item.price * item.quantity, 0)}
+          {cart.reduce((acc, product) => {
+            return (
+              acc +
+              (product.priceMap
+                ? product.priceMap[product.size] * product.quantity
+                : product.price * product.quantity)
+            );
+          }, 0)}
         </p>
       </div>
       <div
