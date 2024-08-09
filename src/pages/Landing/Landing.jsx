@@ -357,6 +357,8 @@ export default function Landing() {
   const [categories, setCategories] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
   const [topRated, setTopRated] = useState([]);
+  const [mostWishlised, setMostWishlised] = useState([]);
+  const [mostOrdered, setMostOrdered] = useState([]);
   useEffect(() => {
     const fetchCategories = async () => {
       const savedCategories = localStorage.getItem("categories");
@@ -389,10 +391,65 @@ export default function Landing() {
         console.log(error);
       } else {
         setNewArrivals(data);
-        console.log(data);
+        console.log("New arr", data);
       }
     };
 
+    const fetchMostWishlisted = async () => {
+      const { data: wishlistData, error: wishlistError } = await supabase
+        .from("wishlist")
+        .select("product_id")
+        .order("product_id", { ascending: false });
+
+      if (wishlistError) {
+        console.log(wishlistError);
+      } else {
+        const productIds = Array.from(
+          new Set(wishlistData.map((item) => item.product_id))
+        ).slice(0, 6);
+        console.log("Wishlisted", productIds);
+        const { data: productData, error: productError } = await supabase
+          .from("products")
+          .select("*")
+          .in("id", productIds);
+
+        if (productError) {
+          console.log(productError);
+        } else {
+          console.log("Returned", productData);
+          setMostWishlised(productData);
+          console.log("Most wishlisted", productData);
+        }
+      }
+    };
+
+    const fetchMostOrdered = async () => {
+      const { data: wishlistData, error: wishlistError } = await supabase
+        .from("wishlist")
+        .select("product_id")
+        .order("product_id", { ascending: true });
+
+      if (wishlistError) {
+        console.log(wishlistError);
+      } else {
+        const productIds = Array.from(
+          new Set(wishlistData.map((item) => item.product_id))
+        ).slice(0, 6);
+        console.log("Wishlisted", productIds);
+        const { data: productData, error: productError } = await supabase
+          .from("products")
+          .select("*")
+          .in("id", productIds);
+
+        if (productError) {
+          console.log(productError);
+        } else {
+          console.log("Returned", productData);
+          setMostOrdered(productData);
+          console.log("Most Ordered", productData);
+        }
+      }
+    };
     const fetchTopRated = async () => {
       const { data, error } = await supabase
         .from("products")
@@ -410,6 +467,8 @@ export default function Landing() {
     fetchNewArrivals();
     fetchCategories();
     fetchTopRated();
+    fetchMostWishlisted();
+    fetchMostOrdered();
   }, []);
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em] ">
@@ -434,8 +493,16 @@ export default function Landing() {
       <BannerSlideShow location="top" />
 
       <CardList title="New Arrivals" products={newArrivals} session={session} />
-      <BannerSlideShow location="bottom" />
       <CardList title="Top Rated" products={topRated} session={session} />
+
+      <BannerSlideShow location="bottom" />
+
+      <CardList
+        title="Most Wishlisted"
+        products={mostWishlised}
+        session={session}
+      />
+      <CardList title="Most Ordered" products={mostOrdered} session={session} />
     </div>
   );
 }

@@ -22,6 +22,7 @@ import { PiPlusCircleFill } from "react-icons/pi";
 import { Helmet } from "react-helmet-async";
 import { addSize } from "../../components/cartSlice";
 import { PiStarFill } from "react-icons/pi";
+import { CiCirclePlus } from "react-icons/ci";
 
 const CommentComponent = ({ comment, profilePic, userName }) => {
   const [isReadMore, setIsReadMore] = useState(true);
@@ -222,6 +223,7 @@ const ProductDetail = () => {
   useEffect(() => {
     if (availableSizes.length > 0) {
       setSelectedSize(availableSizes[0]);
+      console.log("Test available sizes", availableSizes);
     }
   }, [availableSizes]);
 
@@ -291,6 +293,7 @@ const ProductDetail = () => {
       setProduct(data[0]);
       console.log("Product: ", data[0]);
       setavailableSizes(data[0].available_sizes || []);
+
       console.log("Available sizes", availableSizes);
       setIsLoading(false);
 
@@ -655,8 +658,9 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
-      <div className=" mt-4">
+      <div className=" mt-4 ">
         <h2 className="text-xl text-left ml-3 my-3 ">Customer Reviews</h2>
+        {session && <CiCirclePlus size={30} className="ml-auto" />}
         {comments && comments.length > 0
           ? comments.map((comment, index) => (
               <CommentComponent
