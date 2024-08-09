@@ -82,3 +82,6 @@
 - Iphone size issue and scrolling
 - Category name
 - landing
+- Ordered and WIshlisted
+- Add comment delete comment
+- height fix

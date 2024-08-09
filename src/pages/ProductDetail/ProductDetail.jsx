@@ -221,12 +221,11 @@ const ProductDetail = () => {
 
   // select a size by default
   useEffect(() => {
-    if (availableSizes.length > 0) {
+    if (product && availableSizes.length > 0) {
       setSelectedSize(availableSizes[0]);
       console.log("Test available sizes", availableSizes);
     }
-  }, [availableSizes]);
-
+  }, [availableSizes, productId]);
   useEffect(() => {
     const productInCart = cartItems.find(
       (item) => item.id === product.id && item.size === selectedSize
@@ -263,6 +262,7 @@ const ProductDetail = () => {
   useEffect(() => {
     setLocalQuantity(0);
     setRandomComments(shuffleArray(randomComment.slice(0, 3)));
+    setSelectedSize(0);
     scroll();
   }, [productId]);
 
