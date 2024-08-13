@@ -52,7 +52,11 @@ const BannerSlideShow = ({ location }) => {
   }, []);
 
   if (isLoading) {
-    return <div></div>; // replace with your preferred loading indicator
+    return (
+      <div className=" w-[96%] h-[18em] m-auto rounded-md pb-2 ">
+        <ResponsiveContentLoader height="18em" />
+      </div>
+    );
   }
 
   return (
@@ -239,7 +243,11 @@ const ProductCard = ({
         },
       }}
     >
-      {!thumbnailLoaded && <ResponsiveContentLoader />}
+      {!thumbnailLoaded && (
+        <div className=" w-[96%] h-[25em] m-auto rounded-md pb-2 ">
+          <ResponsiveContentLoader height="18em" />
+        </div>
+      )}
 
       <div className="relative">
         <img
@@ -339,7 +347,7 @@ export const CategoryCard = ({ index, category, thumbnail, loading }) => {
       key={index}
     >
       {!imageLoaded && (
-        <div className="w-[10em] h-[15em]">
+        <div className=" w-[10em] h-[15em]">
           <ResponsiveContentLoader height="15em" />
         </div>
       )}
