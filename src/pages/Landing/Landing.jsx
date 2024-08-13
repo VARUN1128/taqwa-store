@@ -16,6 +16,7 @@ import ResponsiveContentLoader from "../../components/ResponseContentLoader";
 import { Slide } from "react-slideshow-image";
 import { PiHeart } from "react-icons/pi";
 import "./Landing.css";
+import { PiStarFill } from "react-icons/pi";
 
 const properties = {
   duration: 4000,
@@ -177,6 +178,8 @@ const ProductCard = ({
   price,
   thumbnail,
   session,
+  prev_price,
+  brand,
 }) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const navigate = useNavigate();
@@ -224,12 +227,9 @@ const ProductCard = ({
   return (
     <div
       onClick={handleClick}
-      className="p-1 mb-3 bg-white rounded-lg flex flex-col"
+      className="mb-3 bg-white flex flex-col justify-between"
       style={{
-        width: "calc(50% - 2rem)", // This ensures that at least two cards are displayed in a row on small screens
-        boxShadow:
-          "rgba(14, 63, 126, 0.06) 0px 0px 0px 1px, rgba(42, 51, 70, 0.03) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 2px 2px -1px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.03) 0px 5px 5px -2.5px, rgba(42, 51, 70, 0.03) 0px 10px 10px -5px, rgba(42, 51, 70, 0.03) 0px 24px 24px -8px",
-
+        width: "calc(50% - 0.5rem)", // This ensures that at least two cards are displayed in a row on small screens
         cursor: "pointer",
         "@media (min-width: 1024px)": {
           width: "80%", // This sets the width to 80% on larger screens
@@ -241,17 +241,27 @@ const ProductCard = ({
     >
       {!thumbnailLoaded && <ResponsiveContentLoader />}
 
-      <img
-        src={thumbnail}
-        alt={productName}
-        className="w-35 h-35 object-cover rounded-lg"
-        onLoad={() => {
-          setTimeout(() => {
-            setThumbnailLoaded(true);
-          }, 1000);
-        }}
-        style={{ display: thumbnailLoaded ? "block" : "none" }}
-      />
+      <div className="relative">
+        <img
+          src={thumbnail}
+          alt={productName}
+          className="w-35 h-35 object-cover "
+          onLoad={() => {
+            setTimeout(() => {
+              setThumbnailLoaded(true);
+            }, 1000);
+          }}
+          style={{ display: thumbnailLoaded ? "block" : "none" }}
+        />
+        <span className="absolute bottom-2 left-2 bg-white z-10 px-3 rounded-xl text-black d-flex align-items-center">
+          {rating}
+          <PiStarFill
+            size={20}
+            color="#FF0054"
+            className="inline-block align-middle pb-1"
+          />
+        </span>{" "}
+      </div>
 
       <div
         className="product-details mt-3 w-100 p-2"
@@ -267,7 +277,21 @@ const ProductCard = ({
             />
           )}
         </div>
-        <p
+        {brand && <p className=" text-sm text-gray-600 ">{brand}</p>}
+        {prev_price && (
+          <span
+            style={{
+              color: "black",
+              marginRight: "10px",
+              textDecoration: "line-through",
+              opacity: 0.5,
+            }}
+            className="mt-1 mb-3 "
+          >
+            ₹ {prev_price}
+          </span>
+        )}
+        <span
           style={{
             color: "black",
             fontFamily: "Grifter",
@@ -275,26 +299,26 @@ const ProductCard = ({
           className=" mt-1"
         >
           ₹ {price}
-        </p>
-        <span className="block mt-1 text-yellow-500">
-          <span
-            style={{
-              display: "inline-block",
-              verticalAlign: "middle",
-            }}
-          >
-            {Math.round(rating)}
-          </span>
-
-          <AiFillStar
-            size={20}
-            color="#ffdb00"
-            style={{
-              display: "inline-block",
-              verticalAlign: "middle",
-            }}
-          />
         </span>
+        {prev_price &&
+          prev_price > price &&
+          !isNaN(Math.round(((prev_price - price) / prev_price) * 100)) && (
+            <span
+              style={{
+                background: "#ff0054",
+                color: "white",
+                transform: "skew(-15deg)",
+                padding: "5px",
+                marginLeft: "10px",
+                fontFamily: "Grifter",
+                fontSize: "0.7em",
+                display: "inline-block", // Add this line
+              }}
+            >
+              {Math.round(((prev_price - price) / prev_price) * 100)}% OFF!
+            </span>
+          )}
+        <span className="block mt-1 text-yellow-500"></span>
       </div>
     </div>
   );
@@ -511,12 +535,14 @@ export const CardList = ({ title, products, session }) => {
   return (
     <>
       <h3 className="text-xl text-left ml-7 mt-2">{title}</h3>
-      <div className="flex flex-wrap justify-evenly m-auto mt-5">
+      <div className="flex flex-wrap flex-grow gap-1  justify-center  m-auto mt-5">
         {products.map((product) => (
           <ProductCard
             id={product.id}
             productName={product.name}
             rating={product.avg_rating}
+            prev_price={product.prev_price}
+            brand={product.brand}
             price={
               product.priceMap
                 ? `${product.priceMap[Object.keys(product.priceMap)[0]]} -  ₹ ${

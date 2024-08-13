@@ -6,7 +6,12 @@ import { SessionContext } from "./components/SessionContext";
 import { useEffect, useState } from "react";
 import Clock from "./components/clock";
 import supabase from "./supabase";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Landing from "./pages/Landing/Landing";
 import BottomNavigator from "./components/BottomNavigator";
 import Profile from "./pages/Profile/Profile";
@@ -152,7 +157,7 @@ function App() {
                   path="/register"
                   element={session ? <Profile /> : <RegisterStart />}
                 />
-                <Route path="/" element={<BeforeLogin />} />
+                <Route path="/" element={<Navigate to="/home" />} />
               </Routes>
             </Router>
           </SessionContext.Provider>
