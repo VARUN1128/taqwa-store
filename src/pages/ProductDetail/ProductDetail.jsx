@@ -131,7 +131,7 @@ const Slideshow = ({ slideImages, rating }) => {
                 {rating}
                 <PiStarFill
                   size={20}
-                  color="#FF0054"
+                  color="#06d6a0"
                   className="inline-block align-middle pb-1"
                 />
               </span>{" "}
@@ -456,7 +456,7 @@ const ProductDetail = () => {
               {product.avg_rating}
               <PiStarFill
                 size={20}
-                color="#FF0054"
+                color="#06d6a0"
                 className="inline-block align-middle pb-1"
               />
             </span>{" "}
@@ -496,7 +496,7 @@ const ProductDetail = () => {
             )}
             <p
               style={{
-                color: "#ff0054",
+                color: "black",
                 fontWeight: "bold",
                 fontFamily: "Grifter",
               }}
@@ -510,7 +510,7 @@ const ProductDetail = () => {
             {product.prev_price && product.prev_price > product.price && (
               <div
                 style={{
-                  background: "#ff0054",
+                  background: "black",
                   color: "white",
                   transform: "skew(-15deg)",
                   padding: "5px",
@@ -580,7 +580,7 @@ const ProductDetail = () => {
                         }}
                         className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
                           size === selectedSize
-                            ? "bg-[#ff0054] text-white font-bold"
+                            ? "bg-black text-white font-bold"
                             : availableSizes.includes(size)
                             ? "bg-gray-100 cursor-pointer "
                             : "bg-gray-300 cursor-wait opacity-30"
@@ -604,7 +604,7 @@ const ProductDetail = () => {
         <div className="  product-action justify-center items-center  w-full flex m-auto gap-3">
           <div
             style={{
-              backgroundColor: "#ff0054",
+              backgroundColor: "black",
               color: "white",
               transition: "transform 0.1s",
               boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
@@ -641,18 +641,20 @@ const ProductDetail = () => {
           </div>
           <div
             style={{
-              backgroundColor: "#ff9f00",
-              color: "white",
+              backgroundColor: "white",
+              color: "black",
               transition: "transform 0.1s",
               boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+              border: "0.1em solid black",
+              textAlign: "center",
             }}
             onClick={handleBuyNow}
             className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
           >
             <HiMiniCurrencyRupee
-              size={20}
+              size={25}
               className="mr-2 inline-block align-middle"
-              color="white"
+              color="black"
             />
             Buy Item
           </div>

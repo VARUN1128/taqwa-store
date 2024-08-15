@@ -202,7 +202,7 @@ export default function SearchResults() {
           </div>
 
           {isOpen && (
-            <div className="origin-top-right outline-0 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ml-10">
+            <div className="z-10  origin-top-right outline-0 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ml-10 pl-10">
               <div
                 className="py-1"
                 role="menu"
@@ -255,7 +255,8 @@ export default function SearchResults() {
               className="text-white cursor-pointer hover:bg-blue-500 transition-colors duration-300 ease-in-out py-2 px-4 rounded-full"
               onClick={() => navigate("/home")}
               style={{
-                backgroundColor: "#3669C9",
+                backgroundColor: "black",
+                fontFamily: "Product Sans",
               }}
             >
               Go Back Home

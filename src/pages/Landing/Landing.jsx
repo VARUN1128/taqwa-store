@@ -162,7 +162,7 @@ export const TopBar = ({ avatarInfo }) => {
 
         {itemCount > 0 && (
           <div
-            className="absolute bg-[#ff0054] text-white rounded-full text-xs w-5 h-5 flex items-center justify-center cursor-pointer"
+            className="absolute bg-black text-white rounded-full text-xs w-5 h-5 flex items-center justify-center cursor-pointer"
             style={{ fontSize: "0.6rem", top: "-5px", right: "-5px" }}
             onClick={() => {
               navigate("/cart");
@@ -265,7 +265,7 @@ const ProductCard = ({
           {rating}
           <PiStarFill
             size={20}
-            color="#FF0054"
+            color="#06d6a0"
             className="inline-block align-middle pb-1"
           />
         </span>{" "}
@@ -313,7 +313,7 @@ const ProductCard = ({
           !isNaN(Math.round(((prev_price - price) / prev_price) * 100)) && (
             <span
               style={{
-                background: "#ff0054",
+                background: "black",
                 color: "white",
                 transform: "skew(-15deg)",
                 padding: "5px",

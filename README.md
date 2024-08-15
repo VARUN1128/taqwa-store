@@ -77,11 +77,33 @@
 - image deletion from server
 - Address autofill issue
 - Video client side test
-- Banner loading
 - image size varun
 - Iphone size issue and scrolling
 - Category name
-- landing
 - Ordered and WIshlisted
 - Add comment delete comment
-- height fix
+- Images
+
+```
+<LazyLoadImage
+  alt="Category Thumbnail"
+  src={thumbnail}
+  effect="blur"
+  className="object-cover rounded-lg w-[10em] h-[15em]"
+  style={{
+    display: imageLoaded ? "block" : "none",
+    boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+  }}
+  onLoad={() => {
+    setTimeout(() => {
+      setImageLoaded(true);
+    }, 300);
+  }}
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = "path/to/default/image.jpg"; // replace with your default image path
+  }}
+/>
+```
+
+https://www.sitepoint.com/five-techniques-lazy-load-images-website-performance/

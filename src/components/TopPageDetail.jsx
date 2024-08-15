@@ -90,7 +90,7 @@ export const TopProductDetail = ({ title, onCopy }) => {
           />
           {itemCount > 0 && (
             <div
-              className="absolute  bg-[#ff0054] text-white rounded-full text-xs w-5 h-5 flex items-center justify-center cursor-pointer"
+              className="absolute  bg-black text-white rounded-full text-xs w-5 h-5 flex items-center justify-center cursor-pointer"
               style={{ fontSize: "0.6rem", top: "-6px", right: "-6px" }}
               onClick={() => navigate("/cart")}
             >

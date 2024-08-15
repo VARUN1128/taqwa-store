@@ -457,7 +457,7 @@ export default function OrderConfirm() {
           <p
             className="text-lg font-semibold"
             style={{
-              color: "#ff0054",
+              color: "black",
             }}
           >
             ₹{" "}
@@ -469,7 +469,7 @@ export default function OrderConfirm() {
           <div
             className="px-2 py-1 cursor-pointer rounded-lg absolute bottom-2 right-2 text-sm sm:text-base active:scale-95 transform transition-transform"
             style={{
-              backgroundColor: "#ff0054",
+              backgroundColor: "black",
               color: "white",
               transition: "transform 0.1s",
               boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
@@ -507,7 +507,7 @@ export default function OrderConfirm() {
         <p
           className="text-2xl font-semibold"
           style={{
-            color: "#ff0054",
+            color: "black",
           }}
         >
           ₹ {totalFinalPrice}
