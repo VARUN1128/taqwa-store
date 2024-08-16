@@ -7,8 +7,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { VscGitFetch } from "react-icons/vsc";
 import { CategoryCard } from "../Landing/Landing";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
 import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
@@ -147,7 +145,7 @@ export default function SearchResults() {
 
         if (query) {
           productsQuery = productsQuery.or(
-            `name.ilike.%${query}%,category.ilike.%${query}%`
+            `name.ilike.%${query}%,category.ilike.%${query}%,brand.ilike.%${query}%`
           );
         }
 

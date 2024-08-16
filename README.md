@@ -107,3 +107,12 @@
 ```
 
 https://www.sitepoint.com/five-techniques-lazy-load-images-website-performance/
+
+## Todo
+
+Comment only for proudct add
+4 x 4 for shoes and
+Converse size as shoe
+Perfume prev price
+0 Sheriyakkanam for converse
+Add to cart not alerting

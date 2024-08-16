@@ -517,6 +517,7 @@ const ProductDetail = () => {
                   marginLeft: "10px",
                   fontFamily: "Grifter",
                   fontSize: "1em",
+                  paddingBottom: "0",
                 }}
               >
                 {Math.round(

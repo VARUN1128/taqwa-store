@@ -110,7 +110,7 @@ export const TopBar = ({ avatarInfo }) => {
       style={{
         boxShadow: "rgba(149, 157, 165, 0.2) 0px 8px 24px",
       }}
-      className="px-2 top-bar w-full h-20 flex justify-between items-center "
+      className="px-2 top-bar w-full h-16 flex justify-between items-center "
     >
       <div className="flex justify-start items-center w-full ">
         <TbMenu2
@@ -319,6 +319,7 @@ const ProductCard = ({
                 padding: "5px",
                 marginLeft: "10px",
                 fontFamily: "Grifter",
+                paddingBottom: "0",
                 fontSize: "0.7em",
                 display: "inline-block", // Add this line
               }}
@@ -326,7 +327,6 @@ const ProductCard = ({
               {Math.round(((prev_price - price) / prev_price) * 100)}% OFF!
             </span>
           )}
-        <span className="block mt-1 text-yellow-500"></span>
       </div>
     </div>
   );
