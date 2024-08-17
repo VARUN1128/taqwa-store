@@ -88,3 +88,7 @@ button {
 .card {
   display: inline-block;
 }
+
+* {
+  font-family: "Assistant", sans-serif;
+}

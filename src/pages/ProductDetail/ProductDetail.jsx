@@ -234,15 +234,18 @@ const ProductDetail = () => {
   }, [cartItems, product.id, selectedSize]);
 
   const handleAddToCart = () => {
-    if (!selectedSize && availableSizes.length > 0) {
-      toast.error("Please select a size first!");
-    } else {
-      console.log("Product added to cart");
-      setLocalQuantity(quantity + 1);
-      dispatch(addItem({ ...product, size: selectedSize }));
-      dispatch(addSize({ id: product.id, size: selectedSize }));
-      console.log(quantity);
+    console.log(availableSizes);
+
+    if (!selectedSize && availableSizes.length >= 0) {
+      availableSizes.length > 0
+        ? toast.error("Please select a size first!")
+        : toast.error("This product is not available in any size yet!");
+      return;
     }
+
+    setLocalQuantity(quantity + 1);
+    dispatch(addItem({ ...product, size: selectedSize }));
+    dispatch(addSize({ id: product.id, size: selectedSize }));
   };
   const handleIncrement = (event) => {
     event.stopPropagation();
@@ -269,13 +272,15 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   const handleBuyNow = () => {
-    if (!selectedSize && availableSizes.length > 0) {
-      toast.error("Please select a size first!");
-    } else {
-      dispatch(addItem({ ...product, size: selectedSize }));
-      dispatch(addSize({ id: product.id, size: selectedSize }));
-      navigate("/cart");
+    if (!selectedSize && availableSizes.length >= 0) {
+      availableSizes.length > 0
+        ? toast.error("Please select a size first!")
+        : toast.error("This product is not available in any size yet!");
+      return;
     }
+    dispatch(addItem({ ...product, size: selectedSize }));
+    dispatch(addSize({ id: product.id, size: selectedSize }));
+    navigate("/cart");
   };
 
   //-----------------------------------
@@ -532,7 +537,11 @@ const ProductDetail = () => {
               </div>
             )}
           </div>
-          <p>
+          <p
+            style={{
+              fontFamily: "Product Sans",
+            }}
+          >
             {product.description
               ? product.description
               : `Buy ${product.name} at only ₹${
@@ -540,7 +549,7 @@ const ProductDetail = () => {
                     ? product.priceMap[selectedSize]
                     : product.price
                 } from Taqwa Fashion Store Before it stocks out. ${
-                  product.available_sizes
+                  product.available_sizes && product.available_sizes.length > 0
                     ? "Available sizes are: " +
                       product.available_sizes.join(", ")
                     : ""
@@ -602,64 +611,80 @@ const ProductDetail = () => {
               </div>
             </div>
           )}
-        <div className="  product-action justify-center items-center  w-full flex m-auto gap-3">
-          <div
-            style={{
-              backgroundColor: "black",
-              color: "white",
-              transition: "transform 0.1s",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-            }}
-            onClick={handleAddToCart}
-            className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
-          >
-            {localQuantity > 0 ? (
-              <>
-                <PiMinusCircleFill
-                  size={20}
-                  className="mr-3 inline-block align-middle z-10"
-                  color="white"
-                  onClick={handleDecrement}
-                />
-                {localQuantity}
-                <PiPlusCircleFill
-                  size={20}
-                  className="ml-3 inline-block align-middle z-10"
-                  color="white"
-                  onClick={handleIncrement}
-                />
-              </>
-            ) : (
-              <>
-                <PiShoppingCartSimpleLight
-                  size={20}
-                  className="mr-2 inline-block align-middle"
-                  color="white"
-                />
-                Add to Cart
-              </>
-            )}
+        {product.available_sizes && product.available_sizes.length > 0 ? (
+          <div className="  product-action justify-center items-center  w-full flex m-auto gap-3">
+            <div
+              style={{
+                backgroundColor: "black",
+                color: "white",
+                transition: "transform 0.1s",
+                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+              }}
+              onClick={handleAddToCart}
+              className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
+            >
+              {localQuantity > 0 ? (
+                <>
+                  <PiMinusCircleFill
+                    size={20}
+                    className="mr-3 inline-block align-middle z-10"
+                    color="white"
+                    onClick={handleDecrement}
+                  />
+                  {localQuantity}
+                  <PiPlusCircleFill
+                    size={20}
+                    className="ml-3 inline-block align-middle z-10"
+                    color="white"
+                    onClick={handleIncrement}
+                  />
+                </>
+              ) : (
+                <>
+                  <PiShoppingCartSimpleLight
+                    size={20}
+                    className="mr-2 inline-block align-middle"
+                    color="white"
+                  />
+                  Add to Cart
+                </>
+              )}
+            </div>
+            <div
+              style={{
+                backgroundColor: "white",
+                color: "black",
+                transition: "transform 0.1s",
+                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                border: "0.1em solid black",
+                textAlign: "center",
+              }}
+              onClick={handleBuyNow}
+              className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
+            >
+              <HiMiniCurrencyRupee
+                size={25}
+                className="mr-2 inline-block align-middle"
+                color="black"
+              />
+              Buy Item
+            </div>
           </div>
+        ) : (
           <div
+            className="  product-action justify-center items-center  w-full flex m-auto gap-3"
             style={{
-              backgroundColor: "white",
-              color: "black",
-              transition: "transform 0.1s",
-              boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-              border: "0.1em solid black",
-              textAlign: "center",
+              color: "#ff0054",
+              fontFamily: "Product Sans",
             }}
-            onClick={handleBuyNow}
-            className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
           >
-            <HiMiniCurrencyRupee
-              size={25}
-              className="mr-2 inline-block align-middle"
-              color="black"
-            />
-            Buy Item
+            <span>
+              {" "}
+              This product is not available in any size yet! Please check back
+              later.
+            </span>
           </div>
-        </div>
+        )}
       </div>
       <div className=" mt-4 ">
         <h2 className="text-xl text-left ml-3 my-3 ">Customer Reviews</h2>
