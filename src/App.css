@@ -92,3 +92,25 @@ button {
 * {
   font-family: "Assistant", sans-serif;
 }
+
+.product-sans {
+  font-family: "Product Sans";
+}
+
+.assistant {
+  font-family: "Assistant", sans-serif;
+}
+
+.assistant-bold {
+  font-family: "Assistant", sans-serif;
+  font-weight: 700;
+}
+
+.assistant-light {
+  font-family: "Assistant", sans-serif;
+  font-weight: 200;
+}
+
+.grifter {
+  font-family: "Grifter";
+}

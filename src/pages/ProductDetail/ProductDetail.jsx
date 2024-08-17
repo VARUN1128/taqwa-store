@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 import Clock from "../../components/clock";
 import { CardList } from "../Landing/Landing";
 import { PiShoppingCartSimpleLight } from "react-icons/pi";
-import { HiMiniCurrencyRupee } from "react-icons/hi2";
+import { LiaRupeeSignSolid } from "react-icons/lia";
 import { SessionContext } from "../../components/SessionContext";
 import { WishlistContext } from "../../components/WishlListContext";
 import { useSelector, useDispatch } from "react-redux";
@@ -486,7 +486,23 @@ const ProductDetail = () => {
           )}
           <p className="text-sm text-gray-500 ">{product.category}</p>
           <div style={{ display: "flex", alignItems: "baseline" }}>
-            {product.prev_price && (
+            {product.category &&
+              product.category === "Perfumes" &&
+              product.prevMap && (
+                <p
+                  style={{
+                    color: "black",
+                    marginRight: "10px",
+                    textDecoration: "line-through",
+                    opacity: 0.8,
+                  }}
+                  className="mt-1 mb-3 text-lg"
+                >
+                  ₹ {product.prevMap[selectedSize]}
+                </p>
+              )}
+
+            {product.category !== "Perfumes" && product.prev_price && (
               <p
                 style={{
                   color: "black",
@@ -512,7 +528,8 @@ const ProductDetail = () => {
                 ? product.priceMap[selectedSize]
                 : product.price}
             </p>
-            {product.prev_price && product.prev_price > product.price && (
+
+            {product.category === "Perfumes" && product.prevMap && (
               <div
                 style={{
                   background: "black",
@@ -526,16 +543,41 @@ const ProductDetail = () => {
                 }}
               >
                 {Math.round(
-                  ((product.prev_price -
-                    (product.priceMap
-                      ? product.priceMap[selectedSize]
-                      : product.price)) /
-                    product.prev_price) *
+                  ((product.prevMap[selectedSize] -
+                    product.priceMap[selectedSize]) /
+                    product.prevMap[selectedSize]) *
                     100
                 )}
                 % OFF!
               </div>
             )}
+
+            {product.category !== "Perfumes" &&
+              product.prev_price &&
+              product.prev_price > product.price && (
+                <div
+                  style={{
+                    background: "black",
+                    color: "white",
+                    transform: "skew(-15deg)",
+                    padding: "5px",
+                    marginLeft: "10px",
+                    fontFamily: "Grifter",
+                    fontSize: "1em",
+                    paddingBottom: "0",
+                  }}
+                >
+                  {Math.round(
+                    ((product.prev_price -
+                      (product.priceMap
+                        ? product.priceMap[selectedSize]
+                        : product.price)) /
+                      product.prev_price) *
+                      100
+                  )}
+                  % OFF!
+                </div>
+              )}
           </div>
           <p
             style={{
@@ -662,10 +704,16 @@ const ProductDetail = () => {
               onClick={handleBuyNow}
               className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
             >
-              <HiMiniCurrencyRupee
-                size={25}
+              <LiaRupeeSignSolid
+                size={21}
                 className="mr-2 inline-block align-middle"
                 color="black"
+                style={{
+                  borderRadius: "50%",
+                  padding: "0.2em",
+                  backgroundColor: "black",
+                  color: "white",
+                }}
               />
               Buy Item
             </div>
@@ -687,7 +735,18 @@ const ProductDetail = () => {
         )}
       </div>
       <div className=" mt-4 ">
-        <h2 className="text-xl text-left ml-3 my-3 ">Customer Reviews</h2>
+        <h2 className="text-xl text-left ml-3 my-3 product-sans ">
+          Customer Reviews
+          <span
+            className="assistant-bold  block"
+            style={{
+              color: "#06d6a0",
+              fontSize: "0.6em",
+            }}
+          >
+            By Verified Buyers Only
+          </span>
+        </h2>
         {session && <CiCirclePlus size={30} className="ml-auto" />}
         {comments && comments.length > 0
           ? comments.map((comment, index) => (

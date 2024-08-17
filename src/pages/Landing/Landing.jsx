@@ -184,6 +184,7 @@ const ProductCard = ({
   session,
   prev_price,
   brand,
+  category,
 }) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const navigate = useNavigate();
@@ -286,7 +287,7 @@ const ProductCard = ({
           )}
         </div>
         {brand && <p className=" text-sm text-gray-600 ">{brand}</p>}
-        {prev_price && (
+        {prev_price && category !== "Perfumes" && (
           <span
             style={{
               color: "black",
@@ -507,7 +508,7 @@ export default function Landing() {
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar />
 
-      <h3 className="text-xl text-left ml-4 mt-3">Categories</h3>
+      <h3 className="text-xl text-left ml-4 mt-3 product-sans">Categories</h3>
       <div
         className="hide-scrollbar m-auto xl:flex xl:justify-center w-100  mt-5  scrolling-wrapper "
         style={{ width: "100%", padding: 0, margin: 0, border: 0 }}
@@ -542,7 +543,7 @@ export default function Landing() {
 export const CardList = ({ title, products, session }) => {
   return (
     <>
-      <h3 className="text-xl text-left ml-7 mt-2">{title}</h3>
+      <h3 className="text-xl text-left ml-2 mt-2 product-sans">{title}</h3>
       <div className="flex flex-wrap flex-grow gap-1  justify-center  m-auto mt-5">
         {products.map((product) => (
           <ProductCard
@@ -561,6 +562,7 @@ export const CardList = ({ title, products, session }) => {
             thumbnail={product.images[0]}
             key={product.id}
             session={session}
+            category={product.category}
           />
         ))}
       </div>
