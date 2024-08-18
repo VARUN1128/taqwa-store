@@ -114,3 +114,31 @@ button {
 .grifter {
   font-family: "Grifter";
 }
+.pred::-webkit-progress-value {
+  background-color: #ff0054;
+}
+
+.pred::-moz-progress-bar {
+  background-color: #ff0054;
+}
+
+.pgreen::-webkit-progress-value {
+  background-color: #03a685;
+}
+
+.pgreen::-moz-progress-bar {
+  background-color: #03a685;
+}
+
+.porange::-webkit-progress-value {
+  background-color: #ffa500;
+}
+
+.porange::-moz-progress-bar {
+  background-color: #ffa500;
+}
+
+.selectable {
+  cursor: pointer;
+  --webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}

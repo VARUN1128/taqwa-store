@@ -266,7 +266,7 @@ const ProductCard = ({
           {rating}
           <PiStarFill
             size={20}
-            color="#06d6a0"
+            color="#03a685"
             className="inline-block align-middle pb-1"
           />
         </span>{" "}

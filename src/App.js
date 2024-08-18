@@ -27,6 +27,7 @@ import { Helmet } from "react-helmet-async";
 import LoginStart from "./pages/Login/LoginStart";
 import RegisterStart from "./pages/Login/Register";
 import "react-toastify/dist/ReactToastify.css";
+import OrderDetail from "./pages/Orders/OrderDetail";
 
 function App() {
   const [session, setSession] = useState(null);
@@ -144,6 +145,10 @@ function App() {
                 <Route
                   path="/orders"
                   element={session ? <Orders /> : <Login />}
+                />
+                <Route
+                  path="/order/:orderId"
+                  element={session ? <OrderDetail /> : <Login />}
                 />
                 <Route
                   path="/login"

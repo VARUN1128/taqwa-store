@@ -9,6 +9,7 @@ import WaitingSvg from "../../images/order_recieved.svg";
 import Clock from "../../components/clock";
 import NoOrder from "../../images/noOrder.svg";
 import OrderErrorSvg from "../../images/order_error.svg";
+import { useNavigate } from "react-router-dom";
 
 const Orders = () => {
   const { session } = useContext(SessionContext);
@@ -16,6 +17,7 @@ const Orders = () => {
   const [showFullAddress, setShowFullAddress] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchOrders = async () => {
       setIsLoading(true);
@@ -55,14 +57,15 @@ const Orders = () => {
             // Order Card
             <div
               key={index}
-              className="bg-white rounded-lg p-6 mb-4 flex"
+              className="bg-white rounded-lg p-6 mb-4 flex cursor-pointer"
               style={{
                 boxShadow:
                   "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
               }}
+              onClick={() => navigate(`/order/${order.order_id}`)}
             >
               <div className="flex-grow">
-                <h2 className="text-base font-bold mb-2">
+                <h2 className="text-base font-bold mb-2 selectable">
                   Order ID: {order.order_id}
                 </h2>
                 {order.payment_method != "COD" && (

@@ -3,6 +3,7 @@
 ### TODO
 
 - RED: #ff0054
+- GREEN: #03a685
 - SEO
 - Complete login page
 - Icons and font alignation check on phone

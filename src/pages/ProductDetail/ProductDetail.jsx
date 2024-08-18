@@ -23,6 +23,7 @@ import { Helmet } from "react-helmet-async";
 import { addSize } from "../../components/cartSlice";
 import { PiStarFill } from "react-icons/pi";
 import { CiCirclePlus } from "react-icons/ci";
+import { HiBadgeCheck } from "react-icons/hi";
 
 const CommentComponent = ({ comment, profilePic, userName }) => {
   const [isReadMore, setIsReadMore] = useState(true);
@@ -131,7 +132,7 @@ const Slideshow = ({ slideImages, rating }) => {
                 {rating}
                 <PiStarFill
                   size={20}
-                  color="#06d6a0"
+                  color="#03a685"
                   className="inline-block align-middle pb-1"
                 />
               </span>{" "}
@@ -736,16 +737,64 @@ const ProductDetail = () => {
       </div>
       <div className=" mt-4 ">
         <h2 className="text-xl text-left ml-3 my-3 product-sans ">
-          Customer Reviews
+          Customer Ratings
           <span
             className="assistant-bold  block"
             style={{
-              color: "#06d6a0",
+              color: "#03a685",
               fontSize: "0.6em",
             }}
           >
+            <HiBadgeCheck size={20} className="inline-block mr-1 " />
             By Verified Buyers Only
           </span>
+        </h2>
+        <div
+          className="rating"
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              borderRight: "1px solid #D3D3D3 ",
+              paddingRight: "1em",
+              marginRight: "1em",
+            }}
+          >
+            <h1 className="text-7xl product-sans font-bold">
+              {product.avg_rating}
+            </h1>
+            <PiStarFill color="#03a685" size={25} className="inline" />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            {[5, 4, 3, 2, 1].map((star) => (
+              <div
+                key={star}
+                style={{ display: "flex", alignItems: "center", gap: "0.3em" }}
+              >
+                <p className="product-sans">{star}</p>
+                <PiStarFill color="#03a685" />
+                <progress
+                  className="w-full bg-gray-300 rounded-full overflow-hidden h-1 appearance-none porange"
+                  value="50"
+                  max="100"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <h2 className="text-xl text-left ml-3 my-3 product-sans ">
+          Customer Reviews{" "}
+          <span className="assistant inline">({comments.length})</span>
         </h2>
         {session && <CiCirclePlus size={30} className="ml-auto" />}
         {comments && comments.length > 0
