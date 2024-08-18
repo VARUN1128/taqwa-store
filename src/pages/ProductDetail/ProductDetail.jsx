@@ -104,6 +104,8 @@ const Slideshow = ({ slideImages, rating }) => {
     }
   };
 
+  //print user bearer token
+
   return (
     <div className="slide-container">
       <Slide indicators={true}>

@@ -8,10 +8,10 @@ import { format } from "date-fns";
 import DeliveredSvg from "../../images/order_delivered.svg";
 import ShippedSvg from "../../images/shipped.svg";
 import WaitingSvg from "../../images/order_recieved.svg";
-import NoOrder from "../../images/noOrder.svg";
 import OrderErrorSvg from "../../images/order_error.svg";
 import { PiStar } from "react-icons/pi";
 import { PiStarFill } from "react-icons/pi";
+import { ToastContainer, toast } from "react-toastify";
 
 const OrderDetail = () => {
   const { session } = useContext(SessionContext);
@@ -19,11 +19,16 @@ const OrderDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+  const [reviewProduct, setReviewProduct] = useState("");
 
   const { orderId } = useParams();
 
   const navigate = useNavigate();
-
+  useEffect(() => {
+    if (order && order.items && order.items.length > 0) {
+      setReviewProduct(order.items[0].id);
+    }
+  }, [order]);
   useEffect(() => {
     const fetchOrder = async () => {
       setIsLoading(true);
@@ -43,10 +48,48 @@ const OrderDetail = () => {
     fetchOrder();
   }, [session.user.id]);
 
+  const addReview = async () => {
+    console.log("Review:", review);
+    if (review.length < 5) {
+      toast.error("Review should be at least 5 characters long");
+      return;
+    }
+    if (rating === 0) {
+      toast.error("Please select a rating");
+      return;
+    }
+
+    const response = await fetch(
+      "https://ecvdsyezeauzidjqmpyc.supabase.co/functions/v1/add-rating",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+          product_id: reviewProduct,
+          comment: review,
+          rating: rating,
+          order_id: order.order_id,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      toast.error(data.error);
+    } else {
+      toast.success("Review added successfully");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="page">
         <TopPageDetail title="Order Details" />
+
         <div className="flex items-center justify-center h-[80vh]">
           <Clock />
         </div>
@@ -56,6 +99,7 @@ const OrderDetail = () => {
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopPageDetail title="Order Details" />
+      <ToastContainer />
       <div
         className="bg-white rounded-lg p-2 mt-4 flex flex-row justify-between max-w-[90%] mx-auto"
         style={{
@@ -140,7 +184,7 @@ const OrderDetail = () => {
             <div
               key={itemIndex}
               className="cursor-pointer mb-2"
-              onClick={() => navigate(`/product/${item.product_id}`)}
+              onClick={() => navigate(`/product/${item.id}#top`)}
             >
               <p className="text-md ">
                 Name: <span className="font-bold">{item.name}</span>
@@ -214,6 +258,19 @@ const OrderDetail = () => {
             Rate your experience with the order
           </h2>
           <div className="flex flex-col items-center justify-center m-auto">
+            <select
+              className="w-[50%] p-2 my-2 border"
+              value={reviewProduct}
+              onChange={(e) => {
+                setReviewProduct(Number(e.target.value));
+              }}
+            >
+              {order.items.map((option, optionIndex) => (
+                <option key={optionIndex} value={option.id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
             <textarea
               className="border border-gray-300 rounded-md p-2 w-[80%] h-32 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-transparent"
               placeholder="Write your review here..."
@@ -235,6 +292,13 @@ const OrderDetail = () => {
                 </span>
               ))}
             </div>
+            <button
+              className=" text-white p-2 px-5 rounded-md my-2"
+              style={{ backgroundColor: "#03a685" }}
+              onClick={addReview}
+            >
+              Submit
+            </button>
           </div>
         </div>
       )}
