@@ -117,3 +117,6 @@ Converse size as shoe
 Perfume prev price
 0 Sheriyakkanam for converse
 Add to cart not alerting
+Product card loading animation customisation
+Address fix
+later is life, checkout the comments

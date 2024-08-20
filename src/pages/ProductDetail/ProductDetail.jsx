@@ -22,10 +22,10 @@ import { PiPlusCircleFill } from "react-icons/pi";
 import { Helmet } from "react-helmet-async";
 import { addSize } from "../../components/cartSlice";
 import { PiStarFill } from "react-icons/pi";
-import { CiCirclePlus } from "react-icons/ci";
 import { HiBadgeCheck } from "react-icons/hi";
+import { getRandomComments } from "../../components/DefaultComments";
 
-const CommentComponent = ({ comment, profilePic, userName }) => {
+const CommentComponent = ({ comment, userName, rating }) => {
   const [isReadMore, setIsReadMore] = useState(true);
   const toggleReadMore = () => {
     setIsReadMore(!isReadMore);
@@ -35,25 +35,18 @@ const CommentComponent = ({ comment, profilePic, userName }) => {
   const isLongComment = comment.length > 100;
 
   return (
-    <div
-      className="bg-white p-4 rounded-lg  w-[90%] mx-auto mb-4"
-      style={{
-        boxShadow:
-          " rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",
-      }}
-    >
-      <div className="flex items-center space-x-4">
-        <img
-          src={profilePic}
-          alt="Profile"
-          className="w-10 h-10 rounded-full"
-        />
-        <div className="text-sm font-semibold">{userName}</div>
+    <div className="bg-white w-[90%] ml-2 mb-5 ">
+      <div
+        style={{
+          backgroundColor: "#03a685",
+        }}
+        className=" text-white inline-flex items-center px-2 py-1 rounded-xl"
+      >
+        <p className="text-md font-bold mr-1">{rating}</p>
+        <PiStarFill size={12} className="inline-block" />
       </div>
-      <div className="mt-3 text-sm text-gray-700">
-        <p className="first-letter:text-lg first-letter:font-bold">
-          {displayText}
-        </p>
+      <div className="mt-3 text-md text-gray-700">
+        <p className="">{displayText}</p>
         {isLongComment && (
           <span
             onClick={toggleReadMore}
@@ -62,10 +55,13 @@ const CommentComponent = ({ comment, profilePic, userName }) => {
             {isReadMore ? "...read more" : " show less"}
           </span>
         )}
+
+        <div className="text-sm  text-gray-500">{userName}</div>
       </div>
     </div>
   );
 };
+
 const getContentType = async (url) => {
   try {
     const response = await fetch(url, { method: "HEAD" });
@@ -158,14 +154,6 @@ const Slideshow = ({ slideImages, rating }) => {
   );
 };
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
-
 const ProductDetail = () => {
   const [product, setProduct] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(true);
@@ -220,9 +208,10 @@ const ProductDetail = () => {
   const quantity = productInCart ? productInCart.quantity : 0;
   const [localQuantity, setLocalQuantity] = useState(quantity);
   const [comments, setComments] = useState([]);
-  const [randomComments, setRandomComments] = useState([]);
 
-  // select a size by default
+  useEffect(() => {
+    console.log("Random comments", comments);
+  }, [comments]);
   useEffect(() => {
     if (product && availableSizes.length > 0) {
       setSelectedSize(availableSizes[0]);
@@ -267,7 +256,6 @@ const ProductDetail = () => {
 
   useEffect(() => {
     setLocalQuantity(0);
-    setRandomComments(shuffleArray(randomComment.slice(0, 3)));
     setSelectedSize(0);
     scroll();
   }, [productId]);
@@ -290,90 +278,78 @@ const ProductDetail = () => {
 
   //
   useEffect(() => {
-    const fetchProduct = async () => {
-      const { data, error } = await supabase
+    const fetchData = async () => {
+      // Fetch product
+      const { data: productData, error: productError } = await supabase
         .from("products")
         .select("*")
-        .eq("id", productId);
-      if (error) {
-        console.log(error);
-      }
-      setProduct(data[0]);
-      console.log("Product: ", data[0]);
-      setavailableSizes(data[0].available_sizes || []);
+        .eq("id", productId)
+        .single();
 
-      console.log("Available sizes", availableSizes);
+      if (productError) {
+        console.log(productError);
+        setIsLoading(false);
+        return;
+      }
+
+      setProduct(productData);
+      setavailableSizes(productData.available_sizes || []);
       setIsLoading(false);
 
-      const fetchCategories = async () => {
-        const { data, error } = await supabase.from("categories").select("*");
-        if (error) {
-          console.error("Error fetching categories: ", error);
+      // Fetch categories
+      const { data: categoriesData, error: categoriesError } = await supabase
+        .from("categories")
+        .select("*");
+      if (categoriesError) {
+        console.error("Error fetching categories: ", categoriesError);
+      } else {
+        setCategories(categoriesData);
+      }
+
+      // Fetch comments
+      const { data: commentsData, error: commentsError } = await supabase
+        .from("ratings")
+        .select("*")
+        .eq("product_id", productId);
+
+      if (commentsError) {
+        console.log(commentsError);
+      } else {
+        if (commentsData.length > 0) {
+          setComments(commentsData);
         } else {
-          setCategories(data);
-          console.log(categories);
+          const randomComment = getRandomComments(
+            productData.category,
+            productId
+          );
+          setComments(randomComment);
         }
-      };
+      }
 
-      // Comment section
+      // Fetch related products
+      const { data: relatedData, error: relatedError } = await supabase
+        .from("products")
+        .select("*")
+        .limit(10)
+        .order("category", { ascending: true })
+        .neq("id", productData.id)
+        .eq("category", productData.category);
 
-      const fetchComments = async () => {
-        const { data, error } = await supabase
-          .from("comments")
-          .select("*")
-          .eq("product_id", productId);
-
-        if (error) {
-          console.log(error);
-        }
-        console.log("Comments");
-        console.log(data);
-        if (data.length === 0) {
-          setComments([]);
-          setRandomComments(shuffleArray(randomComment.slice(0, 3)));
-        } else {
-          setComments(data);
-          setRandomComments([]);
-        }
-      };
-
-      const fetchRelatedProducts = async () => {
-        //exclding the current product
-        const { data: relatedData, error } = await supabase
-          .from("products")
-          .select("*")
-          .limit(10)
-          .order("category", { ascending: true })
-          .neq("id", data[0].id)
-          .eq("category", data[0].category);
-
-        if (error) {
-          console.log(error);
-        }
-        console.log("Related Products");
-        console.log(relatedData);
-
-        // Select 4 random products
+      if (relatedError) {
+        console.log(relatedError);
+      } else {
         const randomProducts = [];
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 4 && relatedData.length > 0; i++) {
           const randomIndex = Math.floor(Math.random() * relatedData.length);
-          if (relatedData[randomIndex]) {
-            randomProducts.push(relatedData[randomIndex]);
-            relatedData.splice(randomIndex, 1);
-          }
+          randomProducts.push(relatedData[randomIndex]);
+          relatedData.splice(randomIndex, 1);
         }
-
         setRelatedProducts(randomProducts);
-      };
-
-      fetchCategories();
-      fetchRelatedProducts();
-      fetchComments();
+      }
     };
 
-    fetchProduct();
+    fetchData();
   }, [productId]);
-
   //-----------------------------------
   // Wishlist functionality
 
@@ -777,38 +753,50 @@ const ProductDetail = () => {
               alignItems: "center",
             }}
           >
-            {[5, 4, 3, 2, 1].map((star) => (
-              <div
-                key={star}
-                style={{ display: "flex", alignItems: "center", gap: "0.3em" }}
-              >
-                <p className="product-sans">{star}</p>
-                <PiStarFill color="#03a685" />
-                <progress
-                  className="w-full bg-gray-300 rounded-full overflow-hidden h-1 appearance-none porange"
-                  value="50"
-                  max="100"
-                />
-              </div>
-            ))}
+            {[5, 4, 3, 2, 1].map((star) => {
+              const commentsForStar = comments.filter(
+                (comment) => (comment.rating || product.avg_rating) === star
+              );
+              const count = commentsForStar.length;
+
+              return (
+                <div
+                  key={star}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.3em",
+                  }}
+                >
+                  <p className="product-sans">{star}</p>
+                  <PiStarFill color="#03a685" />
+                  <progress
+                    className="w-full bg-gray-300 rounded-full overflow-hidden h-1 appearance-none pgreen"
+                    value={(count / comments.length) * 100}
+                    max="100"
+                  />
+                  <p className="product-sans">{count}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         <h2 className="text-xl text-left ml-3 my-3 product-sans ">
           Customer Reviews{" "}
-          <span className="assistant inline">({comments.length})</span>
+          <span className="assistant inline">
+            ({comments.length > 0 ? comments.length : "3"})
+          </span>
         </h2>
-        {session && <CiCirclePlus size={30} className="ml-auto" />}
-        {comments && comments.length > 0
-          ? comments.map((comment, index) => (
-              <CommentComponent
-                key={index}
-                comment={comment.comment}
-                profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${comment.username}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-                userName={comment.username}
-              />
-            ))
-          : randomComments}
+
+        {comments.map((comment, index) => (
+          <CommentComponent
+            key={index}
+            comment={comment.comment}
+            rating={comment.rating ? comment.rating : product.avg_rating}
+            userName={comment.username}
+          />
+        ))}
       </div>
       {relatedProducts.length > 0 && (
         <CardList
@@ -820,68 +808,5 @@ const ProductDetail = () => {
     </div>
   );
 };
-
-const randomComment = [
-  <CommentComponent
-    comment="This product is amazing! The quality is top-notch and it's worth every penny."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="I've been using this for a week now and I'm really satisfied with the design. Highly recommended!"
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="Fast delivery and excellent customer service. The product itself is of high quality and easy to use."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="This is a must-have for anyone in need of this product. It's durable, reliable, and worth the investment."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="The craftsmanship on this item is incredible. You can tell a lot of care went into it."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="I'm really impressed with the durability. It's held up well even with daily use."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="This item has become a staple in my daily routine. I can't imagine going without it now."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="I've received so many compliments on this. It's a real conversation starter."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="The craftsmanship on this item is incredible. You can tell a lot of care went into it."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="I'm really impressed with the durability. It's held up well even with daily use."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="This item has become a staple in my daily routine. I can't imagine going without it now."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-  <CommentComponent
-    comment="I've received so many compliments on this. It's a real conversation starter."
-    profilePic={`https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${Math.random()}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`}
-    userName="Anonymous"
-  />,
-];
 
 export default ProductDetail;
