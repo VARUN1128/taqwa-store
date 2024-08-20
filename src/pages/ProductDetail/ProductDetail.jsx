@@ -729,7 +729,13 @@ const ProductDetail = () => {
         </h2>
         <div
           className="rating"
-          style={{ display: "flex", justifyContent: "center" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            width: "50%",
+            alignItems: "center",
+            margin: "auto",
+          }}
         >
           <div
             style={{
@@ -751,6 +757,7 @@ const ProductDetail = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              width: "100%", // Add width: "100%"
             }}
           >
             {[5, 4, 3, 2, 1].map((star) => {
@@ -759,6 +766,9 @@ const ProductDetail = () => {
               );
               const count = commentsForStar.length;
 
+              const progressBarClass =
+                star >= 4 ? "pgreen" : star >= 3 ? "porange" : "pred";
+
               return (
                 <div
                   key={star}
@@ -766,15 +776,17 @@ const ProductDetail = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "0.3em",
+                    width: "100%", // Add this line
                   }}
                 >
                   <p className="product-sans">{star}</p>
                   <PiStarFill color="#03a685" />
-                  <progress
-                    className="w-full bg-gray-300 rounded-full overflow-hidden h-1 appearance-none pgreen"
-                    value={(count / comments.length) * 100}
-                    max="100"
-                  />
+                  <div className="progress-bar">
+                    <div
+                      className={`progress-bar-fill ${progressBarClass}`}
+                      style={{ width: `${(count / comments.length) * 100}%` }}
+                    />
+                  </div>
                   <p className="product-sans">{count}</p>
                 </div>
               );

@@ -142,3 +142,27 @@ button {
   cursor: pointer;
   --webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+.progress-bar {
+  width: 100%;
+  background-color: #f3f3f3;
+  border-radius: 50px;
+  overflow: hidden;
+  height: 4px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  transition: width 0.2s ease-in-out;
+}
+
+.pgreen {
+  background-color: #03a685;
+}
+
+.porange {
+  background-color: #ffa500;
+}
+
+.pred {
+  background-color: #ff0054;
+}
