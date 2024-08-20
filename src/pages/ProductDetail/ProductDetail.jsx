@@ -765,9 +765,14 @@ const ProductDetail = () => {
                 (comment) => (comment.rating || product.avg_rating) === star
               );
               const count = commentsForStar.length;
+              const percentage = (count / comments.length) * 100;
 
               const progressBarClass =
-                star >= 4 ? "pgreen" : star >= 3 ? "porange" : "pred";
+                percentage >= 50
+                  ? "pgreen"
+                  : percentage >= 25
+                  ? "porange"
+                  : "pred";
 
               return (
                 <div
@@ -776,7 +781,7 @@ const ProductDetail = () => {
                     display: "flex",
                     alignItems: "center",
                     gap: "0.3em",
-                    width: "100%", // Add this line
+                    width: "100%",
                   }}
                 >
                   <p className="product-sans">{star}</p>
@@ -784,7 +789,7 @@ const ProductDetail = () => {
                   <div className="progress-bar">
                     <div
                       className={`progress-bar-fill ${progressBarClass}`}
-                      style={{ width: `${(count / comments.length) * 100}%` }}
+                      style={{ width: `${percentage}%` }}
                     />
                   </div>
                   <p className="product-sans">{count}</p>
