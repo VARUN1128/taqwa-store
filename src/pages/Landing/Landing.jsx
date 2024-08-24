@@ -17,6 +17,7 @@ import { Slide } from "react-slideshow-image";
 import { PiHeart } from "react-icons/pi";
 import "./Landing.css";
 import { PiStarFill } from "react-icons/pi";
+import axios from "axios";
 
 const properties = {
   duration: 4000,
@@ -429,33 +430,24 @@ export default function Landing() {
     };
 
     const fetchMostWishlisted = async () => {
-      const { data: wishlistData, error: wishlistError } = await supabase
-        .from("wishlist")
-        .select("product_id")
-        .order("product_id", { ascending: false });
+      try {
+        const response = await axios.post(
+          "http://127.0.0.1:54321/functions/v1/fetch-wishlisted",
+          { limit: 6 },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      if (wishlistError) {
-        console.log(wishlistError);
-      } else {
-        const productIds = Array.from(
-          new Set(wishlistData.map((item) => item.product_id))
-        ).slice(0, 6);
-        console.log("Wishlisted", productIds);
-        const { data: productData, error: productError } = await supabase
-          .from("products")
-          .select("*")
-          .in("id", productIds);
-
-        if (productError) {
-          console.log(productError);
-        } else {
-          console.log("Returned", productData);
-          setMostWishlised(productData);
-          console.log("Most wishlisted", productData);
-        }
+        console.log("Most Wishlisted", response.data.data);
+        setMostWishlised(response.data.data);
+      } catch (error) {
+        setMostWishlised([]);
+        console.error(error);
       }
     };
-
     const fetchMostOrdered = async () => {
       const { data: wishlistData, error: wishlistError } = await supabase
         .from("wishlist")

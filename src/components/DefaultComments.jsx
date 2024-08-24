@@ -72,7 +72,7 @@ export const comments = {
       rating: 5,
     },
   ],
-  Watches: [
+  Watch: [
     {
       username: "ChronoCraft",
       comment: "This watch is very elegant.",

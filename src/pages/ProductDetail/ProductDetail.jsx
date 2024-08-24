@@ -747,8 +747,9 @@ const ProductDetail = () => {
               marginRight: "1em",
             }}
           >
-            <h1 className="text-7xl product-sans font-bold">
+            <h1 className="text-7xl product-sans font-bold ">
               {product.avg_rating}
+              {/* {(comments.reduce((acc, comment) => acc + comment.rating, 0) / comments.length).toFixed(1)} */}
             </h1>
             <PiStarFill color="#03a685" size={25} className="inline" />
           </div>
