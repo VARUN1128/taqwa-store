@@ -119,10 +119,16 @@ export default function AddAddress() {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
+    console.log(data);
     const address = {
       ...data,
-      country: "India",
-      state: selectedState ? selectedState.value : "Kerala",
+      name: data.name.toUpperCase(),
+      phone: data.phone,
+      address: data.address.toUpperCase(),
+      zip: data.zip,
+      city: data.city.toUpperCase(),
+      country: "INDIA",
+      state: selectedState ? selectedState.value.toUpperCase() : "KERALA",
     };
     const { error } = await supabase
       .from("users")
@@ -169,62 +175,81 @@ export default function AddAddress() {
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopPageDetail title="Add Address" />
       <form onSubmit={handleSubmit(onSubmit)} className="p-4">
-        {/* name, phone number email */}
         <input
           type="text"
           placeholder="Name"
-          {...register("name", { required: true })}
+          name="name"
+          autoComplete="name"
+          {...register("name", {
+            required: "Name is required",
+            minLength: {
+              value: 2,
+              message: "Name must be at least 2 characters long",
+            },
+          })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
-          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
-          onBlur={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
+
         {errors.name && (
-          <span className="text-red-500">This field is required</span>
+          <span className="text-red-500">{errors.name.message}</span>
         )}
+
         <input
-          type="number"
+          type="tel"
           placeholder="Phone Number"
-          {...register("phone", { required: true })}
+          name="phone"
+          autoComplete="tel"
+          {...register("phone", {
+            required: "Phone number is required",
+          })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
-          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
-        />{" "}
+        />
         {errors.phone && (
-          <span className="text-red-500">This field is required</span>
+          <span className="text-red-500">{errors.phone.message}</span>
         )}
-        {/* address, city, country, state */}
+
         <input
           type="text"
           placeholder="Address"
-          {...register("address", { required: true })}
+          name="address"
+          autoComplete="street-address"
+          {...register("address", { required: "Address is required" })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
-          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
-          onBlur={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.address && (
-          <span className="text-red-500">This field is required</span>
+          <span className="text-red-500">{errors.address.message}</span>
         )}
+
         <input
           type="number"
+          name="zip"
           placeholder="Zip Code"
-          {...register("zip", { required: true })}
+          autoComplete="postal-code"
+          {...register("zip", {
+            required: "Zip code is required",
+            pattern: {
+              value: /^\d{6}$/,
+              message: "Please enter a valid 6-digit zip code",
+            },
+          })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
-          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
-          onBlur={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.zip && (
-          <span className="text-red-500">This field is required</span>
+          <span className="text-red-500">{errors.zip.message}</span>
         )}
+
         <input
           type="text"
+          name="city"
           placeholder="City"
-          {...register("city", { required: true })}
+          autoComplete="address-level2"
+          {...register("city", { required: "City is required" })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
-          onChange={(e) => (e.target.value = e.target.value.toUpperCase())}
-          onBlur={(e) => (e.target.value = e.target.value.toUpperCase())}
         />
         {errors.city && (
-          <span className="text-red-500">This field is required</span>
+          <span className="text-red-500">{errors.city.message}</span>
         )}
+
         <Select
           options={countries}
           value={selectedCountry}
@@ -234,8 +259,9 @@ export default function AddAddress() {
           defaultInputValue="India"
         />
         {errors.country && (
-          <span className="text-red-500">This field is required</span>
+          <span className="text-red-500">{errors.country.message}</span>
         )}
+
         <Select
           options={states}
           value={selectedState}
@@ -248,8 +274,9 @@ export default function AddAddress() {
           defaultInputValue="Kerala"
         />
         {errors.state && (
-          <span className="text-red-500">This field is required</span>
+          <span className="text-red-500">{errors.state.message}</span>
         )}
+
         <div
           style={{
             backgroundColor: "#ff9f00",
