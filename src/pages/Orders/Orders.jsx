@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 const Orders = () => {
   const { session } = useContext(SessionContext);
   const [orders, setOrders] = useState([]);
-  const [showFullAddress, setShowFullAddress] = useState(false);
+
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -34,6 +34,7 @@ const Orders = () => {
       setIsLoading(false);
     };
     fetchOrders();
+    console.log(orders);
   }, [session]);
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
@@ -70,17 +71,6 @@ const Orders = () => {
                 </h2>
                 {order.payment_method != "COD" && (
                   <p className="text-sm">
-                    Payment ID: {order.razorpay_payment_id}
-                  </p>
-                )}
-
-                <p className="text-sm">
-                  Payment Method:{" "}
-                  <span className="font-bold">{order.payment_method}</span>
-                </p>
-
-                {order.payment_method != "COD" && (
-                  <p className="text-sm">
                     Order Status:{" "}
                     <span
                       className="font-bold"
@@ -109,7 +99,6 @@ const Orders = () => {
                     </span>
                   </p>
                 )}
-
                 {order.payment_method === "COD" && (
                   <p className="text-sm">
                     Order Status:{" "}
@@ -136,63 +125,33 @@ const Orders = () => {
                     </span>
                   </p>
                 )}
-                <p className="text-sm">Amount Paid: ₹ {order.amount}</p>
                 <p className="text-sm">
-                  Ordered At:{" "}
-                  {format(new Date(order.created_at), "do MMM yyyy")}
+                  Amount Paid: ₹ <b>{order.amount}</b>
                 </p>
                 <h3 className="text-base font-bold mt-4 mb-2">Items:</h3>
                 {order.items.map((item, itemIndex) => (
-                  <div key={itemIndex}>
-                    <p className="text-sm ">
-                      Name: <span className="font-bold">{item.name}</span>
-                    </p>
-                    <p className="text-sm ">
-                      Quantity:{" "}
-                      <span className="font-bold">{item.quantity}</span>
-                    </p>
-                    {item.size && (
+                  <div key={itemIndex} className="flex items-center gap-2 mb-2">
+                    <img
+                      src={item.images[0]}
+                      alt={item.name}
+                      className="w-16"
+                    />
+                    <div>
                       <p className="text-sm ">
-                        Size: <span className="font-bold">{item.size}</span>
+                        Name: <span className="font-bold">{item.name}</span>
                       </p>
-                    )}
+                      <p className="text-sm ">
+                        Quantity:{" "}
+                        <span className="font-bold">{item.quantity}</span>
+                      </p>
+                      {item.size && (
+                        <p className="text-sm ">
+                          Size: <span className="font-bold">{item.size}</span>
+                        </p>
+                      )}
+                    </div>
                   </div>
                 ))}
-                {order.address && (
-                  <>
-                    <h3 className="text-base font-bold mt-4 mb-2">
-                      Delivery Address:
-                    </h3>
-                    <p className="text-sm">Name: {order.address.name}</p>
-                    <p className="text-sm">Phone: {order.address.phone}</p>
-                    {showFullAddress ? (
-                      <>
-                        <p className="text-sm">
-                          Address: {order.address.address}
-                        </p>
-                        <p className="text-sm">City: {order.address.city}</p>
-                        <p className="text-sm">State: {order.address.state}</p>
-                        <p className="text-sm">Zip: {order.address.zip}</p>
-                        <p className="text-sm">
-                          Country: {order.address.country}
-                        </p>
-                        <button
-                          onClick={() => setShowFullAddress(false)}
-                          className="text-blue-500"
-                        >
-                          View Less
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => setShowFullAddress(true)}
-                        className="text-blue-500"
-                      >
-                        View More
-                      </button>
-                    )}
-                  </>
-                )}
               </div>
               <div className="ml-4 flex justify-center items-center">
                 {order.payment_method === "Razorpay" &&

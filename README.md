@@ -76,14 +76,7 @@
 - ~~Price black~~
 - Webp
 - image deletion from server
-- Address autofill issue
 - Video client side test
-- image size varun
-- Iphone size issue and scrolling
-- Category name
-- Ordered and WIshlisted
-- Add comment delete comment
-- Images
 
 ```
 <LazyLoadImage
@@ -109,14 +102,3 @@
 
 https://www.sitepoint.com/five-techniques-lazy-load-images-website-performance/
 
-## Todo
-
-Comment only for proudct add
-4 x 4 for shoes and
-Converse size as shoe
-Perfume prev price
-0 Sheriyakkanam for converse
-Add to cart not alerting
-Product card loading animation customisation
-Address fix
-later is life, checkout the comments

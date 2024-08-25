@@ -19,6 +19,8 @@ import "./Landing.css";
 import { PiStarFill } from "react-icons/pi";
 import axios from "axios";
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_ORDER_URL;
+
 const properties = {
   duration: 4000,
   transitionDuration: 500,
@@ -432,7 +434,7 @@ export default function Landing() {
     const fetchMostWishlisted = async () => {
       try {
         const response = await axios.post(
-          "http://127.0.0.1:54321/functions/v1/fetch-wishlisted",
+          `${BACKEND_URL}/fetch-wishlisted`,
           { limit: 6 },
           {
             headers: {
