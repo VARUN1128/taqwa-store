@@ -7,63 +7,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { VscGitFetch } from "react-icons/vsc";
 import { CategoryCard } from "../Landing/Landing";
-
-import { styled } from "@mui/material/styles";
-import Switch from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import subBrands from "../../components/staticSubCats";
 import { BiMenuAltRight } from "react-icons/bi";
-
-const IOSSwitch = styled((props) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-))(({ theme }) => ({
-  width: 42,
-  height: 26,
-  padding: 0,
-  marginRight: "0.3em",
-  "& .MuiSwitch-switchBase": {
-    padding: 0,
-    margin: 2,
-    transitionDuration: "300ms",
-    "&.Mui-checked": {
-      transform: "translateX(16px)",
-      color: "#fff",
-      "& + .MuiSwitch-track": {
-        backgroundColor: theme.palette.mode === "dark" ? "#ff0054" : "#ff0054",
-        opacity: 1,
-        border: 0,
-      },
-      "&.Mui-disabled + .MuiSwitch-track": {
-        opacity: 0.5,
-      },
-    },
-    "&.Mui-focusVisible .MuiSwitch-thumb": {
-      color: "#ff0054",
-      border: "6px solid #fff",
-    },
-    "&.Mui-disabled .MuiSwitch-thumb": {
-      color:
-        theme.palette.mode === "light"
-          ? theme.palette.grey[100]
-          : theme.palette.grey[600],
-    },
-    "&.Mui-disabled + .MuiSwitch-track": {
-      opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
-    },
-  },
-  "& .MuiSwitch-thumb": {
-    boxSizing: "border-box",
-    width: 22,
-    height: 22,
-  },
-  "& .MuiSwitch-track": {
-    borderRadius: 26 / 2,
-    backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
-    opacity: 1,
-    transition: theme.transitions.create(["background-color"], {
-      duration: 500,
-    }),
-  },
-}));
 
 export default function SearchResults() {
   const { session } = useContext(SessionContext);
@@ -75,8 +20,51 @@ export default function SearchResults() {
   const [hasFetched, setHasFetched] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState("");
 
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchBrand = async () => {
+      setIsFetching(true);
+      setLoading(true);
+      setProducts([]);
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("brand_categ", selectedBrand)
+        .eq("category", category)
+        .order(
+          sortOption.split("_")[0] === "rating"
+            ? "avg_rating"
+            : sortOption.split("_")[0],
+          {
+            ascending: sortOption.endsWith("asc"),
+          }
+        )
+        .range(page * itemsPerPage, (page + 1) * itemsPerPage - 1);
+
+      if (error) {
+        console.log(error);
+      }
+      setProducts((prevProducts) => {
+        const newProducts = data.filter(
+          (newProduct) =>
+            !prevProducts.some(
+              (prevProduct) => prevProduct.id === newProduct.id
+            )
+        );
+        return [...prevProducts, ...newProducts];
+      });
+      setLoading(false);
+      setHasFetched(true);
+      setIsFetching(false);
+    };
+
+    if (selectedBrand) {
+      fetchBrand();
+    }
+  }, [selectedBrand]);
 
   const options = [
     { value: "price_asc", label: "Price: Low to High" },
@@ -183,24 +171,42 @@ export default function SearchResults() {
   //   setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   // };
   return (
-    <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
+    <div className="page overflow-y-auto hide-scrollbar pb-[5em] overflow-x-hidden">
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar value={query && `${query}`} />
       {products.length > 0 && (
-        <div className="relative m-auto inline-block outline-0 mt-4">
-          <div>
-            <button
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              className="ml-10 inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 outline-0"
-            >
-              {selectedOption}
-              <BiMenuAltRight className="ml-2 h-5 w-5" />
-            </button>
+        <div className="relative mt-3">
+          <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar">
+            <div className="relative inline-block outline-0 ml-3">
+              <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 outline-0 whitespace-nowrap"
+              >
+                {selectedOption}
+                <BiMenuAltRight className="ml-2 h-5 w-5" />
+              </button>
+            </div>
+            {subBrands[category] && subBrands[category].length > 0 && (
+              <div className="flex items-center gap-3 justify-evenly mr-2">
+                {subBrands[category].map((brand) => (
+                  <span
+                    key={brand}
+                    className={`cursor-pointer px-3 py-1 rounded-3xl border  whitespace-nowrap ${
+                      selectedBrand === brand
+                        ? "border-blue-500 text-blue-800 "
+                        : "border-gray-300"
+                    }`}
+                    onClick={() => setSelectedBrand(brand)}
+                  >
+                    {brand}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
-
           {isOpen && (
-            <div className="z-10  origin-top-right outline-0 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ml-10 pl-10">
+            <div className="z-10 origin-top-left absolute left-3 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
               <div
                 className="py-1"
                 role="menu"
@@ -215,7 +221,7 @@ export default function SearchResults() {
                       setSelectedOption(option.label);
                       setIsOpen(false);
                     }}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                     role="menuitem"
                   >
                     {option.label}
@@ -266,13 +272,7 @@ export default function SearchResults() {
           <CardList
             session={session}
             products={products}
-            title={
-              query
-                ? `Search results for "${query}"`
-                : category
-                ? `Search results for "${category}"`
-                : "All Products"
-            }
+            title={query && `Search results for "${query}"`}
           />
 
           <div className="flex justify-center mt-5">
