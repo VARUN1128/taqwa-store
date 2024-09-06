@@ -47,6 +47,7 @@ export default function SearchResults() {
       if (error) {
         console.log(error);
       }
+      console.log("Data: ", data);
       setProducts((prevProducts) => {
         const newProducts = data.filter(
           (newProduct) =>
@@ -63,6 +64,7 @@ export default function SearchResults() {
 
     if (selectedBrand) {
       fetchBrand();
+      console.log("Selected Brand: ", selectedBrand);
     }
   }, [selectedBrand]);
 
@@ -174,7 +176,7 @@ export default function SearchResults() {
     <div className="page overflow-y-auto hide-scrollbar pb-[5em] overflow-x-hidden">
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar value={query && `${query}`} />
-      {products.length > 0 && (
+      {
         <div className="relative mt-3">
           <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar">
             <div className="relative inline-block outline-0 ml-3">
@@ -183,7 +185,7 @@ export default function SearchResults() {
                 onClick={() => setIsOpen(!isOpen)}
                 className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500 outline-0 whitespace-nowrap"
               >
-                {selectedOption}
+                FILTER
                 <BiMenuAltRight className="ml-2 h-5 w-5" />
               </button>
             </div>
@@ -231,7 +233,7 @@ export default function SearchResults() {
             </div>
           )}
         </div>
-      )}
+      }
       {!isFetching && hasFetched && products.length === 0 ? (
         <>
           <div className="mt-20 relative">
