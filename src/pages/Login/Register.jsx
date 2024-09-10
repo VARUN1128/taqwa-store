@@ -19,9 +19,13 @@ import CapPng from "../../images/cap.png";
 import PerfumePng from "../../images/perfume.png";
 import CrocsPng from "../../images/crocs.png";
 import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
+import { AiOutlineRightCircle } from "react-icons/ai";
 
 export default function RegisterStart() {
   const [loading, setLoading] = React.useState(false);
+  const [otpSent, setOtpSent] = React.useState(true);
+
+  const [phoneNumber, setPhoneNumber] = useState(""); // Add state for the phone number
 
   async function register() {
     setLoading(true);
@@ -156,38 +160,50 @@ export default function RegisterStart() {
             position: "relative", // Remove absolute positioning
           }}
         />
-        <input
-          type="number"
-          placeholder="Phone Number"
-          className="  z-20  cont-google-btn px-5 w-[22em] mb-3 py-4 text-black bg-white rounded-2xl text-xs  border-2 border-black outline-none"
-          style={{
-            position: "relative", // Remove absolute positioning
-          }}
-        />
+        <div style={{ position: "relative" }}>
+          <input
+            type="number"
+            placeholder="Phone Number"
+            value={phoneNumber} // Set the value to the phone number state
+            onChange={(e) => setPhoneNumber(e.target.value)} // Update the state when the input changes
+            className="z-20 cont-google-btn px-5 w-[22em] mb-3 py-4 text-black bg-white rounded-2xl text-xs border-2 border-black outline-none"
+            style={{
+              paddingRight: "30px", // Add padding to make room for the icon
+            }}
+            onClick={() => setOtpSent(false)}
+          />
+
+          {phoneNumber.length === 10 && ( // Only show the icon when the phone number length is 10
+            <AiOutlineRightCircle
+              size={25}
+              style={{
+                position: "absolute", // Position the icon absolutely
+                top: "50%", // Center it vertically
+                right: "10px", // Position it to the right
+                transform: "translateY(-65%)", // Adjust this value to move the icon up or down
+                cursor: "pointer", // Add a pointer cursor
+              }}
+              onClick={() => {
+                setOtpSent(true);
+              }}
+            />
+          )}
+        </div>
+
         <input
           type="number"
           placeholder="OTP"
-          className="z-20  cont-google-btn px-5 w-[22em]  py-4 text-blac bg-white rounded-2xl text-xs  border-2 border-black outline-none"
+          className={`z-20  cont-google-btn px-5 w-[22em]   py-4 text-black bg-white rounded-2xl text-xs  border-2 ${
+            otpSent ? "border-black" : "border-gray-300"
+          } outline-none`}
           style={{
             position: "relative", // Remove absolute positioning
           }}
+          disabled={!otpSent}
         />
-        <div className=" mb-10 flex justify-between text-center w-[22em] text-xs text-black">
-          <span
-            className="text-blue-500 cursor-pointer"
-            onClick={() => navigate("/loginStart")}
-          >
-            Already have an account?
-          </span>
-          <span
-            className="text-blue-500 cursor-pointer"
-            onClick={() => navigate("/home")}
-          >
-            Continue without login
-          </span>{" "}
-        </div>
+
         <span
-          className="flex justify-center items-center gap-2 cont-google-btn  absolute bottom-2 px-16 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap border-2 border-black"
+          className=" mt-5 flex justify-center items-center gap-2 cont-google-btn  absolute bottom-2 px-16 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap border-2 border-black"
           onClick={register}
           style={{
             zIndex: "10",
@@ -205,6 +221,20 @@ export default function RegisterStart() {
           )}
           Register
         </span>
+        <div className=" mb-10 flex justify-between text-center w-[22em] text-xs text-black">
+          <span
+            className="text-blue-500 cursor-pointer"
+            onClick={() => navigate("/loginStart")}
+          >
+            Already have an account?
+          </span>
+          <span
+            className="text-blue-500 cursor-pointer"
+            onClick={() => navigate("/home")}
+          >
+            Continue without login
+          </span>{" "}
+        </div>
       </div>
     </div>
   );

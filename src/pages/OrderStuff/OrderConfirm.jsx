@@ -16,7 +16,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { BsCartCheckFill } from "react-icons/bs";
 
-function Modal({ isOpen, onClose, onConfirm }) {
+function Modal({ isOpen, onClose, onConfirm, cod_charge }) {
   const [confirming, setConfirming] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -69,7 +69,8 @@ function Modal({ isOpen, onClose, onConfirm }) {
                   className="text-lg leading-6 font-medium text-gray-900"
                   id="modal-title"
                 >
-                  Pay on Delivery, You can track the order in Orders Page
+                  Cash on Delivery Charge: ₹ {cod_charge}.<br></br> You can
+                  track the order in Orders Page
                 </h3>
               </div>
             </div>
@@ -217,6 +218,10 @@ export default function OrderConfirm() {
       0
     ) + convenienceFees;
 
+  const cod_charge = Object.values(cart).reduce(
+    (total, item) => total + (item.cod_price ? item.cod_price : 0),
+    0
+  );
   const createOrder = async () => {
     console.log("Address", address.current);
     const response = await axios.post(
@@ -394,6 +399,7 @@ export default function OrderConfirm() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={cashOnDelivey}
+        cod_charge={cod_charge}
       />
       {address.current && (
         <div className="p-4">
@@ -513,6 +519,9 @@ export default function OrderConfirm() {
           ₹ {totalFinalPrice}
         </p>
       </div>
+      <span className="ml-4 text-xs">
+        Cash On Delivery Charge: ₹ {cod_charge}
+      </span>
       {cart.length > 0 ? (
         address.current && (
           <div className="flex flex-col gap-4 p-4">
@@ -535,7 +544,7 @@ export default function OrderConfirm() {
                 className="mr-2 inline-block align-middle"
                 color="white"
               />
-              <span>Pay on Delivery</span>
+              <span>Cash on Delivery</span>
             </div>
             <div
               style={{

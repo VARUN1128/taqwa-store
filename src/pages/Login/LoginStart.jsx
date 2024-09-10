@@ -19,11 +19,14 @@ import CapPng from "../../images/cap.png";
 import PerfumePng from "../../images/perfume.png";
 import CrocsPng from "../../images/crocs.png";
 import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
-import { AiFillGoogleCircle } from "react-icons/ai";
+import { AiFillGoogleCircle, AiOutlineRightCircle } from "react-icons/ai";
 const url = new URL(window.origin).href;
 
 export default function LoginStart() {
   const [loading, setLoading] = React.useState(false);
+  const [otpSent, setOtpSent] = React.useState(true);
+
+  const [phoneNumber, setPhoneNumber] = useState(""); // Add state for the phone number
 
   async function signIn() {
     setLoading(true);
@@ -153,23 +156,66 @@ export default function LoginStart() {
         >
           Walk out in style
         </span>
+        <div style={{ position: "relative" }}>
+          <input
+            type="number"
+            placeholder="Phone Number"
+            value={phoneNumber} // Set the value to the phone number state
+            onChange={(e) => setPhoneNumber(e.target.value)} // Update the state when the input changes
+            className="z-20 cont-google-btn px-5 w-[22em] mb-3 py-4 text-black bg-white rounded-2xl text-xs border-2 border-black outline-none"
+            style={{
+              paddingRight: "30px", // Add padding to make room for the icon
+            }}
+            onClick={() => setOtpSent(false)}
+          />
 
-        <input
-          type="number"
-          placeholder="Phone Number"
-          className="  z-20  cont-google-btn px-5 w-[22em] mb-3 py-4 text-black bg-white rounded-2xl text-xs  border-2 border-black outline-none"
-          style={{
-            position: "relative", // Remove absolute positioning
-          }}
-        />
+          {phoneNumber.length === 10 && ( // Only show the icon when the phone number length is 10
+            <AiOutlineRightCircle
+              size={25}
+              style={{
+                position: "absolute", // Position the icon absolutely
+                top: "50%", // Center it vertically
+                right: "10px", // Position it to the right
+                transform: "translateY(-65%)", // Adjust this value to move the icon up or down
+                cursor: "pointer", // Add a pointer cursor
+              }}
+              onClick={() => {
+                setOtpSent(true);
+              }}
+            />
+          )}
+        </div>
         <input
           type="number"
           placeholder="OTP"
-          className="z-20  cont-google-btn px-5 w-[22em]   py-4 text-blac bg-white rounded-2xl text-xs  border-2 border-black outline-none"
+          className={`z-20  cont-google-btn px-5 w-[22em]   py-4 text-black bg-white rounded-2xl text-xs  border-2 ${
+            otpSent ? "border-black" : "border-gray-300"
+          } outline-none`}
           style={{
             position: "relative", // Remove absolute positioning
           }}
+          disabled={!otpSent}
         />
+
+        <span
+          className=" mt-5 flex justify-center items-center gap-2 cont-google-btn  absolute bottom-2 px-16 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap border-2 border-black"
+          onClick={signIn}
+          style={{
+            zIndex: "10",
+            position: "relative",
+            boxShadow:
+              "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
+          }}
+        >
+          {loading ? (
+            <CircularProgress style={{ color: "black" }} size={18} />
+          ) : (
+            <>
+              <IoLogIn style={{ display: "block" }} size={23} color="black" />
+            </>
+          )}
+          Login
+        </span>
         <div className=" mb-5  text-center w-[22em] text-xs text-black">
           Don't have an account?{" "}
           <span
@@ -191,25 +237,6 @@ export default function LoginStart() {
             onClick={signInGoogle}
           />
         </div>
-        <span
-          className="flex justify-center items-center gap-2 cont-google-btn  absolute bottom-2 px-16 py-4 text-blac bg-white rounded-2xl font-bold cursor-pointer text-xs flex-no-wrap border-2 border-black"
-          onClick={signIn}
-          style={{
-            zIndex: "10",
-            position: "relative",
-            boxShadow:
-              "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
-          }}
-        >
-          {loading ? (
-            <CircularProgress style={{ color: "black" }} size={18} />
-          ) : (
-            <>
-              <IoLogIn style={{ display: "block" }} size={23} color="black" />
-            </>
-          )}
-          Login
-        </span>
       </div>
     </div>
   );

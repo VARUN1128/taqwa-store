@@ -29,6 +29,7 @@ const OrderDetail = () => {
       setReviewProduct(order.items[0].id);
     }
   }, [order]);
+
   useEffect(() => {
     const fetchOrder = async () => {
       setIsLoading(true);
@@ -47,6 +48,11 @@ const OrderDetail = () => {
     };
     fetchOrder();
   }, [session.user.id]);
+
+  const cod_charge = Object.values(order.items).reduce(
+    (total, item) => total + (item.cod_price ? item.cod_price : 0),
+    0
+  );
 
   const addReview = async () => {
     console.log("Review:", review);
@@ -175,7 +181,12 @@ const OrderDetail = () => {
               </span>
             </p>
           )}
-          <p className="text-md">Amount Paid: ₹ {order.amount}</p>
+          <p className="text-md">
+            {order.payment_method === "COD"
+              ? "Amount to be Paid: "
+              : "Amount Paid: "}
+            ₹ {order.amount + cod_charge}
+          </p>
           <p className="text-md">
             Ordered At: {format(new Date(order.created_at), "do MMM yyyy")}
           </p>

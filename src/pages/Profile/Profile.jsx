@@ -13,10 +13,10 @@ const Profile = () => {
   const { session } = useContext(SessionContext);
   const [loading, setLoading] = React.useState(false);
   const avatarInfo = session?.user.user_metadata;
-  const userName = avatarInfo?.name || "Anonymous";
+  const userName = avatarInfo?.name || "Account";
   const avatarPic =
     avatarInfo?.avatar_url ||
-    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
+    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=292929`;
   const avatarEmail = avatarInfo?.email;
 
   const navigate = useNavigate();

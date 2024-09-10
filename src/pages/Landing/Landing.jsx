@@ -93,10 +93,10 @@ export const TopBar = ({ avatarInfo }) => {
 
   const [open, setOpen] = useState(false);
 
-  const userName = avatarInfo?.name.split(" ")[0] || "Anonymous";
+  const userName = avatarInfo?.name.split(" ")[0] || "Account";
   const avatarPic =
     avatarInfo?.avatar_url ||
-    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=ff0054`;
+    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=000000`;
 
   const navigate = useNavigate();
 
