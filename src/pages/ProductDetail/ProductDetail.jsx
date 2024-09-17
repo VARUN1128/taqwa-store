@@ -574,7 +574,7 @@ const ProductDetail = () => {
                     ? "Available sizes are: " +
                       product.available_sizes.join(", ")
                     : ""
-                } . The product is rated ${
+                } The product is rated ${
                   product.avg_rating
                 } stars by our customers.`}
           </p>
