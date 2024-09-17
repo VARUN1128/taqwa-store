@@ -50,13 +50,13 @@
 - Realtime on admins orders
 - ~~Size chart~~
 - ~~Category card scrolling~~
-Implement a stock system
-Show the available items on the item page
-IF item is not available and stock = 0 then show that and also a grayed out
-Check funcitonality of stock counter in admin panel
-Server side updation of stock counter. A db function for that
-Perfumes, multiple stocks implementations
-Check the quantity bug
+  Implement a stock system
+  Show the available items on the item page
+  IF item is not available and stock = 0 then show that and also a grayed out
+  Check funcitonality of stock counter in admin panel
+  Server side updation of stock counter. A db function for that
+  Perfumes, multiple stocks implementations
+  Check the quantity bug
 
 ## Changes made to supabase
 
@@ -80,9 +80,6 @@ Check the quantity bug
 - ~~banner order~~
 - ~~image shiine~~
 - ~~Price black~~
-- Webp
-- image deletion from server
-- Video client side test
 
 ```
 <LazyLoadImage
@@ -108,3 +105,17 @@ Check the quantity bug
 
 https://www.sitepoint.com/five-techniques-lazy-load-images-website-performance/
 
+Stock system
+For products with sizes, the sizes are the stock
+and for others, the stock is the stock
+they could manually turn the stocks to 0
+and also switch the sizes to set stocks
+this is much more simple
+also simple for offline buying
+stock online can also be updated by admin side, if required, which is a future system
+Also ensure to include the image addition warning
+
+- Webp
+- image deletion from server
+- Video client side test
+- DB side security too

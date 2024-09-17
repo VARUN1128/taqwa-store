@@ -17,6 +17,7 @@ import { Slide } from "react-slideshow-image";
 import { PiHeart } from "react-icons/pi";
 import "./Landing.css";
 import { PiStarFill } from "react-icons/pi";
+import SoldOut from "../../images/sold_out.png";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_ORDER_URL;
@@ -188,6 +189,7 @@ const ProductCard = ({
   prev_price,
   brand,
   category,
+  stock,
 }) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const navigate = useNavigate();
@@ -248,12 +250,15 @@ const ProductCard = ({
       }}
     >
       {!thumbnailLoaded && (
-        <div className=" w-[96%] h-[25em] m-auto rounded-md pb-2 ">
+        <div className=" w-[96%] h-[20em] m-auto rounded-md pb-2 ">
           <ResponsiveContentLoader height="18em" />
         </div>
       )}
 
       <div className="relative">
+        {stock === 0 && thumbnailLoaded && (
+          <img src={SoldOut} className="absolute z-10" />
+        )}
         <img
           src={thumbnail}
           alt={productName}
@@ -263,7 +268,21 @@ const ProductCard = ({
               setThumbnailLoaded(true);
             }, 1000);
           }}
-          style={{ display: thumbnailLoaded ? "block" : "none" }}
+          style={{
+            display: thumbnailLoaded ? "block" : "none",
+            filter:
+              thumbnailLoaded && stock === 0
+                ? "grayscale(100%) blur(1px)"
+                : "none",
+            msFilter:
+              thumbnailLoaded && stock === 0
+                ? "grayscale(100%) blur(1px)"
+                : "none",
+            WebkitFilter:
+              thumbnailLoaded && stock === 0
+                ? "grayscale(100%) blur(1px)"
+                : "none",
+          }}
         />
         <span className="absolute bottom-2 left-2 bg-white z-10 px-3 rounded-xl text-black d-flex align-items-center">
           {rating}
@@ -557,6 +576,7 @@ export const CardList = ({ title, products, session }) => {
             key={product.id}
             session={session}
             category={product.category}
+            stock={product.stock}
           />
         ))}
       </div>
