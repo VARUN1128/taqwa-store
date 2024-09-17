@@ -50,7 +50,13 @@
 - Realtime on admins orders
 - ~~Size chart~~
 - ~~Category card scrolling~~
-- Clock
+Implement a stock system
+Show the available items on the item page
+IF item is not available and stock = 0 then show that and also a grayed out
+Check funcitonality of stock counter in admin panel
+Server side updation of stock counter. A db function for that
+Perfumes, multiple stocks implementations
+Check the quantity bug
 
 ## Changes made to supabase
 

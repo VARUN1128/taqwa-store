@@ -1,4 +1,81 @@
 export const comments = {
+  Wallets: [
+    {
+      username: "NimbusLeather",
+      comment: "This wallet is sleek and durable.",
+      rating: 5,
+    },
+    {
+      username: "VelvetPouch",
+      comment: "I love the compact design, perfect for everyday use.",
+      rating: 4,
+    },
+    {
+      username: "EchoWallet",
+      comment: "Holds all my cards and cash with ease.",
+      rating: 5,
+    },
+    {
+      username: "LunarFold",
+      comment: "Stylish and functional, highly recommend.",
+      rating: 4,
+    },
+    {
+      username: "StellarPurse",
+      comment: "The leather feels premium and soft.",
+      rating: 5,
+    },
+    {
+      username: "ZenCash",
+      comment: "It fits perfectly in my pocket without being bulky.",
+      rating: 4,
+    },
+    {
+      username: "AetherCard",
+      comment: "Amazing quality, very satisfied with this wallet.",
+      rating: 5,
+    },
+    {
+      username: "OrbitWallet",
+      comment: "Perfect balance between design and functionality.",
+      rating: 4,
+    },
+    {
+      username: "PulseFold",
+      comment: "This wallet looks classy and is super practical.",
+      rating: 5,
+    },
+    {
+      username: "QuasarPouch",
+      comment: "The best wallet I’ve ever owned!",
+      rating: 5,
+    },
+    {
+      username: "ShadowCard",
+      comment: "Very durable and stylish, great for everyday use.",
+      rating: 4,
+    },
+    {
+      username: "WaveWallet",
+      comment: "I love how organized it keeps all my essentials.",
+      rating: 5,
+    },
+    {
+      username: "RetroFold",
+      comment: "Simple, sleek, and super functional.",
+      rating: 4,
+    },
+    {
+      username: "SwiftPouch",
+      comment: "Lightweight and great for travel.",
+      rating: 5,
+    },
+    {
+      username: "NebulaLeather",
+      comment: "This wallet exceeded my expectations in every way.",
+      rating: 5,
+    },
+  ],
   Shoes: [
     {
       username: "NimbusWalker",
