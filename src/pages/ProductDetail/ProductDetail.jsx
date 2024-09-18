@@ -208,6 +208,7 @@ const ProductDetail = () => {
   const quantity = productInCart ? productInCart.quantity : 0;
   const [localQuantity, setLocalQuantity] = useState(quantity);
   const [comments, setComments] = useState([]);
+  const [categoryType, setCategoryType] = useState("");
 
   useEffect(() => {
     console.log("Random comments", comments);
@@ -226,13 +227,26 @@ const ProductDetail = () => {
   }, [cartItems, product.id, selectedSize]);
 
   const handleAddToCart = () => {
-    console.log("Handling add to cart");
-    console.log(availableSizes);
-
     if (!selectedSize && availableSizes.length > 0) {
       console.log(availableSizes);
       availableSizes.length > 0 && toast.error("Please select a size first!");
       return;
+    }
+
+    if (categoryType.stock_map_required) {
+      if (localQuantity >= product.stockMap[selectedSize]) {
+        toast.error(
+          `Available stock is ${product.stockMap[selectedSize]}. You already added ${localQuantity} items to the cart.`
+        );
+        return;
+      }
+    } else {
+      if (localQuantity >= product.stock) {
+        toast.error(
+          `Available stock is ${product.stock}. You already added ${localQuantity} items to the cart.`
+        );
+        return;
+      }
     }
 
     setLocalQuantity(quantity + 1);
@@ -240,8 +254,24 @@ const ProductDetail = () => {
     dispatch(addItem({ ...product, size: selectedSize }));
     dispatch(addSize({ id: product.id, size: selectedSize }));
   };
+
   const handleIncrement = (event) => {
     event.stopPropagation();
+    if (categoryType.stock_map_required) {
+      if (localQuantity >= product.stockMap[selectedSize]) {
+        toast.error(
+          `Available stock is ${product.stockMap[selectedSize]}. You already added ${localQuantity} items to the cart.`
+        );
+        return;
+      }
+    } else {
+      if (localQuantity >= product.stock) {
+        toast.error(
+          `Available stock is ${product.stock}. You already added ${localQuantity} items to the cart.`
+        );
+        return;
+      }
+    }
     setLocalQuantity(quantity + 1);
     dispatch(addItem({ ...product, size: selectedSize }));
   };
@@ -269,8 +299,17 @@ const ProductDetail = () => {
       toast.error("Please select a size first!");
       return;
     }
-    console.log("Buy now");
-    dispatch(addItem({ ...product, size: selectedSize }));
+
+    if (categoryType.stock_map_required) {
+      if (localQuantity < product.stockMap[selectedSize]) {
+        dispatch(addItem({ ...product, size: selectedSize }));
+      }
+    } else {
+      if (localQuantity < product.stock) {
+        dispatch(addItem({ ...product, size: selectedSize }));
+      }
+    }
+
     dispatch(addSize({ id: product.id, size: selectedSize }));
     navigate("/cart");
   };
@@ -305,6 +344,12 @@ const ProductDetail = () => {
         console.error("Error fetching categories: ", categoriesError);
       } else {
         setCategories(categoriesData);
+        setCategoryType(
+          categoriesData.find(
+            (category) => category.category === productData.category
+          )
+        );
+        console.log("This is the category", categoryType);
       }
 
       // Fetch comments
