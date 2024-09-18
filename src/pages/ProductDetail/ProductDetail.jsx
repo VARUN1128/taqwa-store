@@ -625,71 +625,149 @@ const ProductDetail = () => {
                 } stars by our customers.`}
           </p>
         </div>
-        {categories &&
-          categories.find(
-            (category) => category.category === product.category
-          ) &&
-          categories.find((category) => category.category === product.category)
-            .sizes &&
-          categories.find((category) => category.category === product.category)
-            .sizes.length > 0 && (
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2 text-center"
-                htmlFor="size"
-              >
-                Available Sizes
-              </label>
-              <div className="pb-2 flex flex-row justify-center align-middle items-center overflow-x-auto flex-wrap">
-                {categories
-                  .find((category) => category.category === product.category)
-                  .sizes.map((size, index) => (
-                    <div key={index} className="items-center m-2 relative">
-                      <span
-                        style={{
-                          boxShadow: availableSizes.includes(size)
-                            ? "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px"
-                            : null,
-                          fontSize: "0.8em",
-                          outline: availableSizes.includes(size)
-                            ? "0.05em solid black "
-                            : "0.1em solid black ",
-                        }}
-                        className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
-                          size === selectedSize
-                            ? "bg-black text-white font-bold"
-                            : availableSizes.includes(size)
-                            ? "bg-gray-100 cursor-pointer "
-                            : "bg-gray-300 cursor-wait opacity-30"
-                        }`}
-                        onClick={() => handleSizeClick(size)}
-                        disabled={
-                          !product.available_sizes ||
-                          !product.available_sizes.includes(size)
-                        }
-                      >
-                        {size}
-                      </span>
-                      {!availableSizes.includes(size) && (
-                        <div className="absolute top-1/2 left-0 w-full transform rotate-45 border-t-[0.1em] border-black opacity-30"></div>
-                      )}
-                    </div>
-                  ))}
-              </div>
+        {categoryType.sizes && categoryType.sizes.length > 0 && (
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2 text-center"
+              htmlFor="size"
+            >
+              Available Sizes
+            </label>
+            <div className="pb-2 flex flex-row justify-center align-middle items-center overflow-x-auto flex-wrap">
+              {categories
+                .find((category) => category.category === product.category)
+                .sizes.map((size, index) => (
+                  <div key={index} className="items-center m-2 relative">
+                    <span
+                      style={{
+                        boxShadow: availableSizes.includes(size)
+                          ? "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px"
+                          : null,
+                        fontSize: "0.8em",
+                        outline: availableSizes.includes(size)
+                          ? "0.05em solid black "
+                          : "0.1em solid black ",
+                      }}
+                      className={`inline-block w-10 h-10 font-mono  flex items-center justify-center text-center rounded-full cursor-pointer ${
+                        size === selectedSize
+                          ? "bg-black text-white font-bold"
+                          : availableSizes.includes(size)
+                          ? "bg-gray-100 cursor-pointer "
+                          : "bg-gray-300 cursor-wait opacity-30"
+                      }`}
+                      onClick={() => handleSizeClick(size)}
+                      disabled={
+                        !product.available_sizes ||
+                        !product.available_sizes.includes(size)
+                      }
+                    >
+                      {size}
+                    </span>
+                    {!availableSizes.includes(size) && (
+                      <div className="absolute top-1/2 left-0 w-full transform rotate-45 border-t-[0.1em] border-black opacity-30"></div>
+                    )}
+                  </div>
+                ))}
             </div>
-          )}
-        {product.stock && product.stock > 0 ? (
-          categories &&
-          categories.find(
-            (category) => category.category === product.category
-          ) &&
-          categories.find((category) => category.category === product.category)
-            .sizes &&
-          categories.find((category) => category.category === product.category)
-            .sizes.length > 0 ? (
-            product.available_sizes && product.available_sizes.length > 0 ? (
-              // if product is in stock and available in some sizes and the category has sizes available for the product category then show the add to cart and buy now buttons with the size selection options
-              <div className="  product-action justify-center items-center  w-full flex m-auto gap-3">
+          </div>
+        )}
+        <div>
+          {categoryType.stock_map_required ? (
+            product.stockMap && product.stockMap[selectedSize] > 0 ? (
+              <>
+                {/* Display buttons when stockMap has available stock */}
+                <div className="product-action justify-center items-center w-full flex m-auto gap-3">
+                  <div
+                    style={{
+                      backgroundColor: "black",
+                      color: "white",
+                      transition: "transform 0.1s",
+                      boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                    }}
+                    onClick={handleAddToCart}
+                    className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
+                  >
+                    {localQuantity > 0 ? (
+                      <>
+                        <PiMinusCircleFill
+                          size={20}
+                          className="mr-3 inline-block align-middle z-10"
+                          color="white"
+                          onClick={handleDecrement}
+                        />
+                        {localQuantity}
+                        <PiPlusCircleFill
+                          size={20}
+                          className="ml-3 inline-block align-middle z-10"
+                          color="white"
+                          onClick={handleIncrement}
+                          style={{
+                            display:
+                              localQuantity >= product.stockMap[selectedSize]
+                                ? "none"
+                                : "inline",
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <PiShoppingCartSimpleLight
+                          size={20}
+                          className="mr-2 inline-block align-middle"
+                          color="white"
+                        />
+                        Add to Cart
+                      </>
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      backgroundColor: "white",
+                      color: "black",
+                      transition: "transform 0.1s",
+                      boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                      border: "0.1em solid black",
+                      textAlign: "center",
+                    }}
+                    onClick={handleBuyNow}
+                    className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
+                  >
+                    <LiaRupeeSignSolid
+                      size={21}
+                      className="mr-2 inline-block align-middle"
+                      color="black"
+                      style={{
+                        borderRadius: "50%",
+                        padding: "0.2em",
+                        backgroundColor: "black",
+                        color: "white",
+                      }}
+                    />
+                    Buy Item
+                  </div>
+                </div>
+                {product.stockMap[selectedSize] < 10 && (
+                  <div className="m-auto product-sans text-red-500 text-center mt-4">
+                    Hurry Up! Only <b>{product.stockMap[selectedSize]}</b> left!
+                  </div>
+                )}
+              </>
+            ) : (
+              // Sold out message if stockMap has no available stock
+              <div
+                className="product-action justify-center items-center w-full flex m-auto gap-3"
+                style={{
+                  color: "#ff0054",
+                  fontFamily: "Product Sans",
+                }}
+              >
+                <span>Product has been sold out. Please check back later.</span>
+              </div>
+            )
+          ) : product.stock > 0 ? (
+            <>
+              {/* Display buttons when general stock is available */}
+              <div className="product-action justify-center items-center w-full flex m-auto gap-3">
                 <div
                   style={{
                     backgroundColor: "black",
@@ -714,6 +792,10 @@ const ProductDetail = () => {
                         className="ml-3 inline-block align-middle z-10"
                         color="white"
                         onClick={handleIncrement}
+                        style={{
+                          display:
+                            localQuantity >= product.stock ? "none" : "inline",
+                        }}
                       />
                     </>
                   ) : (
@@ -753,100 +835,25 @@ const ProductDetail = () => {
                   Buy Item
                 </div>
               </div>
-            ) : (
-              // if product is in stock and the category has sizes available for the product category but the product is not available in any size
-              <div
-                className="product-action justify-center items-center w-full flex m-auto gap-3"
-                style={{
-                  color: "#ff0054",
-                  fontFamily: "Product Sans",
-                }}
-              >
-                <span>
-                  Product is not available in any sizes. Please check back
-                  later.
-                </span>
-              </div>
-            )
+              {product.stock < 10 && (
+                <div className="m-auto product-sans text-red-500 text-center mt-4">
+                  Hurry Up! Only <b>{product.stock}</b> left!
+                </div>
+              )}
+            </>
           ) : (
-            // if product is in stock but the category does not have sizes available for the product category then show the add to cart and buy now buttons with the size selection options
-            <div className="  product-action justify-center items-center  w-full flex m-auto gap-3">
-              <div
-                style={{
-                  backgroundColor: "black",
-                  color: "white",
-                  transition: "transform 0.1s",
-                  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-                }}
-                onClick={handleAddToCart}
-                className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
-              >
-                {localQuantity > 0 ? (
-                  <>
-                    <PiMinusCircleFill
-                      size={20}
-                      className="mr-3 inline-block align-middle z-10"
-                      color="white"
-                      onClick={handleDecrement}
-                    />
-                    {localQuantity}
-                    <PiPlusCircleFill
-                      size={20}
-                      className="ml-3 inline-block align-middle z-10"
-                      color="white"
-                      onClick={handleIncrement}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <PiShoppingCartSimpleLight
-                      size={20}
-                      className="mr-2 inline-block align-middle"
-                      color="white"
-                    />
-                    Add to Cart
-                  </>
-                )}
-              </div>
-              <div
-                style={{
-                  backgroundColor: "white",
-                  color: "black",
-                  transition: "transform 0.1s",
-                  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-                  border: "0.1em solid black",
-                  textAlign: "center",
-                }}
-                onClick={handleBuyNow}
-                className="px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
-              >
-                <LiaRupeeSignSolid
-                  size={21}
-                  className="mr-2 inline-block align-middle"
-                  color="black"
-                  style={{
-                    borderRadius: "50%",
-                    padding: "0.2em",
-                    backgroundColor: "black",
-                    color: "white",
-                  }}
-                />
-                Buy Item
-              </div>
+            // Sold out message if general stock is unavailable
+            <div
+              className="product-action justify-center items-center w-full flex m-auto gap-3"
+              style={{
+                color: "#ff0054",
+                fontFamily: "Product Sans",
+              }}
+            >
+              <span>Product has been sold out. Please check back later.</span>
             </div>
-          )
-        ) : (
-          // if product is not in stock
-          <div
-            className="product-action justify-center items-center w-full flex m-auto gap-3"
-            style={{
-              color: "#ff0054",
-              fontFamily: "Product Sans",
-            }}
-          >
-            <span>Product has been sold out. Please check back later.</span>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <div className=" mt-4 ">
         <h2 className="text-xl text-left ml-3 my-3 product-sans ">

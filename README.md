@@ -124,3 +124,4 @@ Also ensure to include the image addition warning
   Stock bug check
   Multiple size scenario check
   COD and amount to be paid
+  Stock remaining tell and gray out the + icon
