@@ -27,7 +27,7 @@ const OrderDetail = () => {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [reviewProduct, setReviewProduct] = useState("");
-
+  const [cod_charge, setCodCharge] = useState(0);
   const { orderId } = useParams();
 
   const navigate = useNavigate();
@@ -54,6 +54,14 @@ const OrderDetail = () => {
       }
     };
     fetchOrder();
+    if (order && order.payment_method === "COD") {
+      const ordercod_charge = Object.values(order.items).reduce(
+        (total, item) => total + (item.cod_price ? item.cod_price : 0),
+        0
+      );
+      setCodCharge(ordercod_charge);
+      console.log("COD Charge:", ordercod_charge);
+    }
   }, [session.user.id]);
 
   const addReview = async () => {
@@ -187,7 +195,7 @@ const OrderDetail = () => {
             {order.payment_method === "COD"
               ? "Amount to be Paid: "
               : "Amount Paid: "}
-            ₹ <b> {order && order.amount}</b>
+            ₹ <b> {order.amount}</b>
           </p>
           <p className="text-md">
             Ordered At: {format(new Date(order.created_at), "do MMM yyyy")}
