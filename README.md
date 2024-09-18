@@ -122,6 +122,6 @@ Also ensure to include the image addition warning
   Decrementation shouldnt be allowed to be less than 0
   Order shouldnt be created if decrementation limit is reached
   Stock bug check
-  Multiple size scenario check
-  COD and amount to be paid
-  Stock remaining tell and gray out the + icon
+  Convinience no need if cod
+  Actual amount to be paid should be updated in the db if COD, along with cod_charge
+  Reciept if recieved

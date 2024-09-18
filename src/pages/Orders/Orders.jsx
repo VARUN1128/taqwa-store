@@ -11,6 +11,13 @@ import NoOrder from "../../images/noOrder.svg";
 import OrderErrorSvg from "../../images/order_error.svg";
 import { useNavigate } from "react-router-dom";
 
+const displayCodCharge = (cartItems) => {
+  return Object.values(cartItems).reduce(
+    (total, item) => total + (item.cod_price ? item.cod_price : 0),
+    0
+  );
+};
+
 const Orders = () => {
   const { session } = useContext(SessionContext);
   const [orders, setOrders] = useState([]);
@@ -126,8 +133,17 @@ const Orders = () => {
                   </p>
                 )}
                 <p className="text-sm">
-                  Amount Paid: ₹ <b>{order.amount}</b>
+                  {order.payment_method == "COD"
+                    ? "Amount to be Paid: "
+                    : "Amount Paid:"}{" "}
+                  ₹ <b>{order.amount}</b>
                 </p>
+                {order.payment_method == "COD" && (
+                  <p className="text-sm">
+                    Cash On Delivery Charge: ₹{" "}
+                    <b>{displayCodCharge(order.items)}</b>
+                  </p>
+                )}
                 <h3 className="text-base font-bold mt-4 mb-2">Items:</h3>
                 {order.items.map((item, itemIndex) => (
                   <div key={itemIndex} className="flex items-center gap-2 mb-2">

@@ -13,6 +13,13 @@ import { PiStar } from "react-icons/pi";
 import { PiStarFill } from "react-icons/pi";
 import { ToastContainer, toast } from "react-toastify";
 
+const displayCodCharge = (cartItems) => {
+  return Object.values(cartItems).reduce(
+    (total, item) => total + (item.cod_price ? item.cod_price : 0),
+    0
+  );
+};
+
 const OrderDetail = () => {
   const { session } = useContext(SessionContext);
   const [order, setOrder] = useState(null);
@@ -20,7 +27,7 @@ const OrderDetail = () => {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [reviewProduct, setReviewProduct] = useState("");
-  const [cod_charge, setCodCharge] = useState(0);
+
   const { orderId } = useParams();
 
   const navigate = useNavigate();
@@ -47,13 +54,6 @@ const OrderDetail = () => {
       }
     };
     fetchOrder();
-    if (order && order.payment_method === "COD") {
-      const ordercod_charge = Object.values(order.items).reduce(
-        (total, item) => total + (item.cod_price ? item.cod_price : 0),
-        0
-      );
-      setCodCharge(ordercod_charge);
-    }
   }, [session.user.id]);
 
   const addReview = async () => {
@@ -187,7 +187,7 @@ const OrderDetail = () => {
             {order.payment_method === "COD"
               ? "Amount to be Paid: "
               : "Amount Paid: "}
-            ₹ {order.amount + cod_charge}
+            ₹ <b> {order && order.amount}</b>
           </p>
           <p className="text-md">
             Ordered At: {format(new Date(order.created_at), "do MMM yyyy")}
