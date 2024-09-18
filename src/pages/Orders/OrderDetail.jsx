@@ -12,6 +12,8 @@ import OrderErrorSvg from "../../images/order_error.svg";
 import { PiStar } from "react-icons/pi";
 import { PiStarFill } from "react-icons/pi";
 import { ToastContainer, toast } from "react-toastify";
+import moment from "moment";
+import { LiaFileDownloadSolid } from "react-icons/lia";
 
 const displayCodCharge = (cartItems) => {
   return Object.values(cartItems).reduce(
@@ -112,6 +114,161 @@ const OrderDetail = () => {
       </div>
     );
   }
+
+  const printDetails = () => {
+    let printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+<html>
+<head>
+  <title>${order.order_id}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      font-size: 0.8em; /* Reduce font size */
+    }
+    .invoice-header {
+      text-align: center;
+      padding: 15px; /* Reduce padding */
+      background-color: #f8f8f8;
+      border-bottom: 1px solid #ddd;
+    }
+    .invoice-body {
+      padding: 15px; /* Reduce padding */
+      border: 1px solid #ddd;
+      margin: 15px; /* Reduce margin */
+    }
+    .invoice-footer {
+      text-align: center;
+      padding: 15px; /* Reduce padding */
+      background-color: #f8f8f8;
+      border-top: 1px solid #ddd;
+    }
+    .section-header {
+      font-weight: bold;
+      margin-top: 10px; /* Reduce margin */
+      margin-bottom: 5px; /* Reduce margin */
+      text-transform: uppercase;
+      color: #666;
+    }
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px; /* Reduce margin */
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px; /* Reduce padding */
+    }
+    p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+`);
+    printWindow.document.write(
+      "<div class='invoice-header'><h2>Invoice</h2></div>"
+    );
+    printWindow.document.write("<div class='invoice-body'>");
+    printWindow.document.write("<h3 class='section-header'>Order Details</h3>");
+    printWindow.document.write(`<p>Order ID: <b>${order.order_id}</b></p>`);
+    printWindow.document.write(`<p>E Biller ID: <b>55938</b></p>`);
+    printWindow.document.write(
+      `<p>Payment Method: ${order.payment_method}</p>`
+    );
+
+    printWindow.document.write(`<p>Total Amount: ₹${order.amount}</p>`);
+
+    if (cod_charge) {
+      printWindow.document.write(`<p>COD Charge:<b>₹ ${cod_charge}<b></p>`);
+    }
+    if (order.payment_id) {
+      printWindow.document.write(`<p>Payment Id: ${order.payment_id}</p>`);
+    }
+    printWindow.document.write(
+      `<p>Created At: ${moment(order.created_at).format(
+        "MMMM Do YYYY, h:mm:ss a"
+      )}</p>`
+    );
+
+    printWindow.document.write(
+      "<h3 class='section-header'>User Information</h3>"
+    );
+    printWindow.document.write(
+      `<p>Name: ${session.user.user_metadata.full_name}</p>`
+    );
+    printWindow.document.write(`<p>Email: ${session.user.email}</p>`);
+    printWindow.document.write("<h3 class='section-header'>Address</h3>");
+    printWindow.document.write(`<p>${order.address.name}</p>`);
+    printWindow.document.write(`<p>${order.address.phone}</p>`);
+    printWindow.document.write(`<p>${order.address.address}</p>`);
+    printWindow.document.write(`<p>${order.address.city}</p>`);
+    printWindow.document.write(`<p>${order.address.state}</p>`);
+    printWindow.document.write(`<p>${order.address.zip}</p>`);
+    printWindow.document.write(`<p>${order.address.country}</p>`);
+    printWindow.document.write("<h3 class='section-header'>Items</h3>");
+    printWindow.document.write(
+      "<table style='width: 100%; border-collapse: collapse;'>"
+    );
+    printWindow.document.write("<tr style='border-bottom: 1px solid #ddd;'>");
+    printWindow.document.write(
+      "<th style='text-align: left; padding: 10px;'>Name</th>"
+    );
+    printWindow.document.write(
+      "<th style='text-align: left; padding: 10px;'>Price</th>"
+    );
+    printWindow.document.write(
+      "<th style='text-align: left; padding: 10px;'>Quantity</th>"
+    );
+    printWindow.document.write(
+      "<th style='text-align: left; padding: 10px;'>Category</th>"
+    );
+    printWindow.document.write(
+      "<th style='text-align: left; padding: 10px;'>Size</th>"
+    );
+    printWindow.document.write("</tr>");
+
+    order.items.forEach((item) => {
+      printWindow.document.write("<tr style='border-bottom: 1px solid #eee;'>");
+      printWindow.document.write(
+        `<td style='padding: 10px;'>${item.name}</td>`
+      );
+      printWindow.document.write(
+        `<td style='padding: 10px;'>₹${
+          item.priceMap ? item.priceMap[item.size] : item.price
+        }</td>`
+      );
+      printWindow.document.write(
+        `<td style='padding: 10px;'>${item.quantity}</td>`
+      );
+      printWindow.document.write(
+        `<td style='padding: 10px;'>${item.category}</td>`
+      );
+      if (item.size) {
+        printWindow.document.write(
+          `<td style='padding: 10px;'>${item.size}</td>`
+        );
+      } else {
+        printWindow.document.write(`<td style='padding: 10px;'>N/A</td>`);
+      }
+      printWindow.document.write("</tr>");
+    });
+
+    printWindow.document.write("</table>");
+    printWindow.document.write("<div class='invoice-footer'>");
+    printWindow.document.write("<h3 class='section-header'>Contact Us</h3>");
+    printWindow.document.write(
+      "<p>Address: Shopping Complex, Amballoor - Kanjiramattom Rd, Kunnumpuram, Kanjiramattom, Kerala 682315</p>"
+    );
+    printWindow.document.write("<p>Phone: +91 9496990907</p>");
+
+    printWindow.document.write("</div>");
+    printWindow.document.write("</body></html>");
+    printWindow.document.close();
+    printWindow.print();
+  };
+
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopPageDetail title="Order Details" />
@@ -241,7 +398,15 @@ const OrderDetail = () => {
             </>
           )}
         </div>
-        <div className="ml-4 flex justify-center items-center">
+        <div className="ml-4 flex justify-center items-center relative">
+          <LiaFileDownloadSolid
+            className="cursor-pointer
+          absolute bottom-0 right-0 p-2  rounded-full
+          "
+            size={45}
+            color="black"
+            onClick={printDetails}
+          />
           {order.payment_method === "Razorpay" &&
           order.razorpay_payment_id &&
           order.razorpay_order_id ? (

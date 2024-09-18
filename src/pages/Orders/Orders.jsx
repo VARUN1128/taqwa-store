@@ -18,6 +18,7 @@ const Orders = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchOrders = async () => {
       setIsLoading(true);
