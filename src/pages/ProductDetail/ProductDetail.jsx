@@ -226,15 +226,17 @@ const ProductDetail = () => {
   }, [cartItems, product.id, selectedSize]);
 
   const handleAddToCart = () => {
+    console.log("Handling add to cart");
     console.log(availableSizes);
 
-    if (!selectedSize && availableSizes.length >= 0) {
+    if (!selectedSize && availableSizes.length > 0) {
+      console.log(availableSizes);
       availableSizes.length > 0 && toast.error("Please select a size first!");
-
       return;
     }
 
     setLocalQuantity(quantity + 1);
+    console.log(quantity, localQuantity);
     dispatch(addItem({ ...product, size: selectedSize }));
     dispatch(addSize({ id: product.id, size: selectedSize }));
   };

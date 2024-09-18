@@ -118,4 +118,9 @@ Also ensure to include the image addition warning
 - Webp
 - image deletion from server
 - Video client side test
-- DB side security too
+- DB side security
+  Decrementation shouldnt be allowed to be less than 0
+  Order shouldnt be created if decrementation limit is reached
+  Stock bug check
+  Multiple size scenario check
+  COD and amount to be paid
