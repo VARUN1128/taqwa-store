@@ -183,8 +183,10 @@ const OrderDetail = () => {
     if (cod_charge) {
       printWindow.document.write(`<p>COD Charge:<b>₹ ${cod_charge}<b></p>`);
     }
-    if (order.payment_id) {
-      printWindow.document.write(`<p>Payment Id: ${order.payment_id}</p>`);
+    if (order.razorpay_payment_id) {
+      printWindow.document.write(
+        `<p>Payment Id: ${order.razorpay_payment_id}</p>`
+      );
     }
     printWindow.document.write(
       `<p>Created At: ${moment(order.created_at).format(

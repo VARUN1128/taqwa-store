@@ -123,5 +123,3 @@ Also ensure to include the image addition warning
   Order shouldnt be created if decrementation limit is reached
   Stock bug check
   Convinience no need if cod
-  Actual amount to be paid should be updated in the db if COD, along with cod_charge
-  Reciept if recieved
