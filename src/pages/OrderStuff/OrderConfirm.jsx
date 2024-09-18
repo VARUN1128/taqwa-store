@@ -450,12 +450,11 @@ export default function OrderConfirm() {
             <p>
               Quantity: <span className="font-bold">x{product.quantity}</span>
             </p>
-            {product.size && (
+            {product.size !== 0 && (
               <p>
                 Size: <span className="font-bold">{product.size}</span>
               </p>
             )}
-
             <p className="text-sm text-gray-500">
               Category: {product.category}
             </p>

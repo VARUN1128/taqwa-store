@@ -144,7 +144,7 @@ const Orders = () => {
                         Quantity:{" "}
                         <span className="font-bold">{item.quantity}</span>
                       </p>
-                      {item.size && (
+                      {item.size !== 0 && (
                         <p className="text-sm ">
                           Size: <span className="font-bold">{item.size}</span>
                         </p>

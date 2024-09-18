@@ -20,7 +20,7 @@ const OrderDetail = () => {
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [reviewProduct, setReviewProduct] = useState("");
-
+  const [cod_charge, setCodCharge] = useState(0);
   const { orderId } = useParams();
 
   const navigate = useNavigate();
@@ -47,12 +47,14 @@ const OrderDetail = () => {
       }
     };
     fetchOrder();
+    if (order && order.payment_method === "COD") {
+      const ordercod_charge = Object.values(order.items).reduce(
+        (total, item) => total + (item.cod_price ? item.cod_price : 0),
+        0
+      );
+      setCodCharge(ordercod_charge);
+    }
   }, [session.user.id]);
-
-  const cod_charge = Object.values(order.items).reduce(
-    (total, item) => total + (item.cod_price ? item.cod_price : 0),
-    0
-  );
 
   const addReview = async () => {
     console.log("Review:", review);
@@ -203,7 +205,7 @@ const OrderDetail = () => {
               <p className="text-md ">
                 Quantity: <span className="font-bold">{item.quantity}</span>
               </p>
-              {item.size && (
+              {item.size !== 0 && (
                 <p className="text-md ">
                   Size: <span className="font-bold">{item.size}</span>
                 </p>

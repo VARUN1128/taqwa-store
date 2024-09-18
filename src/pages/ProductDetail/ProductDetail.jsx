@@ -229,9 +229,8 @@ const ProductDetail = () => {
     console.log(availableSizes);
 
     if (!selectedSize && availableSizes.length >= 0) {
-      availableSizes.length > 0
-        ? toast.error("Please select a size first!")
-        : toast.error("This product is not available in any size yet!");
+      availableSizes.length > 0 && toast.error("Please select a size first!");
+
       return;
     }
 
@@ -263,12 +262,12 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   const handleBuyNow = () => {
-    if (!selectedSize && availableSizes.length >= 0) {
-      availableSizes.length > 0
-        ? toast.error("Please select a size first!")
-        : toast.error("This product is not available in any size yet!");
+    console.log("Handling");
+    if (!selectedSize && availableSizes.length > 0) {
+      toast.error("Please select a size first!");
       return;
     }
+    console.log("Buy now");
     dispatch(addItem({ ...product, size: selectedSize }));
     dispatch(addSize({ id: product.id, size: selectedSize }));
     navigate("/cart");
