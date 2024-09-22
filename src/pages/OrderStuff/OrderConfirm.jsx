@@ -518,33 +518,50 @@ export default function OrderConfirm() {
           ₹ {totalFinalPrice}
         </p>
       </div>
-      <span className="ml-4 text-xs">
-        Cash On Delivery Charge: ₹ {cod_charge}
-      </span>
+
+      {cart.some((product) => product.cod_price === null) ? (
+        <span
+          className="ml-4 text-xs"
+          style={{
+            color: "red",
+          }}
+        >
+          Cash On Delivery Not Available For{" "}
+          {cart.find((product) => product.cod_price === null).name}
+        </span>
+      ) : (
+        <span className="ml-4 text-xs">
+          Cash On Delivery Charge: ₹ {cod_charge}
+        </span>
+      )}
+
       {cart.length > 0 ? (
         address.current && (
           <div className="flex flex-col gap-4 p-4">
             <h1 className="text-xl font-semibold ">Choose Payment Method</h1>
-            <div
-              style={{
-                marginTop: "1em",
-                backgroundColor: "#ff9f00",
-                color: "white",
-                transition: "transform 0.1s",
-                boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
-              }}
-              className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-            >
-              <TbTruckDelivery
-                size={20}
-                className="mr-2 inline-block align-middle"
-                color="white"
-              />
-              <span>Cash on Delivery</span>
-            </div>
+            {!cart.some((product) => product.cod_price === null) && (
+              <div
+                style={{
+                  marginTop: "1em",
+                  backgroundColor: "#ff9f00",
+                  color: "white",
+                  transition: "transform 0.1s",
+                  boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+                }}
+                className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
+                onClick={() => {
+                  setIsModalOpen(true);
+                }}
+              >
+                <TbTruckDelivery
+                  size={20}
+                  className="mr-2 inline-block align-middle"
+                  color="white"
+                />
+                <span>Cash on Delivery</span>
+              </div>
+            )}
+
             <div
               style={{
                 backgroundColor: "#1CA672",

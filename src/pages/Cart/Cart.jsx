@@ -83,6 +83,17 @@ const Cart = () => {
             <p className="text-sm text-gray-500">
               Category: {product.category}
             </p>
+            {!product.cod_price && (
+              <div
+                className="product-action justify-center items-center w-full flex m-auto gap-3 mt-2 text-sm"
+                style={{
+                  color: "#ff0054",
+                  fontFamily: "Product Sans",
+                }}
+              >
+                <span>Cash On Delivery Not Available For This Item</span>
+              </div>
+            )}
           </div>
           <p
             className="text-md font-semibold "

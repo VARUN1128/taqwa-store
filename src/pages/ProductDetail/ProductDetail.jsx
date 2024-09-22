@@ -853,6 +853,18 @@ const ProductDetail = () => {
               <span>Product has been sold out. Please check back later.</span>
             </div>
           )}
+          {!product.cod_price && (
+            <div
+              className="product-action justify-center items-center w-full flex m-auto gap-3 mt-2"
+              style={{
+                color: "#ff0054",
+                fontFamily: "Product Sans",
+                fontWeight: "bold",
+              }}
+            >
+              <span>Cash On Delivery Not Available</span>
+            </div>
+          )}
         </div>
       </div>
       <div className=" mt-4 ">
