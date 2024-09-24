@@ -84,7 +84,10 @@ const BannerSlideShow = ({ location }) => {
               }}
               onClick={() => {
                 if (banner.offer_price) {
-                  navigate(`/search?offer=under&value=${banner.offer_price}`);
+                  let goto = `/search?offer=under&value=${banner.offer_price}${
+                    banner.category && `&category=${banner.category}`
+                  }`;
+                  navigate(goto);
                 } else {
                   navigate("/home");
                 }

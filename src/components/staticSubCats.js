@@ -9,7 +9,6 @@ const subBrands = {
     "Watch 349",
     "Watch 299",
     "Watch 599",
-    "Watch 299",
   ],
 };
 

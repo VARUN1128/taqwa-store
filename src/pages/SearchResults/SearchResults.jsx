@@ -126,14 +126,6 @@ export default function SearchResults() {
         let productsQuery = supabase
           .from("products")
           .select("*")
-          .order(
-            sortOption.split("_")[0] === "rating"
-              ? "avg_rating"
-              : sortOption.split("_")[0],
-            {
-              ascending: sortOption.endsWith("asc"),
-            }
-          )
           .range(page * itemsPerPage, (page + 1) * itemsPerPage - 1);
 
         if (query) {
@@ -143,11 +135,8 @@ export default function SearchResults() {
         }
 
         if (category) {
-          if (!categories.some((cat) => cat.category === category)) {
-            throw new Error("Invalid category");
-          } else {
-            productsQuery = productsQuery.eq("category", category);
-          }
+          // display from high to low of price
+          productsQuery = productsQuery.eq("category", category);
         }
 
         if (offer && offer === "under" && offerValue) {
@@ -157,9 +146,24 @@ export default function SearchResults() {
             if (category && category === "Perfumes") {
               productsQuery = productsQuery.lte("price", offerValue);
             } else {
-              productsQuery = productsQuery.lte("price", offerValue);
+              console.log("not perfumes");
+              // display from high to low
+              productsQuery = productsQuery
+                .lte("price", offerValue)
+                .order("price", {
+                  ascending: false,
+                });
             }
           }
+        } else {
+          productsQuery = productsQuery.order(
+            sortOption.split("_")[0] === "rating"
+              ? "avg_rating"
+              : sortOption.split("_")[0],
+            {
+              ascending: sortOption.endsWith("asc"),
+            }
+          );
         }
 
         const { data, error } = await productsQuery;
