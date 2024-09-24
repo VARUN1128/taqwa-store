@@ -123,3 +123,5 @@ Also ensure to include the image addition warning
   Order shouldnt be created if decrementation limit is reached
   Stock bug check
   Convinience no need if cod
+- Stock order dont accept if stock is less. it accepts right now
+- Most wishlisted stuff

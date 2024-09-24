@@ -34,8 +34,9 @@ const properties = {
 };
 
 const BannerSlideShow = ({ location }) => {
-  const [slideImages, setSlideImages] = useState([]);
+  const [banners, setBanners] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBanners = async () => {
@@ -47,7 +48,7 @@ const BannerSlideShow = ({ location }) => {
       if (error) {
         console.log(error);
       } else {
-        setSlideImages(data.map((banner) => banner.image_url));
+        setBanners(data);
         setIsLoading(false);
       }
     };
@@ -66,12 +67,13 @@ const BannerSlideShow = ({ location }) => {
   return (
     <div className="slide-container ">
       <Slide {...properties}>
-        {slideImages.map((image, index) => (
+        {banners.map((banner, index) => (
           <div key={index} className="each-slide pb-2">
             <div
               className="rounded-md w-[96%] m-auto"
               style={{
-                backgroundImage: `url(${image})`,
+                cursor: "pointer",
+                backgroundImage: `url(${banner.image_url})`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
@@ -79,6 +81,13 @@ const BannerSlideShow = ({ location }) => {
                 borderRadius: "10px",
                 boxShadow:
                   "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+              }}
+              onClick={() => {
+                if (banner.offer_price) {
+                  navigate(`/search?offer=under&value=${banner.offer_price}`);
+                } else {
+                  navigate("/home");
+                }
               }}
             ></div>
           </div>

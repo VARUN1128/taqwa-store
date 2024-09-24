@@ -112,6 +112,9 @@ export default function SearchResults() {
     const searchParams = new URLSearchParams(location.search);
     const query = searchParams.get("query");
     const category = searchParams.get("category");
+    const offer = searchParams.get("offer");
+    const offerValue = searchParams.get("value");
+
     setQuery(query);
     setCategory(category);
 
@@ -140,7 +143,23 @@ export default function SearchResults() {
         }
 
         if (category) {
-          productsQuery = productsQuery.eq("category", category);
+          if (!categories.some((cat) => cat.category === category)) {
+            throw new Error("Invalid category");
+          } else {
+            productsQuery = productsQuery.eq("category", category);
+          }
+        }
+
+        if (offer && offer === "under" && offerValue) {
+          if (isNaN(offerValue)) {
+            throw new Error("Invalid value for offer");
+          } else {
+            if (category && category === "Perfumes") {
+              productsQuery = productsQuery.lte("price", offerValue);
+            } else {
+              productsQuery = productsQuery.lte("price", offerValue);
+            }
+          }
         }
 
         const { data, error } = await productsQuery;
