@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import supabase from "../../supabase";
 import { CardList, TopBar } from "../Landing/Landing";
 import { SessionContext } from "../../components/SessionContext";
@@ -9,6 +9,11 @@ import { VscGitFetch } from "react-icons/vsc";
 import { CategoryCard } from "../Landing/Landing";
 import subBrands from "../../components/staticSubCats";
 import { BiMenuAltRight } from "react-icons/bi";
+
+function retrieveNumberFromString(str) {
+  const match = str.match(/\d+/);
+  return match ? parseInt(match[0]) : null;
+}
 
 export default function SearchResults() {
   const { session } = useContext(SessionContext);
@@ -21,6 +26,7 @@ export default function SearchResults() {
   const [isFetching, setIsFetching] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState("");
+  const [offerValue, setOfferValue] = useState("");
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -111,12 +117,15 @@ export default function SearchResults() {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const query = searchParams.get("query");
-    const category = searchParams.get("category");
-    const offer = searchParams.get("offer");
-    const offerValue = searchParams.get("value");
+    const queryCategory = searchParams.get("category");
+    const queryOffer = searchParams.get("offer");
+    const queryofferValue = searchParams.get("value");
+    const querySubBrand = searchParams.get("brand");
 
     setQuery(query);
-    setCategory(category);
+    setCategory(queryCategory);
+    setSelectedBrand(querySubBrand);
+    setOfferValue(queryofferValue);
 
     const fetchProducts = async () => {
       setIsFetching(true);
@@ -134,22 +143,26 @@ export default function SearchResults() {
           );
         }
 
-        if (category) {
+        if (queryCategory) {
           // display from high to low of price
-          productsQuery = productsQuery.eq("category", category);
+          productsQuery = productsQuery.eq("category", queryCategory);
         }
 
-        if (offer && offer === "under" && offerValue) {
-          if (isNaN(offerValue)) {
+        if (querySubBrand) {
+          productsQuery = productsQuery.eq("brand_categ", querySubBrand);
+        }
+
+        if (queryOffer && queryOffer === "under" && queryofferValue) {
+          if (isNaN(queryofferValue)) {
             throw new Error("Invalid value for offer");
           } else {
-            if (category && category === "Perfumes") {
-              productsQuery = productsQuery.lte("price", offerValue);
+            if (queryCategory && queryCategory === "Perfumes") {
+              productsQuery = productsQuery.lte("price", queryofferValue);
             } else {
               console.log("not perfumes");
               // display from high to low
               productsQuery = productsQuery
-                .lte("price", offerValue)
+                .lte("price", queryofferValue)
                 .order("price", {
                   ascending: false,
                 });
@@ -192,9 +205,31 @@ export default function SearchResults() {
     fetchProducts();
   }, [location, query, category, page, sortOption]);
 
-  // const toggleSortOrder = () => {
-  //   setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-  // };
+  const updateUrlWithoutNavigating = useCallback(
+    (newBrand) => {
+      const searchParams = new URLSearchParams(location.search);
+      if (newBrand) {
+        searchParams.set("brand", newBrand);
+        searchParams.set("value", retrieveNumberFromString(newBrand));
+        searchParams.set("offer", "under");
+      } else {
+        searchParams.delete("brand");
+        searchParams.delete("value");
+        searchParams.delete("offer");
+      }
+      const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+      window.history.pushState({ path: newUrl }, "", newUrl);
+    },
+    [location.search]
+  );
+
+  const handleBrandChange = (brand) => {
+    updateUrlWithoutNavigating(brand);
+    setSelectedBrand(brand);
+    setOfferValue(retrieveNumberFromString(brand));
+    setPage(0);
+  };
+
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em] overflow-x-hidden">
       <TopBar avatarInfo={session?.user.user_metadata} />
@@ -222,7 +257,7 @@ export default function SearchResults() {
                         ? "border-blue-500 text-blue-800 "
                         : "border-gray-300"
                     }`}
-                    onClick={() => setSelectedBrand(brand)}
+                    onClick={() => handleBrandChange(brand)}
                   >
                     {brand}
                   </span>

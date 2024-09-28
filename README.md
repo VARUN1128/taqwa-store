@@ -125,3 +125,5 @@ Also ensure to include the image addition warning
   Convinience no need if cod
 - Stock order dont accept if stock is less. it accepts right now
 - Most wishlisted stuff
+- Perfume search
+- In the search results, when page is loaded and offer value is there, the request to supabase containst that lte. if another subbrand is selected without refreshing, and the page is not refreshed, even though url changes, the request doenst contain the lte. but the subbrand is fetching correctly
