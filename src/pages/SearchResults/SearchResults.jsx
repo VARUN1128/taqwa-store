@@ -213,7 +213,7 @@ export default function SearchResults() {
   };
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em] overflow-x-hidden">
-      <TopBar avatarInfo={session?.user.user_metadata} />
+      <TopBar showCopy avatarInfo={session?.user.user_metadata} />
       <SearchBar value={query && `${query}`} />
       {
         <div className="relative mt-3">

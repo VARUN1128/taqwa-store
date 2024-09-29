@@ -19,6 +19,9 @@ import "./Landing.css";
 import { PiStarFill } from "react-icons/pi";
 import SoldOut from "../../images/sold_out.png";
 import axios from "axios";
+import { IoIosLink } from "react-icons/io";
+import { ToastContainer, toast } from "react-toastify";
+import { to } from "react-spring";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_ORDER_URL;
 
@@ -100,7 +103,7 @@ const BannerSlideShow = ({ location }) => {
   );
 };
 
-export const TopBar = ({ avatarInfo }) => {
+export const TopBar = ({ avatarInfo, showCopy }) => {
   const itemCount = useSelector(selectTotalQuantity);
   const [shine, setShine] = useState(false);
 
@@ -128,6 +131,7 @@ export const TopBar = ({ avatarInfo }) => {
       }}
       className="px-2 top-bar w-full h-16 flex justify-between items-center "
     >
+      <ToastContainer />
       <div className="flex justify-start items-center w-full ">
         <TbMenu2
           size={25}
@@ -161,6 +165,20 @@ export const TopBar = ({ avatarInfo }) => {
         />
       </div>
       <div className="flex justify-end items-center w-full relative gap-2">
+        <IoIosLink
+          size={30}
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            navigator.clipboard
+              .writeText(window.location.href)
+              .then(() => {
+                toast.success("Link copied to clipboard!");
+              })
+              .catch(() =>
+                toast.error("Failed to copy link! Please copy manually")
+              );
+          }}
+        />
         <PiHeart
           size={30}
           style={{ cursor: "pointer" }}
@@ -175,7 +193,6 @@ export const TopBar = ({ avatarInfo }) => {
             navigate("/cart");
           }}
         />
-
         {itemCount > 0 && (
           <div
             className="absolute bg-black text-white rounded-full text-xs w-5 h-5 flex items-center justify-center cursor-pointer"
