@@ -1,12 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import supabase from "../../supabase";
-import { CardList, TopBar } from "../Landing/Landing";
+import { CardList, TopBar, CategoryCard } from "../Landing/Landing";
 import { SessionContext } from "../../components/SessionContext";
 import SearchBar from "../../components/SearchBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { VscGitFetch } from "react-icons/vsc";
-import { CategoryCard } from "../Landing/Landing";
 import subBrands from "../../components/staticSubCats";
 import { BiMenuAltRight } from "react-icons/bi";
 
@@ -15,9 +14,74 @@ function retrieveNumberFromString(str) {
   return match ? parseInt(match[0]) : null;
 }
 
+const itemsPerPage = 10;
+
+const fetchProducts = async (
+  query,
+  category,
+  page,
+  sortOption,
+  selectedBrand,
+  offer,
+  offerValue
+) => {
+  try {
+    let productsQuery = supabase
+      .from("products")
+      .select("*")
+      .range(page * itemsPerPage, (page + 1) * itemsPerPage - 1);
+
+    if (query) {
+      productsQuery = productsQuery.or(
+        `name.ilike.%${query}%,category.ilike.%${query}%,brand.ilike.%${query}%`
+      );
+    }
+
+    if (category) {
+      productsQuery = productsQuery.eq("category", category);
+    }
+
+    if (selectedBrand) {
+      if (offerValue) {
+        productsQuery = productsQuery.lte("price", offerValue);
+      } else {
+        productsQuery = productsQuery.eq("brand_categ", selectedBrand);
+      }
+    }
+
+    if (offer === "under" && offerValue) {
+      if (isNaN(offerValue)) {
+        throw new Error("Invalid value for offer");
+      } else {
+        productsQuery = productsQuery.lte("price", offerValue);
+      }
+    }
+
+    // Move the sorting code outside of the if (offer === "under" && offerValue) condition
+    productsQuery = productsQuery.order(
+      sortOption.split("_")[0] === "rating"
+        ? "avg_rating"
+        : sortOption.split("_")[0],
+      { ascending: sortOption.endsWith("asc") }
+    );
+
+    const { data, error } = await productsQuery;
+
+    if (error) {
+      throw error;
+    } else {
+      return data;
+    }
+  } catch (error) {
+    console.error("Error fetching products: ", error);
+    return [];
+  }
+};
+
 export default function SearchResults() {
   const { session } = useContext(SessionContext);
   const location = useLocation();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [products, setProducts] = useState([]);
@@ -27,52 +91,9 @@ export default function SearchResults() {
   const [categories, setCategories] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState("");
   const [offerValue, setOfferValue] = useState("");
-
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchBrand = async () => {
-      setIsFetching(true);
-      setLoading(true);
-      setProducts([]);
-      const { data, error } = await supabase
-        .from("products")
-        .select("*")
-        .eq("brand_categ", selectedBrand)
-        .eq("category", category)
-        .order(
-          sortOption.split("_")[0] === "rating"
-            ? "avg_rating"
-            : sortOption.split("_")[0],
-          {
-            ascending: sortOption.endsWith("asc"),
-          }
-        )
-        .range(page * itemsPerPage, (page + 1) * itemsPerPage - 1);
-
-      if (error) {
-        console.log(error);
-      }
-      console.log("Data: ", data);
-      setProducts((prevProducts) => {
-        const newProducts = data.filter(
-          (newProduct) =>
-            !prevProducts.some(
-              (prevProduct) => prevProduct.id === newProduct.id
-            )
-        );
-        return [...prevProducts, ...newProducts];
-      });
-      setLoading(false);
-      setHasFetched(true);
-      setIsFetching(false);
-    };
-
-    if (selectedBrand) {
-      fetchBrand();
-      console.log("Selected Brand: ", selectedBrand);
-    }
-  }, [selectedBrand]);
+  const [page, setPage] = useState(0);
+  const [sortOption, setSortOption] = useState("price_desc");
 
   const options = [
     { value: "price_asc", label: "Price: Low to High" },
@@ -81,15 +102,23 @@ export default function SearchResults() {
     { value: "rating_desc", label: "Rating: High to Low" },
   ];
 
-  const [sortOption, setSortOption] = useState("price_asc");
   const [selectedOption, setSelectedOption] = useState(
     options.find((option) => option.value === sortOption).label
   );
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const queryFromUrl = searchParams.get("query");
+    const queryCategory = searchParams.get("category");
+    const queryOffer = searchParams.get("offer");
+    const queryOfferValue = searchParams.get("value");
+    const querySubBrand = searchParams.get("brand");
 
-  const [page, setPage] = useState(0);
-  const itemsPerPage = 10;
+    setQuery(queryFromUrl || "");
+    setCategory(queryCategory || "");
+    setSelectedBrand(querySubBrand || "");
+    setOfferValue(queryOfferValue || "");
+  }, [location.search]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -108,83 +137,36 @@ export default function SearchResults() {
       }
     };
 
-    // Fetch categories only when products array is empty
     if (products.length === 0) {
       fetchCategories();
     }
-  }, [products]); // Add products as a dependency
+  }, [products]);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const query = searchParams.get("query");
-    const queryCategory = searchParams.get("category");
-    const queryOffer = searchParams.get("offer");
-    const queryofferValue = searchParams.get("value");
-    const querySubBrand = searchParams.get("brand");
-
-    setQuery(query);
-    setCategory(queryCategory);
-    setSelectedBrand(querySubBrand);
-    setOfferValue(queryofferValue);
-
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       setIsFetching(true);
       setLoading(true);
       setProducts([]);
+
       try {
-        let productsQuery = supabase
-          .from("products")
-          .select("*")
-          .range(page * itemsPerPage, (page + 1) * itemsPerPage - 1);
-
-        if (query) {
-          productsQuery = productsQuery.or(
-            `name.ilike.%${query}%,category.ilike.%${query}%,brand.ilike.%${query}%`
-          );
-        }
-
-        if (queryCategory) {
-          // display from high to low of price
-          productsQuery = productsQuery.eq("category", queryCategory);
-        }
-
-        if (querySubBrand) {
-          productsQuery = productsQuery.eq("brand_categ", querySubBrand);
-        }
-
-        if (queryOffer && queryOffer === "under" && queryofferValue) {
-          if (isNaN(queryofferValue)) {
-            throw new Error("Invalid value for offer");
-          } else {
-            if (queryCategory && queryCategory === "Perfumes") {
-              productsQuery = productsQuery.lte("price", queryofferValue);
-            } else {
-              console.log("not perfumes");
-              // display from high to low
-              productsQuery = productsQuery
-                .lte("price", queryofferValue)
-                .order("price", {
-                  ascending: false,
-                });
-            }
-          }
-        } else {
-          productsQuery = productsQuery.order(
-            sortOption.split("_")[0] === "rating"
-              ? "avg_rating"
-              : sortOption.split("_")[0],
-            {
-              ascending: sortOption.endsWith("asc"),
-            }
-          );
-        }
-
-        const { data, error } = await productsQuery;
-
-        if (error) {
-          throw error;
-        }
-
+        const data = await fetchProducts(
+          query,
+          category,
+          page,
+          sortOption,
+          selectedBrand,
+          "under",
+          offerValue
+        );
+        console.log(
+          "Fetching data: ",
+          query,
+          category,
+          page,
+          sortOption,
+          selectedBrand,
+          offerValue
+        );
         setProducts((prevProducts) => {
           const newProducts = data.filter(
             (newProduct) =>
@@ -202,8 +184,8 @@ export default function SearchResults() {
       setIsFetching(false);
     };
 
-    fetchProducts();
-  }, [location, query, category, page, sortOption]);
+    fetchData();
+  }, [query, category, page, sortOption, selectedBrand, offerValue]);
 
   const updateUrlWithoutNavigating = useCallback(
     (newBrand) => {
@@ -225,11 +207,10 @@ export default function SearchResults() {
 
   const handleBrandChange = (brand) => {
     updateUrlWithoutNavigating(brand);
-    setSelectedBrand(brand);
     setOfferValue(retrieveNumberFromString(brand));
+    setSelectedBrand(brand);
     setPage(0);
   };
-
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em] overflow-x-hidden">
       <TopBar avatarInfo={session?.user.user_metadata} />
