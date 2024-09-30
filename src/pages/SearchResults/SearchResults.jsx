@@ -184,7 +184,9 @@ export default function SearchResults() {
       setIsFetching(false);
     };
 
-    fetchData();
+    if (query || category || selectedBrand || offerValue) {
+      fetchData();
+    }
   }, [query, category, page, sortOption, selectedBrand, offerValue]);
 
   const updateUrlWithoutNavigating = useCallback(
