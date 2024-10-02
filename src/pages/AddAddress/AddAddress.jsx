@@ -128,6 +128,7 @@ export default function AddAddress() {
       zip: data.zip,
       city: data.city.toUpperCase(),
       country: "INDIA",
+      post: data.po.toUpperCase(),
       state: selectedState ? selectedState.value.toUpperCase() : "KERALA",
     };
     const { error } = await supabase
@@ -159,6 +160,7 @@ export default function AddAddress() {
         setValue("address", address.address);
         setValue("zip", address.zip);
         setValue("city", address.city);
+        setValue("po", address.post);
         setValue("country", { value: "India", label: "India" });
         setValue(
           "state",
@@ -237,6 +239,16 @@ export default function AddAddress() {
         {errors.zip && (
           <span className="text-red-500">{errors.zip.message}</span>
         )}
+
+        <input
+          type="text"
+          name="po"
+          placeholder="Post Office"
+          autoComplete="address-level1"
+          {...register("po", { required: "Post Office is required" })}
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+        />
+        {errors.po && <span className="text-red-500">{errors.po.message}</span>}
 
         <input
           type="text"

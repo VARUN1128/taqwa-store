@@ -411,6 +411,7 @@ export default function OrderConfirm() {
               <p className="text-sm">{address.current.phone}</p>
               <p className="text-sm">{address.current.address.current}</p>
               <p className="text-sm">{address.current.zip}</p>
+              <p className="text-sm">{address.current.post}</p>
               <p className="text-sm">{address.current.city}</p>
               <p className="text-sm">{address.current.state || ""}</p>
               <p className="text-sm">{address.current.country || ""}</p>

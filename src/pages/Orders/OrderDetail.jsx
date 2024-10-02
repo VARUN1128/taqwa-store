@@ -178,7 +178,9 @@ const OrderDetail = () => {
       `<p>Payment Method: ${order.payment_method}</p>`
     );
 
-    printWindow.document.write(`<p>Total Amount: ₹${order.amount}</p>`);
+    printWindow.document.write(
+      `<p>Total Amount: <b> ₹${order.amount}</b> </p>`
+    );
 
     if (cod_charge) {
       printWindow.document.write(`<p>COD Charge:<b>₹ ${cod_charge}<b></p>`);
@@ -207,6 +209,7 @@ const OrderDetail = () => {
     printWindow.document.write(`<p>${order.address.address}</p>`);
     printWindow.document.write(`<p>${order.address.city}</p>`);
     printWindow.document.write(`<p>${order.address.state}</p>`);
+    printWindow.document.write(`<p>${order.address.post}</p>`);
     printWindow.document.write(`<p>${order.address.zip}</p>`);
     printWindow.document.write(`<p>${order.address.country}</p>`);
     printWindow.document.write("<h3 class='section-header'>Items</h3>");
@@ -396,6 +399,7 @@ const OrderDetail = () => {
               <p className="text-md">City: {order.address.city}</p>
               <p className="text-md">State: {order.address.state}</p>
               <p className="text-md">Zip: {order.address.zip}</p>
+              <p className="text-md">Post Office: {order.address.post}</p>
               <p className="text-md">Country: {order.address.country}</p>
             </>
           )}
