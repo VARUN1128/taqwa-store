@@ -32,7 +32,7 @@ export default function BottomNavigator({ avatarInfo }) {
       setValue(null); // Set the value to null or some other default value
     }
   }, [location]); // Empty dependency array means this effect runs once on mount
-  const userName = avatarInfo?.name.split(" ")[0] || "Account";
+  const userName = avatarInfo?.name != undefined ? avatarInfo.name.split()[0] : "User";
   const avatarPic =
     avatarInfo?.avatar_url ||
     `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=000000`;
