@@ -11,6 +11,7 @@ import {
   Route,
   Routes,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import Landing from "./pages/Landing/Landing";
 import BottomNavigator from "./components/BottomNavigator";
@@ -29,6 +30,13 @@ import RegisterStart from "./pages/Login/Register";
 import "react-toastify/dist/ReactToastify.css";
 import OrderDetail from "./pages/Orders/OrderDetail";
 
+function RedirectToFAQ() {
+  useEffect(() => {
+    window.location.href = "/faq.html";
+  }, []);
+
+  return null;
+}
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -163,6 +171,10 @@ function App() {
                   element={session ? <Profile /> : <RegisterStart />}
                 />
                 <Route path="/" element={<Navigate to="/home" />} />
+                <Route path="/privacy" element={<RedirectToFAQ />} />
+                <Route path="/terms" element={<RedirectToFAQ />} />
+                <Route path="/shipping" element={<RedirectToFAQ />} />
+                <Route path="/contactus" element={<RedirectToFAQ />} />"
               </Routes>
             </Router>
           </SessionContext.Provider>
