@@ -74,10 +74,6 @@ export default function LoginStart() {
       return;
     }
     console.log(session);
-
-    if (fetchUser()) {
-      console.log(userInfo);
-    }
   };
 
   const signInGoogle = async () => {
