@@ -46,6 +46,18 @@ function App() {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
+    const setVh = () => {
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    window.addEventListener("resize", setVh);
+    setVh();
+
+    return () => window.removeEventListener("resize", setVh);
+  }, []);
+
+  useEffect(() => {
     if (session && !userName) {
       console.log(session.user);
       const userId = session.user.id;
