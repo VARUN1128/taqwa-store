@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TaqwaLogoRemoved from "../../images/taqwa-removed.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import supabase from "../../supabase";
@@ -22,6 +22,7 @@ import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
 import { AiFillGoogleCircle, AiOutlineRightCircle } from "react-icons/ai";
 import OTPInput from "./OTPInput";
 import { Turnstile } from "@marsidev/react-turnstile";
+import { SessionContext } from "../../components/SessionContext";
 const url = new URL(window.origin).href;
 
 export default function LoginStart() {
@@ -30,14 +31,10 @@ export default function LoginStart() {
   const [showSendOtp, setShowSendOtp] = React.useState(false);
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [captchaToken, setCaptchaToken] = useState("");
+  const { session, setSession } = useContext(SessionContext);
 
   const [phoneNumber, setPhoneNumber] = useState(""); // Add state for the phone number
 
-  const [userInfo, setUserInfo] = useState(null);
-
-  async function signIn() {
-    setLoading(true);
-  }
   const navigate = useNavigate();
 
   const sendOTP = async () => {
@@ -73,6 +70,7 @@ export default function LoginStart() {
       console.log(error);
       return;
     }
+    setSession(session);
     console.log(session);
   };
 

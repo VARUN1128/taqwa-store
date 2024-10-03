@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TaqwaLogoRemoved from "../../images/taqwa-removed.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import supabase from "../../supabase";
@@ -20,28 +20,27 @@ import PerfumePng from "../../images/perfume.png";
 import CrocsPng from "../../images/crocs.png";
 import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
 import { AiOutlineRightCircle } from "react-icons/ai";
+import { SessionContext } from "../../components/SessionContext";
 
 export default function RegisterStart() {
   const [loading, setLoading] = React.useState(false);
-  const [otpSent, setOtpSent] = React.useState(true);
-
-  const [phoneNumber, setPhoneNumber] = useState(""); // Add state for the phone number
+  const [userName, setUserName] = React.useState("");
+  const { session, setSession } = useContext(SessionContext);
+  const navigate = useNavigate();
 
   async function register() {
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithOtp({
-      phone: "+918921511945",
-    });
-
+    const { data, error } = await supabase
+      .from("users")
+      .update({ raw_user_meta_data: { name: userName } })
+      .eq("id", session.user.id);
     if (error) {
-      console.log(error.message);
-      setLoading(false);
+      console.log(error);
       return;
     }
-
     setLoading(false);
+    navigate("/home");
   }
-  const navigate = useNavigate();
 
   const items = [
     <GiConverseShoe size={40} color="black" />,
@@ -152,6 +151,12 @@ export default function RegisterStart() {
         >
           Walk out in style
         </span>
+        <span
+          style={{ zIndex: "10" }}
+          className="block text-right text-[0.9em] text-red-500 font-bold"
+        >
+          Full Name is Required
+        </span>
         <input
           type="text"
           placeholder="Full Name"
@@ -159,47 +164,7 @@ export default function RegisterStart() {
           style={{
             position: "relative", // Remove absolute positioning
           }}
-        />
-        <div style={{ position: "relative" }}>
-          <input
-            type="number"
-            placeholder="Phone Number"
-            value={phoneNumber} // Set the value to the phone number state
-            onChange={(e) => setPhoneNumber(e.target.value)} // Update the state when the input changes
-            className="z-20 cont-google-btn px-5 w-[22em] mb-3 py-4 text-black bg-white rounded-2xl text-xs border-2 border-black outline-none"
-            style={{
-              paddingRight: "30px", // Add padding to make room for the icon
-            }}
-            onClick={() => setOtpSent(false)}
-          />
-
-          {phoneNumber.length === 10 && ( // Only show the icon when the phone number length is 10
-            <AiOutlineRightCircle
-              size={25}
-              style={{
-                position: "absolute", // Position the icon absolutely
-                top: "50%", // Center it vertically
-                right: "10px", // Position it to the right
-                transform: "translateY(-65%)", // Adjust this value to move the icon up or down
-                cursor: "pointer", // Add a pointer cursor
-              }}
-              onClick={() => {
-                setOtpSent(true);
-              }}
-            />
-          )}
-        </div>
-
-        <input
-          type="number"
-          placeholder="OTP"
-          className={`z-20  cont-google-btn px-5 w-[22em]   py-4 text-black bg-white rounded-2xl text-xs  border-2 ${
-            otpSent ? "border-black" : "border-gray-300"
-          } outline-none`}
-          style={{
-            position: "relative", // Remove absolute positioning
-          }}
-          disabled={!otpSent}
+          onChange={(e) => setUserName(e.target.value)}
         />
 
         <span

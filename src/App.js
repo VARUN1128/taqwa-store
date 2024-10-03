@@ -37,10 +37,44 @@ function RedirectToFAQ() {
 
   return null;
 }
+
 function App() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState([]);
+
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    if (session && !userName) {
+      console.log(session.user);
+      const userId = session.user.id;
+      console.log(userId);
+      // fetch user data from users table
+      const fetchUserData = async () => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", userId);
+        if (error) {
+          console.log(error);
+          return;
+        }
+        console.log(data);
+        if (data[0].raw_user_meta_data.name) {
+          setUserName(data[0].raw_user_meta_data.name);
+          console.log("User Name:", data[0].raw_user_meta_data.name);
+        } else {
+          console.log("Data not found");
+        }
+      };
+
+      fetchUserData();
+    } else {
+      console.log("Session not found");
+      setUserName("");
+    }
+  }, [session]);
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -130,7 +164,10 @@ function App() {
         <WishlistContext.Provider value={{ wishlist, setWishlist }}>
           <SessionContext.Provider value={{ session, setSession }}>
             <Router>
-              <BottomNavigator avatarInfo={session?.user.user_metadata} />
+              <BottomNavigator
+                avatarInfo={session?.user.user_metadata}
+                otpUser={userName}
+              />
 
               <Routes>
                 <Route path="/home" element={<Landing />} />
@@ -160,15 +197,45 @@ function App() {
                 />
                 <Route
                   path="/login"
-                  element={session ? <Profile /> : <Login />}
+                  element={
+                    session ? (
+                      userName ? (
+                        <Landing />
+                      ) : (
+                        <RegisterStart />
+                      )
+                    ) : (
+                      <Login />
+                    )
+                  }
                 />
                 <Route
                   path="/loginStart"
-                  element={session ? <Profile /> : <LoginStart />}
+                  element={
+                    session ? (
+                      userName ? (
+                        <Landing />
+                      ) : (
+                        <RegisterStart />
+                      )
+                    ) : (
+                      <LoginStart />
+                    )
+                  }
                 />
                 <Route
                   path="/register"
-                  element={session ? <Profile /> : <RegisterStart />}
+                  element={
+                    session ? (
+                      userName ? (
+                        <Landing />
+                      ) : (
+                        <RegisterStart />
+                      )
+                    ) : (
+                      <Login />
+                    )
+                  }
                 />
                 <Route path="/" element={<Navigate to="/home" />} />
                 <Route path="/privacy" element={<RedirectToFAQ />} />
