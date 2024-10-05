@@ -77,7 +77,7 @@ const Profile = () => {
         <div
           className="flex gap-2 cursor-pointer"
           onClick={() => {
-            window.open("https://wa.me/+919496990907", "_self");
+            window.open("https://wa.me/+917558856844", "_self");
           }}
         >
           <BsPatchQuestion size={30} color="black" />
@@ -86,7 +86,7 @@ const Profile = () => {
         <div
           className="flex gap-2 cursor-pointer "
           onClick={() => {
-            window.open("tel:+919496990907");
+            window.open("tel:+917558856844");
           }}
         >
           <FiPhoneCall size={27} color="black" />
