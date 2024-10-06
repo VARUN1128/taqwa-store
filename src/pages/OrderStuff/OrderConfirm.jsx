@@ -208,15 +208,14 @@ export default function OrderConfirm() {
 
   convenienceFees = parseFloat(convenienceFees);
 
-  const totalFinalPrice =
-    Object.values(cart).reduce(
-      (total, item) =>
-        total +
-        (item.priceMap
-          ? item.priceMap[item.size] * item.quantity
-          : item.price * item.quantity),
-      0
-    ) + convenienceFees;
+  const totalFinalPrice = Object.values(cart).reduce(
+    (total, item) =>
+      total +
+      (item.priceMap
+        ? item.priceMap[item.size] * item.quantity
+        : item.price * item.quantity),
+    0
+  );
 
   // const cod_charge = Object.values(cart).reduce(
   //   (total, item) => total + (item.cod_price ? item.cod_price : 0),
