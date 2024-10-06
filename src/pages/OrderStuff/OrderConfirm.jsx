@@ -218,10 +218,17 @@ export default function OrderConfirm() {
       0
     ) + convenienceFees;
 
+  // const cod_charge = Object.values(cart).reduce(
+  //   (total, item) => total + (item.cod_price ? item.cod_price : 0),
+  //   0
+  // );
+
   const cod_charge = Object.values(cart).reduce(
-    (total, item) => total + (item.cod_price ? item.cod_price : 0),
+    (total, item) =>
+      total + (item.cod_price ? item.cod_price * item.quantity : 0),
     0
   );
+
   const createOrder = async () => {
     console.log("Address", address.current);
     const response = await axios.post(
@@ -494,9 +501,9 @@ export default function OrderConfirm() {
         </div>
       ))}
       <div className="w-full text-right pr-4 pt-2">
-        <span className="text-md ">
+        {/* <span className="text-md ">
           Payment Processing Fee : ₹ {convenienceFees}
-        </span>
+        </span> */}
       </div>
 
       <div className="flex justify-between items-center p-4">
