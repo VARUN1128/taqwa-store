@@ -38,7 +38,7 @@ export default function Wishlist() {
   }, [session.user.id]);
 
   return (
-    <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
+    <div className="page overflow-y-auto hide-scrollbar pb-[10em]">
       <TopPageDetail title="Wishlist" />
       {isLoading ? (
         <div className="flex justify-center items-center h-full">

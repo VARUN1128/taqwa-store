@@ -547,7 +547,7 @@ export default function Landing() {
     fetchMostOrdered();
   }, []);
   return (
-    <div className="page overflow-y-auto hide-scrollbar pb-[5em] ">
+    <div className="page overflow-y-auto hide-scrollbar pb-[10em] ">
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar />
 

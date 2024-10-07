@@ -214,7 +214,7 @@ export default function SearchResults() {
     setPage(0);
   };
   return (
-    <div className="page overflow-y-auto hide-scrollbar pb-[5em] overflow-x-hidden">
+    <div className="page overflow-y-auto hide-scrollbar pb-[10em] overflow-x-hidden">
       <TopBar showCopy avatarInfo={session?.user.user_metadata} />
       <SearchBar value={query && `${query}`} />
       {
