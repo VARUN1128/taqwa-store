@@ -419,6 +419,7 @@ export default function OrderConfirm() {
               <p className="text-sm">{address.current.zip}</p>
               <p className="text-sm">{address.current.post}</p>
               <p className="text-sm">{address.current.city}</p>
+              <p className="text-sm">{address.current.whatsapp}</p>
               <p className="text-sm">{address.current.state || ""}</p>
               <p className="text-sm">{address.current.country || ""}</p>
             </div>

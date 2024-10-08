@@ -129,6 +129,7 @@ export default function AddAddress() {
       city: data.city.toUpperCase(),
       country: "INDIA",
       post: data.po.toUpperCase(),
+      whatsapp: data.whatsapp,
       state: selectedState ? selectedState.value.toUpperCase() : "KERALA",
     };
     const { error } = await supabase
@@ -260,6 +261,24 @@ export default function AddAddress() {
         />
         {errors.city && (
           <span className="text-red-500">{errors.city.message}</span>
+        )}
+
+        <input
+          type="number"
+          name="whatsapp"
+          placeholder="Whatsapp Number"
+          autoComplete="whatsapp"
+          {...register("whatsapp", {
+            required: "Whatsapp number is required",
+            pattern: {
+              value: /^\d{10}$/,
+              message: "Please enter a valid 10-digit whatsapp number",
+            },
+          })}
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+        />
+        {errors.whatsapp && (
+          <span className="text-red-500">{errors.whatsapp.message}</span>
         )}
 
         <Select
