@@ -89,11 +89,13 @@ const Orders = () => {
                     >
                       {order.order_status === "waiting" &&
                       order.status === "paid"
-                        ? "Order Recieved"
+                        ? "Order Received"
                         : order.order_status === "shipped"
                         ? "Order Shipped"
                         : order.order_status === "delivered"
                         ? "Order Delivered"
+                        : order.order_status === "cancelled"
+                        ? "Order Cancelled"
                         : order.status !== "paid"
                         ? "Payment Failed"
                         : "Something went wrong. Please contact support."}
@@ -113,15 +115,19 @@ const Orders = () => {
                             ? "blue"
                             : order.order_status === "delivered"
                             ? "green"
+                            : order.order_status === "cancelled"
+                            ? "grey"
                             : "red",
                       }}
                     >
                       {order.order_status === "waiting"
-                        ? "Order Recieved"
+                        ? "Order Received"
                         : order.order_status === "shipped"
                         ? "Order Shipped"
                         : order.order_status === "delivered"
                         ? "Order Delivered"
+                        : order.order_status === "cancelled"
+                        ? "Order Cancelled"
                         : "Something went wrong. Please contact support."}
                     </span>
                   </p>
@@ -169,6 +175,13 @@ const Orders = () => {
                     {order.order_status === "shipped" && (
                       <img src={ShippedSvg} alt="Shipped" className="w-[8em]" />
                     )}
+                    {order.order_status === "cancelled" && (
+                      <img
+                        src={OrderErrorSvg}
+                        alt="Cancelled"
+                        className="w-[8em]"
+                      />
+                    )}
                     {order.order_status === "delivered" && (
                       <img
                         src={DeliveredSvg}
@@ -185,6 +198,14 @@ const Orders = () => {
                     {order.order_status === "shipped" && (
                       <img src={ShippedSvg} alt="Shipped" className="w-[8em]" />
                     )}
+                    {order.order_status === "cancelled" && (
+                      <img
+                        src={OrderErrorSvg}
+                        alt="Cancelled"
+                        className="w-[8em]"
+                      />
+                    )}
+
                     {order.order_status === "delivered" && (
                       <img
                         src={DeliveredSvg}
