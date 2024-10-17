@@ -159,13 +159,9 @@ export default function AddAddress() {
         setValue("zip", address.zip);
         setValue("city", address.city);
         setValue("po", address.post);
-        setValue("country", { value: "India", label: "India" });
-        setValue(
-          "state",
-          address.state
-            ? { value: address.state, label: address.state }
-            : { value: "Kerala", label: "Kerala" }
-        );
+        setValue("state", address.state);
+        setValue("whatsapp", address.whatsapp);
+        setValue("country", "INDIA");
       }
     };
 
@@ -278,32 +274,29 @@ export default function AddAddress() {
           <span className="text-red-500">{errors.whatsapp.message}</span>
         )}
 
-        <Select
-          options={countries}
-          value={selectedCountry}
-          enabled={0}
+        <input
+          type="text"
+          name="country"
+          disabled
           placeholder="India"
-          className="mb-4"
-          defaultInputValue="India"
+          autoComplete="country"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
         />
         {errors.country && (
           <span className="text-red-500">{errors.country.message}</span>
-        )} */}
+        )}
 
-        {/* <Select
-          options={states}
-          value={selectedState}
-          onChange={(selectedOption) => {
-            setSelectedState(selectedOption);
-            setValue("state", selectedOption.value);
-          }}
+        <input
+          type="text"
+          name="state"
           placeholder="State"
-          className="mb-4"
-          defaultInputValue="Kerala"
+          autoComplete="state"
+          {...register("state", { required: "State is required" })}
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
         />
         {errors.state && (
           <span className="text-red-500">{errors.state.message}</span>
-        )} */}
+        )}
 
         <div
           style={{
