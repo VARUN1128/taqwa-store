@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TaqwaLogoRemoved from "../../images/taqwa-removed.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import supabase from "../../supabase";
@@ -21,7 +21,8 @@ import CrocsPng from "../../images/crocs.png";
 import { LiaArrowAltCircleLeftSolid } from "react-icons/lia";
 import { AiFillGoogleCircle, AiOutlineRightCircle } from "react-icons/ai";
 import OTPInput from "./OTPInput";
-import { Turnstile } from '@marsidev/react-turnstile'
+import { Turnstile } from "@marsidev/react-turnstile";
+import { SessionContext } from "../../components/SessionContext";
 const url = new URL(window.origin).href;
 
 export default function LoginStart() {
@@ -30,12 +31,10 @@ export default function LoginStart() {
   const [showSendOtp, setShowSendOtp] = React.useState(false);
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [captchaToken, setCaptchaToken] = useState("");
+  const { session, setSession } = useContext(SessionContext);
 
   const [phoneNumber, setPhoneNumber] = useState(""); // Add state for the phone number
 
-  async function signIn() {
-    setLoading(true);
-  }
   const navigate = useNavigate();
 
   const sendOTP = async () => {
@@ -50,7 +49,7 @@ export default function LoginStart() {
       return;
     }
     console.log(data);
-  }
+  };
 
   const verifyOTP = async () => {
     console.log(otp.join(""));
@@ -61,17 +60,19 @@ export default function LoginStart() {
     } = await supabase.auth.verifyOtp({
       phone: `+91${phoneNumber}`,
       token: otp.join(""),
-      type: 'sms',
+      type: "sms",
       options: {
         captchaToken: captchaToken,
       },
-    })
+    });
 
     if (error) {
-      console.log(error)
-      return
+      console.log(error);
+      return;
     }
-  }
+    setSession(session);
+    console.log(session);
+  };
 
   const signInGoogle = async () => {
     const { user, session, error } = await supabase.auth.signInWithOAuth({
@@ -79,7 +80,6 @@ export default function LoginStart() {
       options: {
         redirectTo: url,
         captchaToken: captchaToken,
-
       },
     });
     if (error) {
@@ -199,15 +199,20 @@ export default function LoginStart() {
           Walk out in style
         </span>
         <div className="flex flex-col items-center justify-center gap-2">
-          <div className={`border-2 rounded-2xl
+          <div
+            className={`border-2 rounded-2xl
                           flex w-[16em] self-center 
-                          ${showSendOtp ? 'border-green-600' : 'border-black'}
-                          `}>
-                          
-            <div className={`flex text-center items-center 
+                          ${showSendOtp ? "border-green-600" : "border-black"}
+                          `}
+          >
+            <div
+              className={`flex text-center items-center 
                           justify-center w-1/4 text-lg 
                            border-r-2 border-black
-                           ${showSendOtp ? 'border-green-600' : 'border-black'}`}>
+                           ${
+                             showSendOtp ? "border-green-600" : "border-black"
+                           }`}
+            >
               +91
             </div>
             <input
@@ -217,32 +222,38 @@ export default function LoginStart() {
               maxLength={10}
               disabled={otpSent}
               onChange={(e) => {
-                setPhoneNumber(e.target.value)
+                setPhoneNumber(e.target.value);
                 if (e.target.value.length === 10) {
                   setShowSendOtp(true);
-                }else{
+                } else {
                   setShowSendOtp(false);
                   setOtpSent(false);
                   setLoading(false);
                 }
-          
-              }
-              
-              } // Update the state when the input changes
+              }} // Update the state when the input changes
               className="z-20 cont-google-btn w-3/4 f h-12 text-black bg-white rounded-2xl text-lg text-center  outline-none "
               style={{
                 paddingRight: "30px", // Add padding to make room for the icon
               }}
             />
           </div>
-          <div className={`text-xs text-black text-center w-[20em] ${otpSent ? 'hidden' : ''}`}>
+          <div
+            className={`text-xs text-black text-center w-[20em] ${
+              otpSent ? "hidden" : ""
+            }`}
+          >
             We will send you a one time password on this phone number
           </div>
-          <OTPInput otpSent={otpSent} otp={otp} setOtp={setOtp}/>
+          <OTPInput otpSent={otpSent} otp={otp} setOtp={setOtp} />
           <div
             className={`w-24 h-10 p-3 rounded-xl text-center flex bg-black text-white font-bold items-center justify-center cursor-pointer transition-opacity duration-300 ease-in-out ${
-              showSendOtp ? 'opacity-100 ' : 'opacity-0 hidden'}
-              ${otpSent ? 'bg-gray-300 text-black cursor-not-allowed' : 'bg-black text-white'}
+              showSendOtp ? "opacity-100 " : "opacity-0 hidden"
+            }
+              ${
+                otpSent
+                  ? "bg-gray-300 text-black cursor-not-allowed"
+                  : "bg-black text-white"
+              }
               `}
             onClick={() => {
               setOtpSent(true);
@@ -253,7 +264,7 @@ export default function LoginStart() {
           </div>
 
           <div>
-            <span 
+            <span
               className="text-xs text-black cursor-pointer"
               onClick={() => {
                 setPhoneNumber("");
@@ -264,10 +275,6 @@ export default function LoginStart() {
             >
               Change Phone Number
             </span>
-
-              
-
-
           </div>
         </div>
 
@@ -278,16 +285,14 @@ export default function LoginStart() {
                       text-blac bg-white rounded-2xl
                        font-bold cursor-pointer text-xs 
                        flex-no-wrap border-2 border-black
-                       ${otpSent ? 'opacity-100' : 'opacity-0 hidden'}
+                       ${otpSent ? "opacity-100" : "opacity-0 hidden"}
                        `}
           onClick={verifyOTP}
-
           style={{
             zIndex: "10",
             position: "relative",
             boxShadow:
               "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
-            
           }}
         >
           {loading ? (
@@ -325,10 +330,9 @@ export default function LoginStart() {
         siteKey={process.env.REACT_APP_CLOUDFLARE_SITE_KEY}
         className="absolute bottom-20 right-0 z-20"
         onSuccess={(token) => {
-          setCaptchaToken(token)
+          setCaptchaToken(token);
         }}
       />
-
     </div>
   );
 }

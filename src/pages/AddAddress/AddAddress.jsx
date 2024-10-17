@@ -125,6 +125,8 @@ export default function AddAddress() {
       zip: data.zip,
       city: data.city.toUpperCase(),
       country: "INDIA",
+      post: data.po.toUpperCase(),
+      whatsapp: data.whatsapp,
       state: data.state,
     };
     const { error } = await supabase
@@ -155,10 +157,15 @@ export default function AddAddress() {
         setValue("phone", address.phone);
         setValue("address", address.address);
         setValue("zip", address.zip);
-       setValue("city", address.city);
-       setValue("India", address.country);
-       // setValue("country", { value: "India", label: "India" });
-        setValue("state",address.state);
+        setValue("city", address.city);
+        setValue("po", address.post);
+        setValue("country", { value: "India", label: "India" });
+        setValue(
+          "state",
+          address.state
+            ? { value: address.state, label: address.state }
+            : { value: "Kerala", label: "Kerala" }
+        );
       }
     };
 
@@ -233,6 +240,16 @@ export default function AddAddress() {
 
         <input
           type="text"
+          name="po"
+          placeholder="Post Office"
+          autoComplete="address-level1"
+          {...register("po", { required: "Post Office is required" })}
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+        />
+        {errors.po && <span className="text-red-500">{errors.po.message}</span>}
+
+        <input
+          type="text"
           name="city"
           placeholder="City"
           autoComplete="address-level2"
@@ -243,35 +260,25 @@ export default function AddAddress() {
           <span className="text-red-500">{errors.city.message}</span>
         )}
 
-
         <input
-          type="text"
-          name="country"
-          disabled
-          placeholder="India"
-          autoComplete="country"
+          type="number"
+          name="whatsapp"
+          placeholder="Whatsapp Number"
+          autoComplete="whatsapp"
+          {...register("whatsapp", {
+            required: "Whatsapp number is required",
+            pattern: {
+              value: /^\d{10}$/,
+              message: "Please enter a valid 10-digit whatsapp number",
+            },
+          })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
         />
-        {errors.country && (
-          <span className="text-red-500">{errors.country.message}</span>
+        {errors.whatsapp && (
+          <span className="text-red-500">{errors.whatsapp.message}</span>
         )}
 
-      <input
-          type="text"
-          name="state"
-          
-          placeholder="State"
-          autoComplete="state"
-          {...register("state", { required: "State is required" })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
-        />
-        {errors.state && (
-          <span className="text-red-500">{errors.state.message}</span>
-        )}
-
-        
-
-        {/* <Select
+        <Select
           options={countries}
           value={selectedCountry}
           enabled={0}

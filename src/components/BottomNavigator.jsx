@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
@@ -11,12 +11,35 @@ import { IoBagCheck } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-export default function BottomNavigator({ avatarInfo }) {
+export default function BottomNavigator({ avatarInfo, otpUser }) {
+  const [userName, setUserName] = React.useState("User");
+  const [avatarPic, setAvatarPic] = React.useState(
+    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=292929`
+  );
+
   const navigate = useNavigate();
 
   const location = useLocation();
 
   const [value, setValue] = React.useState(0);
+
+  useEffect(() => {
+    if (otpUser) {
+      console.log(otpUser);
+      setUserName(otpUser.split(" ")[0]);
+      setAvatarPic(
+        `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${otpUser.name}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=292929`
+      );
+    } else {
+      if (avatarInfo && avatarInfo.name) {
+        setUserName(avatarInfo.name.split(" ")[0]);
+        setAvatarPic(
+          avatarInfo.avatar_url ||
+            `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${avatarInfo.name}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=292929`
+        );
+      }
+    }
+  }, [otpUser, avatarInfo]);
 
   React.useEffect(() => {
     const currentPage = location.pathname;
@@ -32,10 +55,7 @@ export default function BottomNavigator({ avatarInfo }) {
       setValue(null); // Set the value to null or some other default value
     }
   }, [location]); // Empty dependency array means this effect runs once on mount
-  const userName = avatarInfo?.name != undefined ? avatarInfo.name.split()[0] : "User";
-  const avatarPic =
-    avatarInfo?.avatar_url ||
-    `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=000000`;
+  console.log(avatarInfo);
 
   if (location.pathname === "/") {
     return null;

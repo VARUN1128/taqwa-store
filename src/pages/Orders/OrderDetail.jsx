@@ -178,7 +178,9 @@ const OrderDetail = () => {
       `<p>Payment Method: ${order.payment_method}</p>`
     );
 
-    printWindow.document.write(`<p>Total Amount: ₹${order.amount}</p>`);
+    printWindow.document.write(
+      `<p>Total Amount: <b> ₹${order.amount}</b> </p>`
+    );
 
     if (cod_charge) {
       printWindow.document.write(`<p>COD Charge:<b>₹ ${cod_charge}<b></p>`);
@@ -207,7 +209,9 @@ const OrderDetail = () => {
     printWindow.document.write(`<p>${order.address.address}</p>`);
     printWindow.document.write(`<p>${order.address.city}</p>`);
     printWindow.document.write(`<p>${order.address.state}</p>`);
+    printWindow.document.write(`<p>${order.address.post}</p>`);
     printWindow.document.write(`<p>${order.address.zip}</p>`);
+    printWindow.document.write(`<p>${order.address.whatsapp}</p>`);
     printWindow.document.write(`<p>${order.address.country}</p>`);
     printWindow.document.write("<h3 class='section-header'>Items</h3>");
     printWindow.document.write(
@@ -308,15 +312,19 @@ const OrderDetail = () => {
                       ? "blue"
                       : order.order_status === "delivered"
                       ? "green"
+                      : order.order_status === "cancelled"
+                      ? "grey"
                       : "red",
                 }}
               >
                 {order.order_status === "waiting" && order.status === "paid"
-                  ? "Order Recieved"
+                  ? "Order Received"
                   : order.order_status === "shipped"
                   ? "Order Shipped"
                   : order.order_status === "delivered"
                   ? "Order Delivered"
+                  : order.order_status === "cancelled"
+                  ? "Order Cancelled"
                   : order.status !== "paid"
                   ? "Payment Failed"
                   : "Something went wrong. Please contact support."}
@@ -337,15 +345,19 @@ const OrderDetail = () => {
                       ? "blue"
                       : order.order_status === "delivered"
                       ? "green"
+                      : order.order_status === "cancelled"
+                      ? "grey"
                       : "red",
                 }}
               >
                 {order.order_status === "waiting"
-                  ? "Order Recieved"
+                  ? "Order Received"
                   : order.order_status === "shipped"
                   ? "Order Shipped"
                   : order.order_status === "delivered"
                   ? "Order Delivered"
+                  : order.order_status === "cancelled"
+                  ? "Order Cancelled"
                   : "Something went wrong. Please contact support."}
               </span>
             </p>
@@ -396,6 +408,8 @@ const OrderDetail = () => {
               <p className="text-md">City: {order.address.city}</p>
               <p className="text-md">State: {order.address.state}</p>
               <p className="text-md">Zip: {order.address.zip}</p>
+              <p className="text-md">Whatsapp: {order.address.whatsapp}</p>
+              <p className="text-md">Post Office: {order.address.post}</p>
               <p className="text-md">Country: {order.address.country}</p>
             </>
           )}
@@ -419,6 +433,9 @@ const OrderDetail = () => {
               {order.order_status === "shipped" && (
                 <img src={ShippedSvg} alt="Shipped" className="w-[8em]" />
               )}
+              {order.order_status === "cancelled" && (
+                <img src={OrderErrorSvg} alt="Cancelled" className="w-[8em]" />
+              )}
               {order.order_status === "delivered" && (
                 <img src={DeliveredSvg} alt="Delivered" className="w-[8em]" />
               )}
@@ -430,6 +447,9 @@ const OrderDetail = () => {
               )}
               {order.order_status === "shipped" && (
                 <img src={ShippedSvg} alt="Shipped" className="w-[8em]" />
+              )}
+              {order.order_status === "cancelled" && (
+                <img src={OrderErrorSvg} alt="Cancelled" className="w-[8em]" />
               )}
               {order.order_status === "delivered" && (
                 <img src={DeliveredSvg} alt="Delivered" className="w-[8em]" />

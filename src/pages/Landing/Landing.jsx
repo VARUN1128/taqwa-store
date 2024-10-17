@@ -73,7 +73,7 @@ const BannerSlideShow = ({ location }) => {
         {banners.map((banner, index) => (
           <div key={index} className="each-slide pb-2">
             <div
-              className="rounded-md w-[96%] m-auto"
+              className="rounded-md w-[99%] m-auto"
               style={{
                 cursor: "pointer",
                 backgroundImage: `url(${banner.image_url})`,
@@ -109,8 +109,9 @@ export const TopBar = ({ avatarInfo, showCopy }) => {
 
   const [open, setOpen] = useState(false);
 
-  const userName = avatarInfo?.name != undefined ? avatarInfo.name.split()[0] : "User";
-    const avatarPic =
+  const userName =
+    avatarInfo?.name != undefined ? avatarInfo.name.split()[0] : "User";
+  const avatarPic =
     avatarInfo?.avatar_url ||
     `https://api.dicebear.com/9.x/adventurer/svg?mouth=variant23&seed=${userName}&eyebrows=variant10&skinColor=f2d3b1&backgroundColor=000000`;
 
@@ -546,7 +547,7 @@ export default function Landing() {
     fetchMostOrdered();
   }, []);
   return (
-    <div className="page overflow-y-auto hide-scrollbar pb-[5em] ">
+    <div className="page overflow-y-auto hide-scrollbar pb-[10em] ">
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar />
 
