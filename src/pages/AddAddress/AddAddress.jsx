@@ -18,104 +18,101 @@ export default function AddAddress() {
     formState: { errors },
   } = useForm();
 
-  const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const getAccessToken = async () => {
-    const response = await axios.get(
-      "https://www.universal-tutorial.com/api/getaccesstoken",
-      {
-        headers: {
-          Accept: "application/json",
-          "api-token": process.env.REACT_APP_UNIVERSE_KEY,
-          "user-email": "taqwafashionstoreonline@gmail.com",
-        },
-      }
-    );
+  // const getAccessToken = async () => {
+  //   const response = await axios.get(
+  //     "https://www.universal-tutorial.com/api/getaccesstoken",
+  //     {
+  //       headers: {
+  //         Accept: "application/json",
+  //         "api-token": process.env.REACT_APP_UNIVERSE_KEY,
+  //         "user-email": "taqwafashionstoreonline@gmail.com",
+  //       },
+  //     }
+  //   );
 
-    return response.data.auth_token;
-  };
+  //   return response.data.auth_token;
+  // };
 
-  const getCountries = async (authToken, retryCount = 0) => {
-    try {
-      const response = await axios.get(
-        "https://www.universal-tutorial.com/api/countries/",
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            Accept: "application/json",
-          },
-        }
-      );
+  // const getCountries = async (authToken, retryCount = 0) => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://www.universal-tutorial.com/api/countries/",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //           Accept: "application/json",
+  //         },
+  //       }
+  //     );
 
-      const countries = response.data.map((country) => ({
-        value: country.country_name,
-        label: country.country_name,
-      }));
+  //     const countries = response.data.map((country) => ({
+  //       value: country.country_name,
+  //       label: country.country_name,
+  //     }));
 
-      setCountries(countries);
-    } catch (error) {
-      console.error("Error fetching countries: ", error);
-      if (retryCount < 3) {
-        // Wait for 2 seconds before retrying
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        return getCountries(authToken, retryCount + 1);
-      } else {
-        // If all retries fail, set default country to India
-        setCountries([{ value: "India", label: "India" }]);
-        setSelectedCountry({ value: "India", label: "India" });
-        setValue("country", "India");
-      }
-    }
-  };
+  //     setCountries(countries);
+  //   } catch (error) {
+  //     console.error("Error fetching countries: ", error);
+  //     if (retryCount < 3) {
+  //       // Wait for 2 seconds before retrying
+  //       await new Promise((resolve) => setTimeout(resolve, 2000));
+  //       return getCountries(authToken, retryCount + 1);
+  //     } else {
+  //       // If all retries fail, set default country to India
+  //       setCountries([{ value: "India", label: "India" }]);
+  //       setSelectedCountry({ value: "India", label: "India" });
+  //       setValue("country", "India");
+  //     }
+  //   }
+  // };
 
-  const getStates = async (countryName, retryCount = 0) => {
-    try {
-      const authToken = await getAccessToken();
-      const response = await axios.get(
-        `https://www.universal-tutorial.com/api/states/${countryName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            Accept: "application/json",
-          },
-        }
-      );
+  // const getStates = async (countryName, retryCount = 0) => {
+  //   try {
+  //     const authToken = await getAccessToken();
+  //     const response = await axios.get(
+  //       `https://www.universal-tutorial.com/api/states/${countryName}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${authToken}`,
+  //           Accept: "application/json",
+  //         },
+  //       }
+  //     );
 
-      const states = response.data.map((state) => ({
-        value: state.state_name,
-        label: state.state_name,
-      }));
+  //     const states = response.data.map((state) => ({
+  //       value: state.state_name,
+  //       label: state.state_name,
+  //     }));
 
-      setStates(states);
-    } catch (error) {
-      console.error("Error fetching states: ", error);
-      if (retryCount < 3) {
-        // Wait for 2 seconds before retrying
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        return getStates(countryName, retryCount + 1);
-      } else {
-        // If all retries fail, set default state to Kerala
-        setStates([{ value: "Kerala", label: "Kerala" }]);
-        setSelectedState({ value: "Kerala", label: "Kerala" });
-        setValue("state", "Kerala");
-      }
-    }
-  };
-  useEffect(() => {
-    getAccessToken().then(getCountries);
-  }, []);
+  //     setStates(states);
+  //   } catch (error) {
+  //     console.error("Error fetching states: ", error);
+  //     if (retryCount < 3) {
+  //       // Wait for 2 seconds before retrying
+  //       await new Promise((resolve) => setTimeout(resolve, 2000));
+  //       return getStates(countryName, retryCount + 1);
+  //     } else {
+  //       // If all retries fail, set default state to Kerala
+  //       setStates([{ value: "Kerala", label: "Kerala" }]);
+  //       setSelectedState({ value: "Kerala", label: "Kerala" });
+  //       setValue("state", "Kerala");
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   getAccessToken().then(getCountries);
+  // }, []);
 
-  const handleCountryChange = (selectedOption) => {
-    setSelectedCountry(selectedOption);
-    setValue("country", selectedOption.value);
-    getStates(selectedOption.value);
-  };
+  // const handleCountryChange = (selectedOption) => {
+  //   setSelectedCountry(selectedOption);
+  //   setValue("country", selectedOption.value);
+  //   getStates(selectedOption.value);
+  // };
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -128,7 +125,7 @@ export default function AddAddress() {
       zip: data.zip,
       city: data.city.toUpperCase(),
       country: "INDIA",
-      state: selectedState ? selectedState.value.toUpperCase() : "KERALA",
+      state: data.state,
     };
     const { error } = await supabase
       .from("users")
@@ -158,14 +155,10 @@ export default function AddAddress() {
         setValue("phone", address.phone);
         setValue("address", address.address);
         setValue("zip", address.zip);
-        setValue("city", address.city);
-        setValue("country", { value: "India", label: "India" });
-        setValue(
-          "state",
-          address.state
-            ? { value: address.state, label: address.state }
-            : { value: "Kerala", label: "Kerala" }
-        );
+       setValue("city", address.city);
+       setValue("India", address.country);
+       // setValue("country", { value: "India", label: "India" });
+        setValue("state",address.state);
       }
     };
 
@@ -250,19 +243,47 @@ export default function AddAddress() {
           <span className="text-red-500">{errors.city.message}</span>
         )}
 
-        <Select
-          options={countries}
-          value={selectedCountry}
-          onChange={handleCountryChange}
-          placeholder="Country"
-          className="mb-4"
-          defaultInputValue="India"
+
+        <input
+          type="text"
+          name="country"
+          disabled
+          placeholder="India"
+          autoComplete="country"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
         />
         {errors.country && (
           <span className="text-red-500">{errors.country.message}</span>
         )}
 
-        <Select
+      <input
+          type="text"
+          name="state"
+          
+          placeholder="State"
+          autoComplete="state"
+          {...register("state", { required: "State is required" })}
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+        />
+        {errors.state && (
+          <span className="text-red-500">{errors.state.message}</span>
+        )}
+
+        
+
+        {/* <Select
+          options={countries}
+          value={selectedCountry}
+          enabled={0}
+          placeholder="India"
+          className="mb-4"
+          defaultInputValue="India"
+        />
+        {errors.country && (
+          <span className="text-red-500">{errors.country.message}</span>
+        )} */}
+
+        {/* <Select
           options={states}
           value={selectedState}
           onChange={(selectedOption) => {
@@ -275,7 +296,7 @@ export default function AddAddress() {
         />
         {errors.state && (
           <span className="text-red-500">{errors.state.message}</span>
-        )}
+        )} */}
 
         <div
           style={{
