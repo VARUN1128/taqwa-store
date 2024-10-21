@@ -544,21 +544,27 @@ export default function OrderConfirm() {
           {cart.find((product) => product.cod_price === null).name}
         </span>
       ) : (
-        <span className="ml-4 text-lg ">
+        <span className="ml-4 text-lg">
           <span
-            className="p-0.5"
+            className="px-1"
             style={{
               backgroundColor: "#1CA672",
               color: "white",
+              borderRadius: "5em",
+              display: "inline-block",
+              marginBottom: "0.2em",
             }}
           >
             🎁 Get Free Gifts On Online Payment!
           </span>
           <br />
           <span
-            className="bg-red-500 ml-4 p-0.5 "
+            className="bg-red-500 ml-4 px-1"
             style={{
               color: "white",
+              borderRadius: "5em",
+              display: "inline-block",
+              marginTop: "0.5em",
             }}
           >
             Cash On Delivery Charge Extra ₹ <b>{cod_charge}</b>

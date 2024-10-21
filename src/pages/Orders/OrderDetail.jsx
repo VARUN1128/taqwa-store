@@ -264,10 +264,12 @@ const OrderDetail = () => {
     printWindow.document.write("</table>");
     printWindow.document.write("<div class='invoice-footer'>");
     printWindow.document.write("<h3 class='section-header'>Contact Us</h3>");
+
+    printWindow.document.write("<p>Phone: +91 81292 40844</p>");
+    // add an instagram logo linked to instagram
     printWindow.document.write(
-      "<p>Address: Shopping Complex, Amballoor - Kanjiramattom Rd, Kunnumpuram, Kanjiramattom, Kerala 682315</p>"
+      "<a href='https://www.instagram.com/taqwa_fashionstore_ekm/'><img src='https://cdn-icons-png.flaticon.com/512/2111/2111463.png' alt='Instagram' style='width: 30px; height: 30px;'></a>"
     );
-    printWindow.document.write("<p>Phone: +91 9496990907</p>");
 
     printWindow.document.write("</div>");
     printWindow.document.write("</body></html>");
