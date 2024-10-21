@@ -277,6 +277,68 @@ const OrderDetail = () => {
     printWindow.print();
   };
 
+  const cancelOrder = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_ORDER_URL}/cancel`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            order_id: order.order_id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to cancel the order");
+      }
+
+      if (data.success) {
+        toast.success("Order cancelled successfully");
+      } else {
+        throw new Error(data.message || "Failed to cancel the order");
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`);
+    }
+  };
+
+  const confirmCancelOrder = () => {
+    toast(
+      ({ closeToast }) => (
+        <div>
+          <p>Are you sure you want to cancel the order?</p>
+          <button
+            className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 transition duration-300 mr-2"
+            onClick={() => {
+              cancelOrder();
+              closeToast();
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="bg-gray-500 text-white py-1 px-3 rounded hover:bg-gray-700 transition duration-300"
+            onClick={closeToast}
+          >
+            No
+          </button>
+        </div>
+      ),
+      {
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+      }
+    );
+  };
+
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopPageDetail title="Order Details" />
@@ -420,7 +482,7 @@ const OrderDetail = () => {
           <LiaFileDownloadSolid
             className="cursor-pointer
           absolute bottom-0 right-0 p-2  rounded-full
-          "
+          bg-white shadow-md"
             size={45}
             color="black"
             onClick={printDetails}
@@ -462,6 +524,19 @@ const OrderDetail = () => {
           )}
         </div>
       </div>
+
+      <div className="flex justify-center mt-4">
+        {order.order_status !== "delivered" &&
+          order.payment_method === "COD" && (
+            <button
+              className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-300"
+              onClick={confirmCancelOrder}
+            >
+              Cancel
+            </button>
+          )}
+      </div>
+
       {order.order_status === "delivered" && (
         <div>
           <h2 className="text-xl text-left ml-3 my-3 product-sans ">
