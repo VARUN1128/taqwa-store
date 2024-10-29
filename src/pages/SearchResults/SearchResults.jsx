@@ -57,13 +57,18 @@ const fetchProducts = async (
       }
     }
 
-    // Move the sorting code outside of the if (offer === "under" && offerValue) condition
-    productsQuery = productsQuery.order(
-      sortOption.split("_")[0] === "rating"
-        ? "avg_rating"
-        : sortOption.split("_")[0],
-      { ascending: sortOption.endsWith("asc") }
-    );
+    // Default sorting by creation date to show latest products first
+    productsQuery = productsQuery.order("created_at", { ascending: false });
+
+    // Apply additional sorting based on sortOption if provided
+    if (sortOption) {
+      productsQuery = productsQuery.order(
+        sortOption.split("_")[0] === "rating"
+          ? "avg_rating"
+          : sortOption.split("_")[0],
+        { ascending: sortOption.endsWith("asc") }
+      );
+    }
 
     const { data, error } = await productsQuery;
 
@@ -77,7 +82,6 @@ const fetchProducts = async (
     return [];
   }
 };
-
 export default function SearchResults() {
   const { session } = useContext(SessionContext);
   const location = useLocation();
