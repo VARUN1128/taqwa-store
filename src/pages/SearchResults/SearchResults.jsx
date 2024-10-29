@@ -43,7 +43,7 @@ const fetchProducts = async (
 
     if (selectedBrand) {
       if (offerValue) {
-        productsQuery = productsQuery.lte("price", offerValue);
+        productsQuery = productsQuery.eq("price", offerValue);
       } else {
         productsQuery = productsQuery.eq("brand_categ", selectedBrand);
       }
@@ -53,7 +53,7 @@ const fetchProducts = async (
       if (isNaN(offerValue)) {
         throw new Error("Invalid value for offer");
       } else {
-        productsQuery = productsQuery.lte("price", offerValue);
+        productsQuery = productsQuery.eq("price", offerValue);
       }
     }
 
