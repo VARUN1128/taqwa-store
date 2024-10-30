@@ -43,25 +43,34 @@ const fetchProducts = async (
 
     if (selectedBrand) {
       if (offerValue) {
-        productsQuery = productsQuery.eq("price", offerValue);
+        productsQuery = productsQuery
+          .lte("price", offerValue)
+          .order("price", { ascending: false })
+          .order("created_at", { ascending: false }); // Secondary sort by creation date
       } else {
-        productsQuery = productsQuery.eq("brand_categ", selectedBrand);
+        productsQuery = productsQuery
+          .eq("brand_categ", selectedBrand)
+          .order("created_at", { ascending: false });
       }
-    }
-
-    if (offer === "under" && offerValue) {
+    } else if (offer === "under" && offerValue) {
       if (isNaN(offerValue)) {
         throw new Error("Invalid value for offer");
       } else {
-        productsQuery = productsQuery.eq("price", offerValue);
+        productsQuery = productsQuery
+          .lte("price", offerValue)
+          .order("price", { ascending: false })
+          .order("created_at", { ascending: false }); // Secondary sort by creation date
       }
+    } else {
+      productsQuery = productsQuery.order("created_at", { ascending: false });
     }
 
-    // Default sorting by creation date to show latest products first
-    productsQuery = productsQuery.order("created_at", { ascending: false });
-
     // Apply additional sorting based on sortOption if provided
-    if (sortOption) {
+    // Only apply if no brand+offer or under offer filtering is active
+    if (
+      sortOption &&
+      !((selectedBrand && offerValue) || (offer === "under" && offerValue))
+    ) {
       productsQuery = productsQuery.order(
         sortOption.split("_")[0] === "rating"
           ? "avg_rating"
@@ -71,7 +80,6 @@ const fetchProducts = async (
     }
 
     const { data, error } = await productsQuery;
-
     if (error) {
       throw error;
     } else {
@@ -82,6 +90,7 @@ const fetchProducts = async (
     return [];
   }
 };
+
 export default function SearchResults() {
   const { session } = useContext(SessionContext);
   const location = useLocation();
