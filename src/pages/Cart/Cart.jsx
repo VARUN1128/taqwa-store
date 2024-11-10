@@ -83,7 +83,7 @@ const Cart = () => {
             <p className="text-sm text-gray-500">
               Category: {product.category}
             </p>
-            {!product.cod_price && (
+            {!product.cod_price && !product.codPriceMap && (
               <div
                 className="product-action justify-center items-center w-full flex m-auto gap-3 mt-2 text-sm"
                 style={{

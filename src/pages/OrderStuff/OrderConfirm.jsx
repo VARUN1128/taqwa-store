@@ -228,11 +228,22 @@ export default function OrderConfirm() {
   //   0
   // );
 
-  const cod_charge = Object.values(cart).reduce(
-    (total, item) =>
-      total + (item.cod_price ? item.cod_price * item.quantity : 0),
-    0
-  );
+  const cod_charge = Object.values(cart).reduce((total, item) => {
+    const codPrice =
+      item.codPriceMap && item.size
+        ? item.codPriceMap[item.size]
+        : item.cod_price;
+    return total + (codPrice ? codPrice * item.quantity : 0);
+  }, 0);
+
+  useEffect(() => {
+    cart.forEach((product) => {
+      if (product.codPriceMap) {
+        console.log("Price Map for product:", product.codPriceMap);
+        console.log(product.codPriceMap[product.size]);
+      }
+    });
+  }, [cart]);
 
   const createOrder = async () => {
     console.log("Address", address.current);
@@ -533,7 +544,14 @@ export default function OrderConfirm() {
         </p>
       </div>
 
-      {cart.some((product) => product.cod_price === null) ? (
+      {cart.some(
+        (product) =>
+          product.cod_price == null &&
+          (!product.codPriceMap ||
+            !product.size ||
+            product.codPriceMap[product.size] == null ||
+            product.codPriceMap[product.size] === undefined)
+      ) ? (
         <span
           className="ml-4 text-xs"
           style={{
@@ -541,7 +559,16 @@ export default function OrderConfirm() {
           }}
         >
           Cash On Delivery Not Available For{" "}
-          {cart.find((product) => product.cod_price === null).name}
+          {
+            cart.find(
+              (product) =>
+                product.cod_price == null &&
+                (!product.codPriceMap ||
+                  !product.size ||
+                  product.codPriceMap[product.size] == null ||
+                  product.codPriceMap[product.size] === undefined)
+            ).name
+          }
         </span>
       ) : (
         <span className="ml-4 text-lg">
@@ -594,7 +621,13 @@ export default function OrderConfirm() {
               <span>Online Payment</span>
             </div>
 
-            {!cart.some((product) => product.cod_price === null) && (
+            {!cart.some(
+              (product) =>
+                product.cod_price === null &&
+                (!product.codPriceMap ||
+                  !product.size ||
+                  product.codPriceMap[product.size] === null)
+            ) && (
               <div
                 style={{
                   // backgroundColor: "#ff9f00",

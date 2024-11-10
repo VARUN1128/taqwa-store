@@ -16,12 +16,14 @@ import moment from "moment";
 import { LiaFileDownloadSolid } from "react-icons/lia";
 
 const displayCodCharge = (cartItems) => {
-  return Object.values(cartItems).reduce(
-    (total, item) => total + (item.cod_price ? item.cod_price : 0),
-    0
-  );
+  return Object.values(cartItems).reduce((total, item) => {
+    const codPrice =
+      item.codPriceMap && item.size
+        ? item.codPriceMap[item.size]
+        : item.cod_price;
+    return total + (codPrice ? codPrice : 0);
+  }, 0);
 };
-
 const OrderDetail = () => {
   const { session } = useContext(SessionContext);
   const [order, setOrder] = useState(null);
@@ -58,7 +60,13 @@ const OrderDetail = () => {
     fetchOrder();
     if (order && order.payment_method === "COD") {
       const ordercod_charge = Object.values(order.items).reduce(
-        (total, item) => total + (item.cod_price ? item.cod_price : 0),
+        (total, item) => {
+          const codPrice =
+            item.codPriceMap && item.size
+              ? item.codPriceMap[item.size]
+              : item.cod_price;
+          return total + (codPrice ? codPrice : 0);
+        },
         0
       );
       setCodCharge(ordercod_charge);
