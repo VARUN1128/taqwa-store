@@ -313,7 +313,7 @@ const OrderDetail = () => {
         throw new Error(data.message || "Failed to cancel the order");
       }
     } catch (error) {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`${error.message}`);
     }
   };
 
@@ -535,6 +535,7 @@ const OrderDetail = () => {
 
       <div className="flex justify-center mt-4">
         {order.order_status !== "delivered" &&
+          order.order_status !== "cancelled" &&
           order.payment_method === "COD" && (
             <button
               className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700 transition duration-300"
