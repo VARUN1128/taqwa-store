@@ -15,6 +15,7 @@ import PaymentProcessLoadScreen from "../../components/PaymentProcessLoadScreen"
 import CircularProgress from "@mui/material/CircularProgress";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { BsCartCheckFill } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 function Modal({ isOpen, onClose, onConfirm, cod_charge }) {
   const [confirming, setConfirming] = useState(false);
@@ -605,14 +606,20 @@ export default function OrderConfirm() {
             <h1 className="text-xl font-semibold ">Choose Payment Method</h1>
             <div
               style={{
-                backgroundColor: "#1CA672",
+                // backgroundColor: "#1CA672",
                 color: "white",
                 transition: "transform 0.1s",
                 boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
                 marginTop: "1em",
+                disabled: true,
+                backgroundColor: "gray",
+                opacity: "0.5",
               }}
               className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
-              onClick={handlePayment}
+              // onClick={handlePayment}
+              onClick={() => {
+                alert("Online Payment is temporarily unavailable");
+              }}
             >
               <SiRazorpay
                 size={20}
