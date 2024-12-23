@@ -18,9 +18,51 @@ import { BsCartCheckFill } from "react-icons/bs";
 import { toast } from "react-toastify";
 import QRCode from "qrcode";
 import { IoCloseCircle } from "react-icons/io5";
+import { FaWhatsapp } from "react-icons/fa";
+import { MdContentCopy } from "react-icons/md";
+import {
+  SiGooglepay,
+  SiPhonepe,
+  SiPaytm,
+  SiAmazon,
+  SiPaypal,
+} from "react-icons/si";
 
-const QrCodeModal = ({ onClose, upiLink }) => {
+const UPI_ICONS = [
+  { icon: SiGooglepay },
+  { icon: SiPhonepe },
+  { icon: SiPaytm },
+  { icon: SiAmazon },
+  { icon: SiPaypal },
+];
+
+const QrCodeModal = ({
+  onClose,
+  upiLink,
+  cart,
+  totalFinalPrice,
+  userInfo,
+  onDone,
+}) => {
   const [qrCodeImage, setQrCodeImage] = useState("");
+  const [currentIconIndex, setCurrentIconIndex] = useState(0);
+  const [showFollowUp, setShowFollowUp] = useState(false);
+  const [fadeIn, setFadeIn] = useState(false);
+  const whatsappNumber = "+91 7558856844";
+
+  const cartItemsMessage = cart.map((item) => {
+    const itemName = `Name: ${item.name}`;
+    const itemSize = item.size ? `Size: ${item.size}` : "";
+    const itemQuantity = `Quantity: ${item.quantity}`;
+    const itemPrice = `Price: ₹${
+      item.priceMap ? item.priceMap[item.size] : item.price
+    }`;
+    return `${itemName}\n${itemSize}\n${itemQuantity}\n${itemPrice}`;
+  });
+
+  const cartItemsMessageString = cartItemsMessage.join("\n\n");
+
+  const address = `${userInfo.name}\n ${userInfo.phone}\n${userInfo.address}, ${userInfo.zip}, ${userInfo.post}\n ${userInfo.city}\n ${userInfo.whatsapp}\n ${userInfo.state}\n${userInfo.country}\n`;
 
   useEffect(() => {
     const generateQrCode = async () => {
@@ -28,36 +70,145 @@ const QrCodeModal = ({ onClose, upiLink }) => {
         const qrCode = await QRCode.toDataURL(upiLink, {
           errorCorrectionLevel: "H",
           width: 300,
-          color: {
-            dark: "#000000",
-            light: "#ffffff",
-          },
+          color: { dark: "#000000", light: "#ffffff" },
         });
         setQrCodeImage(qrCode);
       } catch (error) {
         console.error("Error generating QR code:", error);
       }
     };
-
     generateQrCode();
+
+    const interval = setInterval(() => {
+      setCurrentIconIndex((prev) => (prev + 1) % UPI_ICONS.length);
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [upiLink]);
 
+  const openWhatsapp = () => {
+    const message = encodeURIComponent(
+      "Here's my payment screenshot for order: \n " +
+        cartItemsMessageString +
+        `\n\nTotal Price: *₹${totalFinalPrice}* \n\nAddress: \n${address}`
+    );
+    window.open(
+      `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${message}`
+    );
+
+    setShowFollowUp(true);
+    setTimeout(() => setFadeIn(true), 100);
+  };
+
+  const CurrentIcon = UPI_ICONS[currentIconIndex].icon;
+
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg relative max-w-[90%] max-h-[90%]">
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 text-2xl border-none bg-transparent cursor-pointer"
-        >
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+      <div className="bg-white rounded-lg relative w-full max-w-md my-8">
+        <button onClick={onClose} className="absolute top-2 right-2 z-10">
           <IoCloseCircle size={28} color="red" />
         </button>
-        {qrCodeImage && (
-          <img
-            src={qrCodeImage}
-            alt="UPI QR Code"
-            className="max-w-full h-auto"
-          />
-        )}
+
+        <div className="p-4 sm:p-6 space-y-4">
+          {!showFollowUp ? (
+            <>
+              <h2 className="text-xl sm:text-2xl font-bold text-center">
+                Payment Instructions
+              </h2>
+
+              <div className="flex justify-center">
+                {qrCodeImage && (
+                  <img
+                    src={qrCodeImage}
+                    alt="UPI QR Code"
+                    className="w-48 sm:w-64 h-auto"
+                  />
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <h3 className="font-semibold mb-1">Option 1: Scan QR Code</h3>
+                  <p className="text-sm text-gray-600">
+                    Open any UPI app and scan the QR code above
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <h3 className="font-semibold mb-1">
+                    Option 2: Pay Directly to Bank Account
+                  </h3>
+                  <p className="text-gray-600">
+                    Account Details: M/S. Taqwa Fashion Store And Taqwa Gadgets
+                    <br />
+                    AC No: <span className="select-all">0032073000000424</span>
+                    <br />
+                    IFSC CODE: <span className="select-all">SIBL0000032</span>
+                    <br /> BANK: SOUTH INDIAN BANK (SIB)
+                  </p>
+                </div>
+
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <h3 className="font-semibold mb-1">
+                    Option 3: Pay via any UPI App
+                  </h3>
+                  <a
+                    href={upiLink}
+                    className="inline-flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-400"
+                  >
+                    <CurrentIcon
+                      size={20}
+                      className="transition-all duration-500"
+                    />
+                    <span>Open UPI App</span>
+                  </a>
+                </div>
+              </div>
+
+              <div className="border-t pt-3">
+                <p className="text-sm text-gray-600">
+                  After payment, send screenshot to:
+                  <span className="font-semibold block">{whatsappNumber}</span>
+                </p>
+                <button
+                  onClick={openWhatsapp}
+                  className="mt-2 w-full bg-green-500 text-white py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-green-600"
+                >
+                  <FaWhatsapp size={20} />
+                  <span>Send Screenshot on WhatsApp</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            <div
+              className={`text-center py-8 space-y-4 transition-opacity duration-500 ${
+                fadeIn ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
+                <FaWhatsapp size={32} className="text-green-500" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-800">
+                Thank You for Your Order!
+              </h2>
+              <p className="text-gray-600">
+                We've opened WhatsApp for you to send your payment confirmation.
+                All further communications regarding your order will be handled
+                through WhatsApp.
+              </p>
+              <p className="text-gray-600">
+                Our team will process your order once we receive your payment
+                screenshot.
+              </p>
+              <button
+                onClick={onDone}
+                className="mt-4 px-6 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"
+              >
+                Done
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -506,12 +657,19 @@ export default function OrderConfirm() {
       />
       {ShowQrModal && (
         <QrCodeModal
+          cart={cart}
           upiLink={upiQrLink}
           onClose={() => {
             console.log("closing");
             console.log(ShowQrModal);
             setShowQrModal(false);
           }}
+          onDone={() => {
+            dispatch(removeEntireItem());
+            navigate("/");
+          }}
+          totalFinalPrice={totalFinalPrice}
+          userInfo={address.current}
         />
       )}
       {address.current && (
