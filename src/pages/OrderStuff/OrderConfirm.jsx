@@ -16,6 +16,52 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { BsCartCheckFill } from "react-icons/bs";
 import { toast } from "react-toastify";
+import QRCode from "qrcode";
+import { IoCloseCircle } from "react-icons/io5";
+
+const QrCodeModal = ({ onClose, upiLink }) => {
+  const [qrCodeImage, setQrCodeImage] = useState("");
+
+  useEffect(() => {
+    const generateQrCode = async () => {
+      try {
+        const qrCode = await QRCode.toDataURL(upiLink, {
+          errorCorrectionLevel: "H",
+          width: 300,
+          color: {
+            dark: "#000000",
+            light: "#ffffff",
+          },
+        });
+        setQrCodeImage(qrCode);
+      } catch (error) {
+        console.error("Error generating QR code:", error);
+      }
+    };
+
+    generateQrCode();
+  }, [upiLink]);
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-lg relative max-w-[90%] max-h-[90%]">
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-2xl border-none bg-transparent cursor-pointer"
+        >
+          <IoCloseCircle size={28} color="red" />
+        </button>
+        {qrCodeImage && (
+          <img
+            src={qrCodeImage}
+            alt="UPI QR Code"
+            className="max-w-full h-auto"
+          />
+        )}
+      </div>
+    </div>
+  );
+};
 
 function Modal({ isOpen, onClose, onConfirm, cod_charge }) {
   const [confirming, setConfirming] = useState(false);
@@ -149,6 +195,10 @@ export default function OrderConfirm() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [OrderConfirmed, setOrderConfirmed] = useState(true);
+
+  const [ShowQrModal, setShowQrModal] = useState(false);
+  const [qrCodeImage, setqrCodeImage] = useState(null);
+  const [upiQrLink, setUpiQrLink] = useState(null);
 
   const getPaymentResponseOnSuccess = async (
     paymentId,
@@ -389,6 +439,35 @@ export default function OrderConfirm() {
     console.log("New session:", session);
   }, [session]);
 
+  const qrPayment = async () => {
+    console.log("Its on");
+    const payeeName = "TAQWA FASHION STORE & TAQWA GADGETS";
+    const payeeUPI = "Q50267725@ybl";
+    const payeeAmount = totalFinalPrice;
+    const payeeCurrency = "INR";
+
+    const payeeNote = `Payment for ${cart.map((item) => item.name).join(", ")}`;
+
+    const maxLength = 50;
+    const trimmedPayeeNote =
+      payeeNote.length > maxLength
+        ? `${payeeNote.substring(0, maxLength - 3)}...`
+        : payeeNote;
+
+    const upiLink = `upi://pay?pa=${encodeURIComponent(
+      payeeUPI
+    )}&pn=${encodeURIComponent(payeeName)}&mc=&tid=&tr=&tn=${encodeURIComponent(
+      trimmedPayeeNote
+    )}&am=${encodeURIComponent(payeeAmount)}&cu=${encodeURIComponent(
+      payeeCurrency
+    )}`;
+
+    //display the qrcode on the page
+
+    setShowQrModal(true);
+    setUpiQrLink(upiLink);
+  };
+
   const cashOnDelivey = async () => {
     const response = await axios.post(
       `${BACKEND_URL}/create-order`,
@@ -425,6 +504,16 @@ export default function OrderConfirm() {
         onConfirm={cashOnDelivey}
         cod_charge={cod_charge}
       />
+      {ShowQrModal && (
+        <QrCodeModal
+          upiLink={upiQrLink}
+          onClose={() => {
+            console.log("closing");
+            console.log(ShowQrModal);
+            setShowQrModal(false);
+          }}
+        />
+      )}
       {address.current && (
         <div className="p-4">
           <h1 className="text-2xl font-semibold">Order Summary</h1>
@@ -606,20 +695,17 @@ export default function OrderConfirm() {
             <h1 className="text-xl font-semibold ">Choose Payment Method</h1>
             <div
               style={{
-                // backgroundColor: "#1CA672",
+                backgroundColor: "#1CA672",
                 color: "white",
                 transition: "transform 0.1s",
                 boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
                 marginTop: "1em",
                 disabled: true,
-                backgroundColor: "gray",
-                opacity: "0.5",
+                // backgroundColor: "gray",
+                // opacity: "0.5",
               }}
               className="text-center px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base w-[70%] sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 m-auto"
-              // onClick={handlePayment}
-              onClick={() => {
-                alert("Online Payment is temporarily unavailable");
-              }}
+              onClick={qrPayment}
             >
               <SiRazorpay
                 size={20}
