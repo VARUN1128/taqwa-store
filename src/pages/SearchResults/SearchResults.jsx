@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import supabase from "../../supabase";
 import { CardList, TopBar, CategoryCard } from "../Landing/Landing";
 import { SessionContext } from "../../components/SessionContext";
@@ -226,6 +232,26 @@ export default function SearchResults() {
     setSelectedBrand(brand);
     setPage(0);
   };
+
+  const saveScrollPosition = () => {
+    const pageElement = document.querySelector(".page");
+    if (pageElement) {
+      console.log("Saving scroll position: ", pageElement.scrollTop);
+      sessionStorage.setItem("listScroll", pageElement.scrollTop);
+    }
+  };
+
+  // Restore scroll position when returning
+  useEffect(() => {
+    if (hasFetched && !isFetching && products.length > 0) {
+      const savedScroll = sessionStorage.getItem("listScroll");
+      const pageElement = document.querySelector(".page");
+      if (savedScroll && pageElement) {
+        console.log("Restoring scroll position: ", savedScroll);
+        pageElement.scrollTop = parseInt(savedScroll);
+      }
+    }
+  }, [hasFetched, isFetching, products.length]);
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[10em] overflow-x-hidden">
       <TopBar showCopy avatarInfo={session?.user.user_metadata} />
@@ -329,6 +355,7 @@ export default function SearchResults() {
             session={session}
             products={products}
             title={query && `Search results for "${query}"`}
+            saveScrollPosition={saveScrollPosition}
           />
 
           <div className="flex justify-center mt-5">

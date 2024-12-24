@@ -39,7 +39,7 @@ export default function RegisterStart() {
       return;
     }
     setLoading(false);
-    navigate("/home");
+    navigate("/cart");
   }
 
   const items = [

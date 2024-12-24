@@ -220,6 +220,7 @@ const ProductCard = ({
   brand,
   category,
   stock,
+  saveScrollPosition,
 }) => {
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
   const navigate = useNavigate();
@@ -228,6 +229,9 @@ const ProductCard = ({
   const isInWishlist = wishlist.includes(id);
 
   const handleClick = () => {
+    if (saveScrollPosition) {
+      saveScrollPosition();
+    }
     navigate(`/product/${id}#top`);
   };
 
@@ -593,13 +597,14 @@ export default function Landing() {
   );
 }
 
-export const CardList = ({ title, products, session }) => {
+export const CardList = ({ title, products, session, saveScrollPosition }) => {
   return (
     <>
       <h3 className="text-xl text-left ml-2 mt-2 product-sans">{title}</h3>
       <div className="flex flex-wrap flex-grow gap-1  justify-center  m-auto mt-5">
         {products.map((product) => (
           <ProductCard
+            saveScrollPosition={saveScrollPosition}
             id={product.id}
             productName={product.name}
             rating={product.avg_rating}
