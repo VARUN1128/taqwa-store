@@ -50,6 +50,10 @@ const OTPInput = ({ otpSent, otp, setOtp }) => {
           onKeyDown={(e) => handleKeyDown(e, index)}
           onPaste={index === 0 ? handlePaste : null}
           ref={(el) => (inputRefs.current[index] = el)}
+          // Add these attributes for OTP autofill
+          autoComplete={index === 0 ? "one-time-code" : "off"}
+          inputMode="numeric"
+          pattern="[0-9]*"
           className={`z-20 cont-google-btn w-10 h-10 text-black bg-white rounded-2xl text-lg font-bold border-2 outline-none transition-opacity duration-500 ease-in-out text-center ${
             otpSent ? "border-black opacity-100" : "border-gray-300 opacity-0"
           }`}

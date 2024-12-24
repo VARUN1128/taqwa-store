@@ -57,7 +57,9 @@ const QrCodeModal = ({
     const itemPrice = `Price: ₹${
       item.priceMap ? item.priceMap[item.size] : item.price
     }`;
-    return `${itemName}\n${itemSize}\n${itemQuantity}\n${itemPrice}`;
+    const itemLink = `Product Link: ${window.location.origin}/product/${item.id}#top`;
+
+    return `${itemName}\n${itemSize}\n${itemQuantity}\n${itemPrice}\n${itemLink}`;
   });
 
   const cartItemsMessageString = cartItemsMessage.join("\n\n");
