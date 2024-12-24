@@ -388,10 +388,25 @@ const ProductCard = ({
 export const CategoryCard = ({ index, category, thumbnail, loading }) => {
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleClick = () => {
     navigate(`/search?category=${category}`);
   };
+
+  useEffect(() => {
+    // Preload the image
+    const img = new Image();
+    img.src = thumbnail;
+    img.onload = () => {
+      setIsLoading(false);
+      setImageLoaded(true);
+    };
+    img.onerror = () => {
+      setIsLoading(false);
+      setImageLoaded(false);
+    };
+  }, [thumbnail]);
 
   return (
     <div
@@ -399,41 +414,36 @@ export const CategoryCard = ({ index, category, thumbnail, loading }) => {
       onClick={handleClick}
       key={index}
     >
-      {!imageLoaded && (
-        <div className=" w-[10em] h-[15em]">
+      {isLoading ? (
+        <div className="w-[10em] h-[15em]">
           <ResponsiveContentLoader height="15em" />
         </div>
+      ) : (
+        <div className="relative w-[10em] h-[15em]">
+          <img
+            src={thumbnail}
+            alt="Category Thumbnail"
+            className="object-cover rounded-lg w-[10em] h-[15em]"
+            style={{
+              boxShadow:
+                "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+            }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "path/to/default/image.jpg";
+            }}
+          />
+          <p
+            style={{
+              fontFamily: "Grifter",
+              letterSpacing: "0.05em",
+            }}
+            className="category-name text-center mt-2 absolute bottom-1 left-2 text-white font-bold"
+          >
+            {category}
+          </p>
+        </div>
       )}
-      <div className="relative w-[10em] h-[15em]">
-        <img
-          src={thumbnail}
-          alt="Category Thumbnail"
-          className="object-cover rounded-lg w-[10em] h-[15em]"
-          style={{
-            display: imageLoaded ? "block" : "none",
-            boxShadow:
-              "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-          }}
-          onLoad={() => {
-            setTimeout(() => {
-              setImageLoaded(true);
-            }, 300);
-          }}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "path/to/default/image.jpg"; // replace with your default image path
-          }}
-        />
-        <p
-          style={{
-            fontFamily: "Grifter",
-            letterSpacing: "0.05em",
-          }}
-          className="category-name text-center mt-2 absolute bottom-1 left-2 text-white font-bold"
-        >
-          {category}
-        </p>
-      </div>
     </div>
   );
 };
