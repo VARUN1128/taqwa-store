@@ -48,7 +48,7 @@ const fetchProducts = async (
     }
 
     if (selectedBrand) {
-      if (offerValue) {
+      if (offerValue && !isNaN(offerValue)) {
         productsQuery = productsQuery
           .lte("price", offerValue)
           .order("price", { ascending: false })
@@ -111,8 +111,15 @@ export default function SearchResults() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [offerValue, setOfferValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [page, setPage] = useState(0);
   const [sortOption, setSortOption] = useState("price_desc");
+  // const [page, setPage] = useState(0);
+  const [page, setPage] = useState(() => {
+    return parseInt(sessionStorage.getItem("currentPage")) || 0;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("currentPage", page.toString());
+  }, [page]);
 
   const options = [
     { value: "price_asc", label: "Price: Low to High" },
@@ -132,6 +139,12 @@ export default function SearchResults() {
     const queryOffer = searchParams.get("offer");
     const queryOfferValue = searchParams.get("value");
     const querySubBrand = searchParams.get("brand");
+
+    // Clear stored page when search parameters change
+    // if (selectedBrand !== querySubBrand) {
+    //   setPage(0);
+    //   sessionStorage.setItem("pageNo", "0");
+    // }
 
     setQuery(queryFromUrl || "");
     setCategory(queryCategory || "");
@@ -236,13 +249,16 @@ export default function SearchResults() {
   const saveScrollPosition = () => {
     const pageElement = document.querySelector(".page");
     if (pageElement) {
-      console.log("Saving scroll position: ", pageElement.scrollTop);
       sessionStorage.setItem("listScroll", pageElement.scrollTop);
+      sessionStorage.setItem("currentPage", page.toString());
+      console.log("PageNO", sessionStorage.getItem("currentPage"));
     }
   };
 
   // Restore scroll position when returning
   useEffect(() => {
+    console.log("PageNosSession", sessionStorage.getItem("currentPage"));
+    console.log("PageNos", page);
     if (hasFetched && !isFetching && products.length > 0) {
       const savedScroll = sessionStorage.getItem("listScroll");
       const pageElement = document.querySelector(".page");

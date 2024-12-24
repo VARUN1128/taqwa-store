@@ -458,6 +458,12 @@ export default function Landing() {
   const [topRated, setTopRated] = useState([]);
   const [mostWishlised, setMostWishlised] = useState([]);
   const [mostOrdered, setMostOrdered] = useState([]);
+
+  useEffect(() => {
+    console.log("pageNo", sessionStorage.getItem("currentPage"));
+    sessionStorage.removeItem("currentPage");
+    sessionStorage.removeItem("scrollPosition");
+  }, []);
   useEffect(() => {
     const fetchCategories = async () => {
       const savedCategories = localStorage.getItem("categories");
