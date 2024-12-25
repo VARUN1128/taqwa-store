@@ -15,7 +15,7 @@ import PaymentProcessLoadScreen from "../../components/PaymentProcessLoadScreen"
 import CircularProgress from "@mui/material/CircularProgress";
 import { MdCheckCircleOutline } from "react-icons/md";
 import { BsCartCheckFill } from "react-icons/bs";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import QRCode from "qrcode";
 import { IoCloseCircle } from "react-icons/io5";
 import { FaWhatsapp } from "react-icons/fa";
@@ -148,6 +148,31 @@ const QrCodeModal = ({
                     IFSC CODE: <span className="select-all">SIBL0000032</span>
                     <br /> BANK: SOUTH INDIAN BANK (SIB)
                   </p>
+                </div>
+
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <h3 className="font-semibold mb-1">
+                    Option 3: Pay via any UPI App
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <CurrentIcon
+                      size={20}
+                      className="transition-all duration-500"
+                      color="black"
+                    />
+                    <span className="select-all bg-white px-3 py-1.5 rounded text-base font-medium">
+                      Q50267725@ybl
+                    </span>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText("Q50267725@ybl");
+                        toast.success("UPI ID copied!");
+                      }}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      <MdContentCopy size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -635,6 +660,7 @@ export default function OrderConfirm() {
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[6em]">
       <TopPageDetail title="Confirm Order" />
+      <ToastContainer />
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
