@@ -149,22 +149,6 @@ const QrCodeModal = ({
                     <br /> BANK: SOUTH INDIAN BANK (SIB)
                   </p>
                 </div>
-
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <h3 className="font-semibold mb-1">
-                    Option 3: Pay via any UPI App
-                  </h3>
-                  <a
-                    href={upiLink}
-                    className="inline-flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-orange-400"
-                  >
-                    <CurrentIcon
-                      size={20}
-                      className="transition-all duration-500"
-                    />
-                    <span>Open UPI App</span>
-                  </a>
-                </div>
               </div>
 
               <div className="border-t pt-3">
