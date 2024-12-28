@@ -273,13 +273,14 @@ const ProductCard = ({
       onClick={handleClick}
       className="mb-3 bg-white flex flex-col justify-between"
       style={{
-        width: "calc(50% - 0.5rem)", // This ensures that at least two cards are displayed in a row on small screens
+        width: "calc(50% - 0.5rem)",
         cursor: "pointer",
+        display: stock === 0 && thumbnailLoaded ? "none" : "flex",
         "@media (min-width: 1024px)": {
-          width: "80%", // This sets the width to 80% on larger screens
+          width: "80%",
         },
         "@media (min-width: 1200px)": {
-          width: "60%", // This sets the width to 60% on even larger screens
+          width: "60%",
         },
       }}
     >
