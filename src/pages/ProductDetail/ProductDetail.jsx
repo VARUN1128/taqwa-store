@@ -111,7 +111,7 @@ const Slideshow = ({ slideImages, rating }) => {
           return (
             <div
               key={index}
-              className="flex items-center justify-center bg-cover h-96 w-[96%] mx-auto rounded-lg bg-center bg-no-repeat mt-4 cursor-zoom-in lg:object-contain lg:h-96 lg:w-96"
+              className="flex items-center justify-center bg-cover h-96 w-[96%] mx-auto rounded-lg bg-center bg-no-repeat mt-4 cursor-zoom-in lg:w-[30%] lg:h-[40em]  "
               style={{
                 boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
                 position: "relative",
@@ -474,7 +474,7 @@ const ProductDetail = () => {
             <img
               src={product.images[0]}
               alt=""
-              className={`w-[96%] m-auto rounded-lg mt-4 mb-3 h-96 cursor-zoom-in ${
+              className={`w-[96%] m-auto rounded-lg mt-4 mb-3 h-96 cursor-zoom-in lg:w-[30%] lg:h-[35em] ${
                 isCover ? "object-cover" : "object-contain"
               }`}
               style={{
