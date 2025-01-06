@@ -61,7 +61,7 @@ const BannerSlideShow = ({ location }) => {
 
   if (isLoading) {
     return (
-      <div className=" w-[96%] h-[18em] m-auto rounded-md pb-2 ">
+      <div className=" w-[96%] h-[18em] m-auto rounded-md pb-2 lg:w-[80%] lg:h-[50em]">
         <ResponsiveContentLoader height="18em" />
       </div>
     );
@@ -73,14 +73,14 @@ const BannerSlideShow = ({ location }) => {
         {banners.map((banner, index) => (
           <div key={index} className="each-slide pb-2">
             <div
-              className="rounded-md w-[99%] m-auto"
+              className="rounded-md w-[99%] m-auto lg:w-[80%] h-[18em] lg:h-[50em]"
               style={{
                 cursor: "pointer",
                 backgroundImage: `url(${banner.image_url})`,
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
-                height: "18em",
+                // height: "18em",
                 borderRadius: "10px",
                 boxShadow:
                   "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
