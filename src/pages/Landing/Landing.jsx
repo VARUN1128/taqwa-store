@@ -574,7 +574,7 @@ export default function Landing() {
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar />
 
-      <h3 className="text-xl text-left ml-4 mt-3 product-sans sub-titles lg:text-center ">
+      <h3 className="text-xl lg:text-2xl lg:mt-2 text-left ml-4 mt-3 product-sans sub-titles lg:text-center ">
         Categories
       </h3>
       <div
@@ -611,7 +611,7 @@ export default function Landing() {
 export const CardList = ({ title, products, session, saveScrollPosition }) => {
   return (
     <>
-      <h3 className="text-xl text-left ml-2 mt-2 product-sans sub-titles lg:text-center">
+      <h3 className="text-xl text-left ml-2 mt-2 product-sans sub-titles lg:text-center lg:text-2xl lg:mt-2">
         {title}
       </h3>
       <div className="flex flex-wrap flex-grow  justify-center  m-auto mt-5 card-contain lg:justify-evenly lg:m-auto  gap-1 lg:gap-0">
