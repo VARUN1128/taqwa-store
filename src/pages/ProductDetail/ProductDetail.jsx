@@ -111,7 +111,7 @@ const Slideshow = ({ slideImages, rating }) => {
           return (
             <div
               key={index}
-              className="flex items-center justify-center bg-cover h-96 w-[96%] mx-auto rounded-lg bg-center bg-no-repeat mt-4 cursor-zoom-in lg:object-contain"
+              className="flex items-center justify-center bg-cover h-96 w-[96%] mx-auto rounded-lg bg-center bg-no-repeat mt-4 cursor-zoom-in lg:object-contain lg:h-96 lg:w-96"
               style={{
                 boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
                 position: "relative",

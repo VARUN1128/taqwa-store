@@ -54,12 +54,12 @@ const Orders = () => {
           </div>
         </>
       ) : (
-        <div className="p-4">
+        <div className="p-4 flex flex-wrap justify-evenly">
           {orders.map((order, index) => (
             // Order Card
             <div
               key={index}
-              className="bg-white rounded-lg p-6 mb-4 flex cursor-pointer"
+              className="bg-white rounded-lg p-6 mb-4 flex cursor-pointer lg:w-[40%]  "
               style={{
                 boxShadow:
                   "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px",

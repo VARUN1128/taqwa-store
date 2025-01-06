@@ -709,7 +709,7 @@ export default function OrderConfirm() {
       {cart.map((product) => (
         <div
           key={product.id}
-          className="flex justify-between items-center p-4 relative cursor-pointer"
+          className="flex justify-between items-center p-4 relative cursor-pointer lg:w-[40%] "
           style={{
             boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px",
           }}
@@ -783,7 +783,7 @@ export default function OrderConfirm() {
         </span> */}
       </div>
 
-      <div className="flex justify-between items-center p-4">
+      <div className="flex justify-between items-center p-4 ">
         <p
           className="text-lg font-semibold"
           style={{

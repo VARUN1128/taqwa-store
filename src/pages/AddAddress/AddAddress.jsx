@@ -170,7 +170,10 @@ export default function AddAddress() {
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopPageDetail title="Add Address" />
-      <form onSubmit={handleSubmit(onSubmit)} className="p-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="p-4 flex flex-wrap flex-col justify-evenly items-center"
+      >
         <input
           type="text"
           placeholder="Name"
@@ -183,7 +186,7 @@ export default function AddAddress() {
               message: "Name must be at least 2 characters long",
             },
           })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
 
         {errors.name && (
@@ -198,7 +201,7 @@ export default function AddAddress() {
           {...register("phone", {
             required: "Phone number is required",
           })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.phone && (
           <span className="text-red-500">{errors.phone.message}</span>
@@ -210,7 +213,7 @@ export default function AddAddress() {
           name="address"
           autoComplete="street-address"
           {...register("address", { required: "Address is required" })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.address && (
           <span className="text-red-500">{errors.address.message}</span>
@@ -228,7 +231,7 @@ export default function AddAddress() {
               message: "Please enter a valid 6-digit zip code",
             },
           })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.zip && (
           <span className="text-red-500">{errors.zip.message}</span>
@@ -240,7 +243,7 @@ export default function AddAddress() {
           placeholder="Post Office"
           autoComplete="address-level1"
           {...register("po", { required: "Post Office is required" })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.po && <span className="text-red-500">{errors.po.message}</span>}
 
@@ -250,7 +253,7 @@ export default function AddAddress() {
           placeholder="City"
           autoComplete="address-level2"
           {...register("city", { required: "City is required" })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.city && (
           <span className="text-red-500">{errors.city.message}</span>
@@ -268,7 +271,7 @@ export default function AddAddress() {
               message: "Please enter a valid 10-digit whatsapp number",
             },
           })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.whatsapp && (
           <span className="text-red-500">{errors.whatsapp.message}</span>
@@ -280,7 +283,7 @@ export default function AddAddress() {
           disabled
           placeholder="India"
           autoComplete="country"
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.country && (
           <span className="text-red-500">{errors.country.message}</span>
@@ -292,7 +295,7 @@ export default function AddAddress() {
           placeholder="State"
           autoComplete="state"
           {...register("state", { required: "State is required" })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600"
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-60 lg:w-[30%]"
         />
         {errors.state && (
           <span className="text-red-500">{errors.state.message}</span>
@@ -305,7 +308,7 @@ export default function AddAddress() {
             transition: "transform 0.1s",
             boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
-          className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
+          className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base lg:w-[30%]"
           onClick={() => {
             handleSubmit(onSubmit)();
           }}

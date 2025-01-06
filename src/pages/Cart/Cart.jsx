@@ -44,7 +44,7 @@ const Cart = () => {
       {cart.map((product) => (
         <div
           key={product.id}
-          className="flex justify-between items-center p-4 relative "
+          className="flex justify-between items-center p-4 relative lg:w-[50%] "
           style={{
             boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px",
           }}
@@ -161,7 +161,7 @@ const Cart = () => {
           transition: "transform 0.1s",
           boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
         }}
-        className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base"
+        className="w-[80%] text-center m-auto px-10 py-3 cursor-pointer rounded-lg active:transform active:scale-95 whitespace-nowrap text-sm sm:text-base lg:px-[5em] lg:w-[50%]"
         onClick={() => {
           console.log(cart);
           navigate("/address");
