@@ -271,18 +271,20 @@ const ProductCard = ({
   return (
     <div
       onClick={handleClick}
-      className="mb-3 bg-white flex flex-col justify-between"
-      style={{
-        width: "calc(50% - 0.5rem)",
-        cursor: "pointer",
-        display: stock === 0 && thumbnailLoaded ? "none" : "flex",
-        "@media (min-width: 1024px)": {
-          width: "80%",
-        },
-        "@media (min-width: 1200px)": {
-          width: "60%",
-        },
-      }}
+      className={`
+        mb-2
+        lg:mb-1
+        bg-white 
+        flex 
+        flex-col 
+        justify-between
+        w-[calc(50%-0.25rem)]
+        cursor-pointer
+        md:w-[calc(33%-0.25rem)]
+        lg:w-[calc(25%-0.25rem)]
+        xl:w-[calc(20%-0.25rem)]
+        ${stock === 0 && thumbnailLoaded ? "hidden" : "flex"}
+      `}
     >
       {!thumbnailLoaded && (
         <div className=" w-[96%] h-[20em] m-auto rounded-md pb-2 ">
@@ -290,7 +292,7 @@ const ProductCard = ({
         </div>
       )}
 
-      <div className="relative">
+      <div className="relative prod-card">
         {stock === 0 && thumbnailLoaded && (
           <img src={SoldOut} className="absolute z-10" />
         )}
@@ -491,7 +493,7 @@ export default function Landing() {
         .from("products")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(6);
+        .limit(10);
 
       if (error) {
         console.log(error);
@@ -505,7 +507,7 @@ export default function Landing() {
       try {
         const response = await axios.post(
           `${BACKEND_URL}/fetch-wishlisted`,
-          { limit: 6 },
+          { limit: 10 },
           {
             headers: {
               "Content-Type": "application/json",
@@ -552,7 +554,7 @@ export default function Landing() {
         .from("products")
         .select("*")
         .order("avg_rating", { ascending: false })
-        .limit(6);
+        .limit(10);
 
       if (error) {
         console.log(error);
@@ -572,7 +574,9 @@ export default function Landing() {
       <TopBar avatarInfo={session?.user.user_metadata} />
       <SearchBar />
 
-      <h3 className="text-xl text-left ml-4 mt-3 product-sans">Categories</h3>
+      <h3 className="text-xl text-left ml-4 mt-3 product-sans sub-titles lg:text-center ">
+        Categories
+      </h3>
       <div
         className="hide-scrollbar m-auto xl:flex xl:justify-center w-100  mt-5  scrolling-wrapper "
         style={{ width: "100%", padding: 0, margin: 0, border: 0 }}
@@ -607,8 +611,10 @@ export default function Landing() {
 export const CardList = ({ title, products, session, saveScrollPosition }) => {
   return (
     <>
-      <h3 className="text-xl text-left ml-2 mt-2 product-sans">{title}</h3>
-      <div className="flex flex-wrap flex-grow gap-1  justify-center  m-auto mt-5">
+      <h3 className="text-xl text-left ml-2 mt-2 product-sans sub-titles lg:text-center">
+        {title}
+      </h3>
+      <div className="flex flex-wrap flex-grow  justify-center  m-auto mt-5 card-contain lg:justify-evenly lg:m-auto  gap-1 lg:gap-0">
         {products.map((product) => (
           <ProductCard
             saveScrollPosition={saveScrollPosition}
