@@ -252,6 +252,8 @@ function App() {
                 <Route path="/" element={<Navigate to="/home" />} />
                 <Route path="/privacy" element={<RedirectToFAQ />} />
                 <Route path="/terms" element={<RedirectToFAQ />} />
+                <Route path="/refund" element={<RedirectToFAQ />} />
+                <Route path="/return" element={<RedirectToFAQ />} />
                 <Route path="/shipping" element={<RedirectToFAQ />} />
                 <Route path="/contactus" element={<RedirectToFAQ />} />"
               </Routes>
