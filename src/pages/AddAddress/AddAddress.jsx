@@ -8,6 +8,7 @@ import { FaSave } from "react-icons/fa";
 import supabase from "../../supabase";
 import { SessionContext } from "../../components/SessionContext";
 import CircularProgress from "@mui/material/CircularProgress";
+import { toast, ToastContainer } from "react-toastify";
 export default function AddAddress() {
   const { session } = useContext(SessionContext);
 
@@ -114,6 +115,49 @@ export default function AddAddress() {
   //   getStates(selectedOption.value);
   // };
 
+  const checkPincode = async (pincode) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_ORDER_URL}/pin-availability?filter_code=${pincode}`
+      );
+
+      if (response.data.error) {
+        toast.error(response.data.error);
+        return false;
+      }
+
+      if (!response.data.cod_available) {
+        toast.warning("Cash on Delivery not available for this pincode");
+        return false;
+      }
+
+      if (response.data.remarks.includes("Non-Serviceable")) {
+        toast.error(response.data.remarks);
+        return false;
+      }
+
+      if (response.data.remarks.includes("temporarily")) {
+        toast.warning(response.data.remarks);
+        return false;
+      }
+
+      toast.success(response.data.remarks);
+      setValue("state", response.data.state);
+      setValue("city", response.data.district); // later change the whole code to accept districts instead of city
+      setValue("country", "INDIA");
+      return true;
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.error || "Failed to check pincode");
+      } else if (error.request) {
+        toast.error("Network error. Please try again");
+      } else {
+        toast.error("Something went wrong");
+      }
+      return false;
+    }
+  };
+
   const onSubmit = async (data) => {
     setIsLoading(true);
     console.log(data);
@@ -170,6 +214,7 @@ export default function AddAddress() {
   return (
     <div className="page overflow-y-auto hide-scrollbar pb-[5em]">
       <TopPageDetail title="Add Address" />
+      <ToastContainer />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="p-4 flex flex-wrap flex-col justify-evenly items-center"
@@ -208,6 +253,24 @@ export default function AddAddress() {
         )}
 
         <input
+          type="number"
+          name="whatsapp"
+          placeholder="Whatsapp Number"
+          autoComplete="whatsapp"
+          {...register("whatsapp", {
+            required: "Whatsapp number is required",
+            pattern: {
+              value: /^\d{10}$/,
+              message: "Please enter a valid 10-digit whatsapp number",
+            },
+          })}
+          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
+        />
+        {errors.whatsapp && (
+          <span className="text-red-500">{errors.whatsapp.message}</span>
+        )}
+
+        <input
           type="text"
           placeholder="Address"
           name="address"
@@ -222,8 +285,15 @@ export default function AddAddress() {
         <input
           type="number"
           name="zip"
-          placeholder="Zip Code"
+          placeholder="Pin Code"
           autoComplete="postal-code"
+          // after inputting 6 digits, automatically run a function
+          onInput={(e) => {
+            if (e.target.value.length === 6) {
+              e.target.blur();
+              checkPincode(e.target.value);
+            }
+          }}
           {...register("zip", {
             required: "Zip code is required",
             pattern: {
@@ -253,28 +323,24 @@ export default function AddAddress() {
           placeholder="City"
           autoComplete="address-level2"
           {...register("city", { required: "City is required" })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
+          disabled
+          className="mb-4 p-2 w-full bg-gray-50 text-gray-500  placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.city && (
           <span className="text-red-500">{errors.city.message}</span>
         )}
 
         <input
-          type="number"
-          name="whatsapp"
-          placeholder="Whatsapp Number"
-          autoComplete="whatsapp"
-          {...register("whatsapp", {
-            required: "Whatsapp number is required",
-            pattern: {
-              value: /^\d{10}$/,
-              message: "Please enter a valid 10-digit whatsapp number",
-            },
-          })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
+          type="text"
+          name="state"
+          placeholder="State"
+          autoComplete="state"
+          disabled
+          {...register("state", { required: "State is required" })}
+          className="mb-4 p-2 w-full bg-gray-50 text-gray-500 placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-60 lg:w-[30%]"
         />
-        {errors.whatsapp && (
-          <span className="text-red-500">{errors.whatsapp.message}</span>
+        {errors.state && (
+          <span className="text-red-500">{errors.state.message}</span>
         )}
 
         <input
@@ -283,22 +349,11 @@ export default function AddAddress() {
           disabled
           placeholder="India"
           autoComplete="country"
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
+          {...register("country", { required: "Country is required" })}
+          className="mb-4 p-2 w-full bg-gray-50 text-gray-500 placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.country && (
           <span className="text-red-500">{errors.country.message}</span>
-        )}
-
-        <input
-          type="text"
-          name="state"
-          placeholder="State"
-          autoComplete="state"
-          {...register("state", { required: "State is required" })}
-          className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-60 lg:w-[30%]"
-        />
-        {errors.state && (
-          <span className="text-red-500">{errors.state.message}</span>
         )}
 
         <div

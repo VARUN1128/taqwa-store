@@ -129,3 +129,10 @@ Also ensure to include the image addition warning
 - In the search results, when page is loaded and offer value is there, the request to supabase containst that lte. if another subbrand is selected without refreshing, and the page is not refreshed, even though url changes, the request doenst contain the lte. but the subbrand is fetching correctly
 - Mail and phone
 - ADdress one more
+
+## TODO With delhivery:
+
+- Change city to district everywhere
+- Remove postal office
+- OLD address handling
+- Rate limiting
