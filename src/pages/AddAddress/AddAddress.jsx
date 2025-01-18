@@ -118,7 +118,13 @@ export default function AddAddress() {
   const checkPincode = async (pincode) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_ORDER_URL}/pin-availability?filter_code=${pincode}`
+        `${process.env.REACT_APP_BACKEND_ORDER_URL}/pin-availability?filter_code=${pincode}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+        }
       );
 
       if (response.data.error) {
