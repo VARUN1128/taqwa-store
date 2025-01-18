@@ -134,5 +134,4 @@ Also ensure to include the image addition warning
 
 - Change city to district everywhere
 - Remove postal office
-- OLD address handling
 - Rate limiting

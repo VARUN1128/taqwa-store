@@ -123,21 +123,37 @@ export default function AddAddress() {
 
       if (response.data.error) {
         toast.error(response.data.error);
+        setValue("state", "");
+        setValue("city", "");
+        setValue("country", "");
+
         return false;
       }
 
       if (!response.data.cod_available) {
         toast.warning("Cash on Delivery not available for this pincode");
+        setValue("state", "");
+        setValue("city", "");
+        setValue("country", "");
+
         return false;
       }
 
       if (response.data.remarks.includes("Non-Serviceable")) {
         toast.error(response.data.remarks);
+        setValue("state", "");
+        setValue("city", "");
+        setValue("country", "");
+
         return false;
       }
 
       if (response.data.remarks.includes("temporarily")) {
         toast.warning(response.data.remarks);
+        setValue("state", "");
+        setValue("city", "");
+        setValue("country", "");
+
         return false;
       }
 
@@ -149,10 +165,19 @@ export default function AddAddress() {
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.error || "Failed to check pincode");
+        setValue("state", "");
+        setValue("city", "");
+        setValue("country", "");
       } else if (error.request) {
         toast.error("Network error. Please try again");
+        setValue("state", "");
+        setValue("city", "");
+        setValue("country", "");
       } else {
         toast.error("Something went wrong");
+        setValue("state", "");
+        setValue("city", "");
+        setValue("country", "");
       }
       return false;
     }
