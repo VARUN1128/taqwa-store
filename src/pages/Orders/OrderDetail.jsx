@@ -217,7 +217,6 @@ const OrderDetail = () => {
     printWindow.document.write(`<p>${order.address.address}</p>`);
     printWindow.document.write(`<p>${order.address.city}</p>`);
     printWindow.document.write(`<p>${order.address.state}</p>`);
-    printWindow.document.write(`<p>${order.address.post}</p>`);
     printWindow.document.write(`<p>${order.address.zip}</p>`);
     printWindow.document.write(`<p>${order.address.whatsapp}</p>`);
     printWindow.document.write(`<p>${order.address.country}</p>`);
@@ -481,7 +480,6 @@ const OrderDetail = () => {
               <p className="text-md">State: {order.address.state}</p>
               <p className="text-md">Zip: {order.address.zip}</p>
               <p className="text-md">Whatsapp: {order.address.whatsapp}</p>
-              <p className="text-md">Post Office: {order.address.post}</p>
               <p className="text-md">Country: {order.address.country}</p>
             </>
           )}

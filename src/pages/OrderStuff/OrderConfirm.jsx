@@ -64,7 +64,7 @@ const QrCodeModal = ({
 
   const cartItemsMessageString = cartItemsMessage.join("\n\n");
 
-  const address = `${userInfo.name}\n ${userInfo.phone}\n${userInfo.address}, ${userInfo.zip}, ${userInfo.post}\n ${userInfo.city}\n ${userInfo.whatsapp}\n ${userInfo.state}\n${userInfo.country}\n`;
+  const address = `${userInfo.name}\n ${userInfo.phone}\n${userInfo.address}, ${userInfo.zip}, \n ${userInfo.city}\n ${userInfo.whatsapp}\n ${userInfo.state}\n${userInfo.country}\n`;
 
   useEffect(() => {
     const generateQrCode = async () => {
@@ -694,7 +694,6 @@ export default function OrderConfirm() {
               <p className="text-sm">{address.current.phone}</p>
               <p className="text-sm">{address.current.address.current}</p>
               <p className="text-sm">{address.current.zip}</p>
-              <p className="text-sm">{address.current.post}</p>
               <p className="text-sm">{address.current.city}</p>
               <p className="text-sm">{address.current.whatsapp}</p>
               <p className="text-sm">{address.current.state || ""}</p>
