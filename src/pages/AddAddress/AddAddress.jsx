@@ -370,7 +370,7 @@ export default function AddAddress() {
           placeholder="City"
           autoComplete="address-level2"
           {...register("city", { required: "City is required" })}
-          disabled000000
+          disabled
           className="mb-4 p-2 w-full bg-gray-50 text-gray-500  placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
         {errors.city && (
