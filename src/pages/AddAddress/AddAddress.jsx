@@ -16,6 +16,7 @@ export default function AddAddress() {
     register,
     handleSubmit,
     setValue,
+    setError,
     formState: { errors },
   } = useForm();
 
@@ -129,6 +130,10 @@ export default function AddAddress() {
 
       if (response.data.error) {
         toast.error(response.data.error);
+        setError("zip", {
+          type: "manual",
+          message: response.data.error,
+        });
         setValue("state", "");
         setValue("city", "");
         setValue("country", "");
@@ -147,6 +152,10 @@ export default function AddAddress() {
 
       if (response.data.remarks.includes("Non-Serviceable")) {
         toast.error(response.data.remarks);
+        setError("zip", {
+          type: "manual",
+          message: response.data.remarks,
+        });
         setValue("state", "");
         setValue("city", "");
         setValue("country", "");
@@ -156,6 +165,10 @@ export default function AddAddress() {
 
       if (response.data.remarks.includes("temporarily")) {
         toast.warning(response.data.remarks);
+        setError("zip", {
+          type: "manual",
+          message: response.data.remarks,
+        });
         setValue("state", "");
         setValue("city", "");
         setValue("country", "");
@@ -171,16 +184,31 @@ export default function AddAddress() {
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.error || "Failed to check pincode");
+        setError("zip", {
+          type: "manual",
+          message: error.response.data.error || "Failed to check pincode",
+        });
+
         setValue("state", "");
         setValue("city", "");
         setValue("country", "");
       } else if (error.request) {
         toast.error("Network error. Please try again");
+        setError("zip", {
+          type: "manual",
+          message: "Network error. Please try again",
+        });
+
         setValue("state", "");
         setValue("city", "");
         setValue("country", "");
       } else {
         toast.error("Something went wrong");
+
+        setError("zip", {
+          type: "manual",
+          message: "Something went wrong",
+        });
         setValue("state", "");
         setValue("city", "");
         setValue("country", "");
