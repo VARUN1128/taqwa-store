@@ -15,15 +15,100 @@ import { ToastContainer, toast } from "react-toastify";
 import moment from "moment";
 import { LiaFileDownloadSolid } from "react-icons/lia";
 
-const displayCodCharge = (cartItems) => {
-  return Object.values(cartItems).reduce((total, item) => {
-    const codPrice =
-      item.codPriceMap && item.size
-        ? item.codPriceMap[item.size]
-        : item.cod_price;
-    return total + (codPrice ? codPrice : 0);
-  }, 0);
+import { FaTruck } from "react-icons/fa";
+
+const getShippingStep = (order) => {
+  if (order.order_status === "cancelled") return -1; // Cancelled state
+  if (!order.waybill && order.order_status === "waiting") return 1;
+  if (order.waybill && order.order_status === "waiting") return 2;
+  if (order.order_status === "shipped") return 3;
+  if (order.order_status === "delivered") return 4;
+  return 1;
 };
+
+const ShippingProgress = ({ order }) => {
+  const currentStep = getShippingStep(order);
+  const progress = ((currentStep - 1) / 3) * 100;
+
+  if (currentStep === -1) {
+    return (
+      <div className="w-full max-w-3xl mx-auto px-4 py-6">
+        <div className="flex items-center justify-center">
+          <span className="text-lg font-medium text-red-600">
+            Order Cancelled
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-3xl mx-auto px-4 py-6">
+      <div className="relative">
+        {/* Progress Bar Background */}
+        <div className="h-2 bg-gray-200 rounded-full">
+          {/* Animated Progress */}
+          <div
+            className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-out"
+            style={{ width: `${progress}%` }}
+          >
+            {/* Animated Truck */}
+            <div
+              className="absolute -top-2 transform -translate-y-1/2 transition-all duration-500 ease-out"
+              style={{ left: `${progress}%` }}
+            >
+              <FaTruck className="text-blue-600 text-2xl" />
+            </div>
+          </div>
+        </div>
+
+        {/* Status Labels */}
+        <div className="flex justify-between mt-4">
+          <div
+            className={`text-sm ${
+              currentStep >= 1 ? "text-blue-600 font-medium" : "text-gray-400"
+            }`}
+          >
+            Waiting
+          </div>
+          <div
+            className={`text-sm ${
+              currentStep >= 2 ? "text-blue-600 font-medium" : "text-gray-400"
+            }`}
+          >
+            Ready to Pickup
+          </div>
+          <div
+            className={`text-sm ${
+              currentStep >= 3 ? "text-blue-600 font-medium" : "text-gray-400"
+            }`}
+          >
+            Shipped
+            {currentStep === 3 && order.delhivery_status?.StatusLocation && (
+              <div className="text-xs text-gray-500">
+                <span className="block text-xs text-gray-500">
+                  Currently: {order.delhivery_status.StatusLocation}
+                </span>
+                <span>
+                  Expected Delivery Date:{" "}
+                  {order.delhivery_status.ExpectedDeliveryDate}
+                </span>
+              </div>
+            )}
+          </div>
+          <div
+            className={`text-sm ${
+              currentStep >= 4 ? "text-blue-600 font-medium" : "text-gray-400"
+            }`}
+          >
+            Delivered
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const OrderDetail = () => {
   const { session } = useContext(SessionContext);
   const [order, setOrder] = useState(null);
@@ -543,6 +628,7 @@ const OrderDetail = () => {
             </button>
           )}
       </div>
+      {order && <ShippingProgress order={order} />}
 
       {order.order_status === "delivered" && (
         <div>
