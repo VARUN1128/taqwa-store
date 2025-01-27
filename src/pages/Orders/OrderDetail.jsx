@@ -26,71 +26,100 @@ const getShippingStep = (order) => {
   return 1;
 };
 
-const ShippingProgress = ({ order }) => {
+const ShippingProgress = ({ order, isLoading }) => {
+  const [showProgress, setShowProgress] = useState(false);
   const currentStep = getShippingStep(order);
   const progress = ((currentStep - 1) / 3) * 100;
+  const isCancelled = order.order_status === "cancelled";
 
-  if (currentStep === -1) {
-    return (
-      <div className="w-full max-w-3xl mx-auto px-4 py-6">
-        <div className="flex items-center justify-center">
-          <span className="text-lg font-medium text-red-600">
-            Order Cancelled
-          </span>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!isLoading) {
+      // Start animation after loading completes
+      const timer = setTimeout(() => {
+        setShowProgress(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 py-6">
+    <div
+      className={`w-full max-w-3xl mx-auto px-4 py-6 transition-all duration-300 ${
+        isLoading ? "opacity-0" : "opacity-100"
+      }`}
+    >
       <div className="relative">
-        {/* Progress Bar Background */}
         <div className="h-2 bg-gray-200 rounded-full">
-          {/* Animated Progress */}
           <div
-            className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${progress}%` }}
+            className="h-full rounded-full transition-all duration-1000 ease-out"
+            style={{
+              width: showProgress
+                ? isCancelled
+                  ? "100%"
+                  : `${progress}%`
+                : "0%",
+              backgroundColor: isCancelled ? "#EF4444" : "#3B82F6",
+            }}
           >
-            {/* Animated Truck */}
             <div
-              className="absolute -top-2 transform -translate-y-1/2 transition-all duration-500 ease-out"
-              style={{ left: `${progress}%` }}
+              className="absolute -top-2 transform -translate-y-1/2 transition-all duration-1000 ease-out"
+              style={{
+                left: showProgress
+                  ? isCancelled
+                    ? "100%"
+                    : `${progress}%`
+                  : "0%",
+              }}
             >
-              <FaTruck className="text-blue-600 text-2xl" />
+              <FaTruck
+                className={`text-2xl ${
+                  isCancelled ? "text-red-600" : "text-blue-600"
+                }`}
+              />
             </div>
           </div>
         </div>
-
         {/* Status Labels */}
         <div className="flex justify-between mt-4">
           <div
             className={`text-sm ${
-              currentStep >= 1 ? "text-blue-600 font-medium" : "text-gray-400"
+              isCancelled
+                ? "text-red-600 font-medium"
+                : currentStep >= 1
+                ? "text-blue-600 font-medium"
+                : "text-gray-400"
             }`}
           >
-            Waiting
+            {isCancelled ? "Order Cancelled" : "Waiting"}
           </div>
           <div
             className={`text-sm ${
-              currentStep >= 2 ? "text-blue-600 font-medium" : "text-gray-400"
+              isCancelled
+                ? "text-red-600 font-medium"
+                : currentStep >= 2
+                ? "text-blue-600 font-medium"
+                : "text-gray-400"
             }`}
           >
             Ready to Pickup
           </div>
           <div
             className={`text-sm ${
-              currentStep >= 3 ? "text-blue-600 font-medium" : "text-gray-400"
+              isCancelled
+                ? "text-red-600 font-medium"
+                : currentStep >= 3
+                ? "text-blue-600 font-medium"
+                : "text-gray-400"
             }`}
           >
             Shipped
             {currentStep === 3 && order.delhivery_status?.StatusLocation && (
               <div className="text-xs text-gray-500">
-                <span className="block text-xs text-gray-500">
+                <span className="block">
                   Currently: {order.delhivery_status.StatusLocation}
                 </span>
-                <span>
-                  Expected Delivery Date:{" "}
+                <span className="block">
+                  Expected Delivery:{" "}
                   {order.delhivery_status.ExpectedDeliveryDate}
                 </span>
               </div>
@@ -98,17 +127,33 @@ const ShippingProgress = ({ order }) => {
           </div>
           <div
             className={`text-sm ${
-              currentStep >= 4 ? "text-blue-600 font-medium" : "text-gray-400"
+              isCancelled
+                ? "text-red-600 font-medium"
+                : currentStep >= 4
+                ? "text-blue-600 font-medium"
+                : "text-gray-400"
             }`}
           >
             Delivered
           </div>
         </div>
+        {/* Tracking ID */}
+        {order.waybill && (
+          <div className="mt-4 p-2  rounded-lg">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-sm text-black">
+                Waybill/Tracking/AWB ID:
+              </span>
+              <span className="text-sm font-medium select-all">
+                {order.waybill}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
 const OrderDetail = () => {
   const { session } = useContext(SessionContext);
   const [order, setOrder] = useState(null);
@@ -628,7 +673,7 @@ const OrderDetail = () => {
             </button>
           )}
       </div>
-      {order && <ShippingProgress order={order} />}
+      {order && <ShippingProgress order={order} isLoading={isLoading} />}
 
       {order.order_status === "delivered" && (
         <div>

@@ -219,16 +219,17 @@ export default function AddAddress() {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    console.log(data);
     const address = {
       ...data,
       name: data.name.toUpperCase(),
-      phone: data.phone,
+      phone: data.phone.startsWith("+91") ? data.phone : `+91${data.phone}`,
+      whatsapp: data.whatsapp.startsWith("+91")
+        ? data.whatsapp
+        : `+91${data.whatsapp}`,
       address: data.address.toUpperCase(),
       zip: data.zip,
       city: data.city.toUpperCase(),
       country: "INDIA",
-      whatsapp: data.whatsapp,
       state: data.state,
     };
     const { error } = await supabase
@@ -297,11 +298,20 @@ export default function AddAddress() {
 
         <input
           type="tel"
-          placeholder="Phone Number"
+          placeholder="Phone Number (10 digits)"
           name="phone"
           autoComplete="tel"
           {...register("phone", {
             required: "Phone number is required",
+            pattern: {
+              value: /^(\+91)?[6-9]\d{9}$/,
+              message:
+                "Please enter a valid Indian phone number. +91 is not requierd (10 digits required)",
+            },
+            onChange: (e) => {
+              // Remove any non-digit characters and limit to 10 digits
+              e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+            },
           })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
         />
@@ -310,15 +320,19 @@ export default function AddAddress() {
         )}
 
         <input
-          type="number"
+          type="tel"
           name="whatsapp"
-          placeholder="Whatsapp Number"
-          autoComplete="whatsapp"
+          placeholder="WhatsApp Number (10 digits)"
+          autoComplete="tel"
           {...register("whatsapp", {
-            required: "Whatsapp number is required",
+            required: "WhatsApp number is required",
             pattern: {
-              value: /^\d{10}$/,
-              message: "Please enter a valid 10-digit whatsapp number",
+              value: /^(\+91)?[6-9]\d{9}$/,
+              message:
+                "Please enter a valid Indian phone number. +91 is not requierd (10 digits required)",
+            },
+            onChange: (e) => {
+              e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
             },
           })}
           className="mb-4 p-2 w-full bg-gray-50 text-black placeholder-gray-500 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-600 lg:w-[30%]"
