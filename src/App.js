@@ -30,9 +30,9 @@ import RegisterStart from "./pages/Login/Register";
 import "react-toastify/dist/ReactToastify.css";
 import OrderDetail from "./pages/Orders/OrderDetail";
 
-function RedirectToFAQ() {
+function RedirectToTerms() {
   useEffect(() => {
-    window.location.href = "/faq.html";
+    window.location.href = "/terms.html";
   }, []);
 
   return null;
@@ -250,12 +250,12 @@ function App() {
                   }
                 />
                 <Route path="/" element={<Navigate to="/home" />} />
-                <Route path="/privacy" element={<RedirectToFAQ />} />
-                <Route path="/terms" element={<RedirectToFAQ />} />
-                <Route path="/refund" element={<RedirectToFAQ />} />
-                <Route path="/return" element={<RedirectToFAQ />} />
-                <Route path="/shipping" element={<RedirectToFAQ />} />
-                <Route path="/contactus" element={<RedirectToFAQ />} />"
+                <Route path="/privacy" element={<RedirectToTerms />} />
+                <Route path="/terms" element={<RedirectToTerms />} />
+                <Route path="/refund" element={<RedirectToTerms />} />
+                <Route path="/return" element={<RedirectToTerms />} />
+                <Route path="/shipping" element={<RedirectToTerms />} />
+                <Route path="/contactus" element={<RedirectToTerms />} />"
               </Routes>
             </Router>
           </SessionContext.Provider>

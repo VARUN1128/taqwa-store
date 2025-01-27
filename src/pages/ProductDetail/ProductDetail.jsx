@@ -624,15 +624,17 @@ const ProductDetail = () => {
                 } stars by our customers.`}
           </p>
 
-          <p
-            className="text-sm text-gray-600 mt-2"
-            style={{ fontFamily: "Product Sans" }}
-          >
-            *All brand names, logos, and trademarks mentioned are used for
-            reference only. Our products are high-quality replicas and are not
-            affiliated with, endorsed by, or connected to the original brands in
-            any way.
-          </p>
+          {product.category !== "Perfumes" && (
+            <p
+              className="text-sm text-gray-600 mt-2"
+              style={{ fontFamily: "Product Sans" }}
+            >
+              *Note: This is a premium quality first-copy product. We are not
+              associated with the original brand manufacturers. All brand names
+              and trademarks are property of their respective owners and are
+              used for reference purposes only.
+            </p>
+          )}
         </div>
         {categoryType.sizes && categoryType.sizes.length > 0 && (
           <div className="mb-4">

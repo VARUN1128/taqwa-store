@@ -11,6 +11,7 @@ import { SessionContext } from "../../components/SessionContext";
 import SideDrawer from "../../components/SideDrawer";
 import { WishlistContext } from "../../components/WishlListContext";
 import TopLogo from "../../images/TAQWA.png";
+import TaqwaBgLogo from "../../images/TAQWA_backgrounded.png";
 import supabase from "../../supabase";
 import ResponsiveContentLoader from "../../components/ResponseContentLoader";
 import { Slide } from "react-slideshow-image";
@@ -21,8 +22,7 @@ import SoldOut from "../../images/sold_out.png";
 import axios from "axios";
 import { IoIosLink } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
-import { to } from "react-spring";
-
+import { FaWhatsapp, FaInstagram, FaPhone, FaEnvelope } from "react-icons/fa";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_ORDER_URL;
 
 const properties = {
@@ -604,6 +604,8 @@ export default function Landing() {
         session={session}
       />
       <CardList title="Most Ordered" products={mostOrdered} session={session} />
+
+      <Footer />
     </div>
   );
 }
@@ -639,5 +641,66 @@ export const CardList = ({ title, products, session, saveScrollPosition }) => {
         ))}
       </div>
     </>
+  );
+};
+
+const Footer = () => {
+  return (
+    <footer className="w-full bg-black text-white py-8 px-4">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Logo Section */}
+        <div className="flex flex-col items-center md:items-start">
+          <img src={TaqwaBgLogo} alt="Taqwa Logo" className="h-12 mb-4" />
+          <p className="text-sm">
+            © {new Date().getFullYear()} Taqwa. All Rights Reserved.
+          </p>
+        </div>
+
+        {/* Links Section */}
+        <div className="flex flex-col items-center md:items-start space-y-2">
+          <h3 className="font-semibold mb-2">Legal</h3>
+          <a href="/terms" className="text-sm hover:text-gray-300">
+            Terms & Conditions
+          </a>
+        </div>
+
+        {/* Contact Section */}
+        <div className="flex flex-col items-center md:items-start space-y-3">
+          <h3 className="font-semibold mb-2">Connect With Us</h3>
+
+          <a
+            href="https://instagram.com/taqwa_fashionstore_ekm"
+            className="flex items-center space-x-2 hover:text-gray-300"
+          >
+            <FaInstagram />
+            <span className="text-sm">@taqwa_fashionstore_ekm</span>
+          </a>
+
+          <a
+            href="tel:+917558856844"
+            className="flex items-center space-x-2 hover:text-gray-300"
+          >
+            <FaPhone />
+            <span className="text-sm">+91 7558856844</span>
+          </a>
+
+          <a
+            href="https://wa.me/917558856844"
+            className="flex items-center space-x-2 hover:text-gray-300"
+          >
+            <FaWhatsapp />
+            <span className="text-sm">WhatsApp Us</span>
+          </a>
+
+          <a
+            href="mailto:taqwafashionstoreonline@gmail.com"
+            className="flex items-center space-x-2 hover:text-gray-300"
+          >
+            <FaEnvelope />
+            <span className="text-sm">taqwafashionstoreonline@gmail.com</span>
+          </a>
+        </div>
+      </div>
+    </footer>
   );
 };
