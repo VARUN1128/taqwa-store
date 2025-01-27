@@ -3,7 +3,6 @@ import { TopProductDetail } from "../../components/TopPageDetail";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AiFillStar } from "react-icons/ai";
 import Like from "../../components/Like";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
@@ -623,6 +622,16 @@ const ProductDetail = () => {
                 } The product is rated ${
                   product.avg_rating
                 } stars by our customers.`}
+          </p>
+
+          <p
+            className="text-sm text-gray-600 mt-2"
+            style={{ fontFamily: "Product Sans" }}
+          >
+            *All brand names, logos, and trademarks mentioned are used for
+            reference only. Our products are high-quality replicas and are not
+            affiliated with, endorsed by, or connected to the original brands in
+            any way.
           </p>
         </div>
         {categoryType.sizes && categoryType.sizes.length > 0 && (

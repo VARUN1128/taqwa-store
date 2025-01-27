@@ -42,6 +42,12 @@ const ShippingProgress = ({ order, isLoading }) => {
     }
   }, [isLoading]);
 
+  if (isCancelled) {
+    return (
+      <p className="text-red-600 font-medium text-center">Order Cancelled</p>
+    );
+  }
+
   return (
     <div
       className={`w-full max-w-3xl mx-auto px-4 py-6 transition-all duration-300 ${
