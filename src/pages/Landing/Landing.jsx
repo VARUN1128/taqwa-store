@@ -176,7 +176,7 @@ export const TopBar = ({ avatarInfo, showCopy }) => {
                 toast.success("Link copied to clipboard!");
               })
               .catch(() =>
-                toast.error("Failed to copy link! Please copy manually")
+                toast.error("Failed to copy link! Please copy manually"),
               );
           }}
         />
@@ -274,9 +274,9 @@ const ProductCard = ({
       className={`
         mb-2
         lg:mb-1
-        bg-white 
-        flex 
-        flex-col 
+        bg-white
+        flex
+        flex-col
         justify-between
         w-[calc(50%-0.25rem)]
         cursor-pointer
@@ -470,14 +470,15 @@ export default function Landing() {
   useEffect(() => {
     const fetchCategories = async () => {
       const savedCategories = localStorage.getItem("categories");
-      if (savedCategories) {
-        setCategories(JSON.parse(savedCategories));
-        return;
-      }
+      // if (savedCategories) {
+      //   setCategories(JSON.parse(savedCategories));
+      //   return;
+      // }
 
       const { data, error } = await supabase
         .from("categories")
         .select("*")
+        .eq("enabled", true)
         .order("id", { ascending: true });
       if (error) {
         console.log(error);
@@ -512,7 +513,7 @@ export default function Landing() {
             headers: {
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         console.log("Most Wishlisted", response.data.data);
@@ -532,7 +533,7 @@ export default function Landing() {
         console.log(wishlistError);
       } else {
         const productIds = Array.from(
-          new Set(wishlistData.map((item) => item.product_id))
+          new Set(wishlistData.map((item) => item.product_id)),
         ).slice(0, 6);
         console.log("Wishlisted", productIds);
         const { data: productData, error: productError } = await supabase

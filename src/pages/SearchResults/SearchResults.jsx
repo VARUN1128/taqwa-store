@@ -29,17 +29,15 @@ const fetchProducts = async (
   sortOption,
   selectedBrand,
   offer,
-  offerValue
+  offerValue,
+  setTotalPages,
 ) => {
   try {
-    let productsQuery = supabase
-      .from("products")
-      .select("*")
-      .range(page * itemsPerPage, (page + 1) * itemsPerPage - 1);
+    let productsQuery = supabase.from("products").select("*");
 
     if (query) {
       productsQuery = productsQuery.or(
-        `name.ilike.%${query}%,category.ilike.%${query}%,brand.ilike.%${query}%`
+        `name.ilike.%${query}%,category.ilike.%${query}%,brand.ilike.%${query}%`,
       );
     }
 
@@ -81,8 +79,21 @@ const fetchProducts = async (
         sortOption.split("_")[0] === "rating"
           ? "avg_rating"
           : sortOption.split("_")[0],
-        { ascending: sortOption.endsWith("asc") }
+        { ascending: sortOption.endsWith("asc") },
       );
+    }
+
+    //change the query to get the products if its enabled
+
+    productsQuery = productsQuery.eq("enabled", true);
+
+    // set total number of pages based on the number of products
+
+    const { data: pageData, error: pageError } = await productsQuery;
+    if (pageError) {
+      throw pageError;
+    } else {
+      setTotalPages(Math.ceil(pageData.length / itemsPerPage));
     }
 
     const { data, error } = await productsQuery;
@@ -112,13 +123,17 @@ export default function SearchResults() {
   const [offerValue, setOfferValue] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [sortOption, setSortOption] = useState("price_desc");
+
   // const [page, setPage] = useState(0);
   const [page, setPage] = useState(() => {
     return parseInt(sessionStorage.getItem("currentPage")) || 0;
   });
 
+  const [totalpages, setTotalPages] = useState(0);
+
   useEffect(() => {
     sessionStorage.setItem("currentPage", page.toString());
+    console.log(page);
   }, [page]);
 
   const options = [
@@ -129,7 +144,7 @@ export default function SearchResults() {
   ];
 
   const [selectedOption, setSelectedOption] = useState(
-    options.find((option) => option.value === sortOption).label
+    options.find((option) => option.value === sortOption).label,
   );
 
   useEffect(() => {
@@ -155,10 +170,10 @@ export default function SearchResults() {
   useEffect(() => {
     const fetchCategories = async () => {
       const savedCategories = localStorage.getItem("categories");
-      if (savedCategories) {
-        setCategories(JSON.parse(savedCategories));
-        return;
-      }
+      // if (savedCategories) {
+      //   setCategories(JSON.parse(savedCategories));
+      //   return;
+      // }
 
       const { data, error } = await supabase.from("categories").select("*");
       if (error) {
@@ -188,7 +203,8 @@ export default function SearchResults() {
           sortOption,
           selectedBrand,
           "under",
-          offerValue
+          offerValue,
+          setTotalPages,
         );
         console.log(
           "Fetching data: ",
@@ -197,17 +213,20 @@ export default function SearchResults() {
           page,
           sortOption,
           selectedBrand,
-          offerValue
+          offerValue,
         );
         setProducts((prevProducts) => {
           const newProducts = data.filter(
             (newProduct) =>
               !prevProducts.some(
-                (prevProduct) => prevProduct.id === newProduct.id
-              )
+                (prevProduct) => prevProduct.id === newProduct.id,
+              ),
           );
           return [...prevProducts, ...newProducts];
         });
+        //set the total pages
+        console.log("Total Pages", totalpages);
+
         setLoading(false);
         setHasFetched(true);
       } catch (error) {
@@ -236,7 +255,7 @@ export default function SearchResults() {
       const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
       window.history.pushState({ path: newUrl }, "", newUrl);
     },
-    [location.search]
+    [location.search],
   );
 
   const handleBrandChange = (brand) => {
@@ -373,29 +392,42 @@ export default function SearchResults() {
             title={query && `Search results for "${query}"`}
             saveScrollPosition={saveScrollPosition}
           />
-
           <div className="flex justify-center mt-5">
-            <button
-              className="m-auto mt-10 w-fit py-3 px-20 rounded-xl bg-gray-300 cursor-pointer"
-              onClick={() => setPage(page + 1)}
-            >
-              {loading ? (
-                <CircularProgress style={{ color: "#000" }} size={20} />
-              ) : (
-                <>
-                  <VscGitFetch
-                    size={20}
-                    color="black"
-                    style={{
-                      display: "inline-block",
-                      verticalAlign: "middle",
-                      marginRight: "1em",
-                    }}
-                  />
-                  Load More
-                </>
-              )}
-            </button>
+            {loading && (
+              <CircularProgress style={{ color: "#000" }} size={20} />
+            )}
+          </div>
+
+          <div className="flex justify-center mt-5 items-center">
+            {page > 0 && (
+              <span
+                className="text-white cursor-pointer hover:bg-blue-500 transition-colors duration-300 ease-in-out py-2 px-4 rounded-full"
+                onClick={() => setPage((prevPage) => prevPage - 1)}
+                style={{
+                  backgroundColor: "black",
+                  fontFamily: "Product Sans",
+                }}
+              >
+                Prev
+              </span>
+            )}
+
+            <span className="mx-5 text-center">
+              {page + 1} of {totalpages}
+            </span>
+
+            {page < totalpages - 1 && (
+              <span
+                className="text-white cursor-pointer hover:bg-blue-500 transition-colors duration-300 ease-in-out py-2 px-4 rounded-full"
+                onClick={() => setPage((prevPage) => prevPage + 1)}
+                style={{
+                  backgroundColor: "black",
+                  fontFamily: "Product Sans",
+                }}
+              >
+                Next
+              </span>
+            )}
           </div>
         </>
       )}

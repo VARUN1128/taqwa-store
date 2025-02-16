@@ -1,5 +1,7 @@
+//  Shoes: ["Adidas", "Nike", "New Balance", "Balenciaga"],
+
 const subBrands = {
-  Shoes: ["Adidas", "Nike", "New Balance", "Balenciaga"],
+  Shoes: ["New Balance", "Balenciaga"],
   Watch: [
     "Watch 199",
     "Watch 249",
