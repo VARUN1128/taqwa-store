@@ -30,14 +30,14 @@ const fetchProducts = async (
   selectedBrand,
   offer,
   offerValue,
-  setTotalPages,
+  setTotalPages
 ) => {
   try {
     let productsQuery = supabase.from("products").select("*");
 
     if (query) {
       productsQuery = productsQuery.or(
-        `name.ilike.%${query}%,category.ilike.%${query}%,brand.ilike.%${query}%`,
+        `name.ilike.%${query}%,category.ilike.%${query}%,brand.ilike.%${query}%`
       );
     }
 
@@ -79,13 +79,14 @@ const fetchProducts = async (
         sortOption.split("_")[0] === "rating"
           ? "avg_rating"
           : sortOption.split("_")[0],
-        { ascending: sortOption.endsWith("asc") },
+        { ascending: sortOption.endsWith("asc") }
       );
     }
 
     //change the query to get the products if its enabled
 
     productsQuery = productsQuery.eq("enabled", true);
+    productsQuery = productsQuery.eq("original", true);
 
     // set total number of pages based on the number of products
 
@@ -144,7 +145,7 @@ export default function SearchResults() {
   ];
 
   const [selectedOption, setSelectedOption] = useState(
-    options.find((option) => option.value === sortOption).label,
+    options.find((option) => option.value === sortOption).label
   );
 
   useEffect(() => {
@@ -204,7 +205,7 @@ export default function SearchResults() {
           selectedBrand,
           "under",
           offerValue,
-          setTotalPages,
+          setTotalPages
         );
         console.log(
           "Fetching data: ",
@@ -213,14 +214,14 @@ export default function SearchResults() {
           page,
           sortOption,
           selectedBrand,
-          offerValue,
+          offerValue
         );
         setProducts((prevProducts) => {
           const newProducts = data.filter(
             (newProduct) =>
               !prevProducts.some(
-                (prevProduct) => prevProduct.id === newProduct.id,
-              ),
+                (prevProduct) => prevProduct.id === newProduct.id
+              )
           );
           return [...prevProducts, ...newProducts];
         });
@@ -255,7 +256,7 @@ export default function SearchResults() {
       const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
       window.history.pushState({ path: newUrl }, "", newUrl);
     },
-    [location.search],
+    [location.search]
   );
 
   const handleBrandChange = (brand) => {

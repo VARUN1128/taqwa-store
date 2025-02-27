@@ -46,6 +46,7 @@ const BannerSlideShow = ({ location }) => {
       const { data, error } = await supabase
         .from("banners")
         .select("*")
+        .eq("enabled", true)
         .eq("location", location);
       console.log("Slides", data);
       if (error) {
@@ -176,7 +177,7 @@ export const TopBar = ({ avatarInfo, showCopy }) => {
                 toast.success("Link copied to clipboard!");
               })
               .catch(() =>
-                toast.error("Failed to copy link! Please copy manually"),
+                toast.error("Failed to copy link! Please copy manually")
               );
           }}
         />
@@ -494,6 +495,7 @@ export default function Landing() {
         .from("products")
         .select("*")
         .order("created_at", { ascending: false })
+        .eq("original", true)
         .limit(10);
 
       if (error) {
@@ -513,7 +515,7 @@ export default function Landing() {
             headers: {
               "Content-Type": "application/json",
             },
-          },
+          }
         );
 
         console.log("Most Wishlisted", response.data.data);
@@ -533,12 +535,13 @@ export default function Landing() {
         console.log(wishlistError);
       } else {
         const productIds = Array.from(
-          new Set(wishlistData.map((item) => item.product_id)),
+          new Set(wishlistData.map((item) => item.product_id))
         ).slice(0, 6);
         console.log("Wishlisted", productIds);
         const { data: productData, error: productError } = await supabase
           .from("products")
           .select("*")
+          .eq("original", true)
           .in("id", productIds);
 
         if (productError) {
@@ -555,6 +558,7 @@ export default function Landing() {
         .from("products")
         .select("*")
         .order("avg_rating", { ascending: false })
+        .eq("original", true)
         .limit(10);
 
       if (error) {
