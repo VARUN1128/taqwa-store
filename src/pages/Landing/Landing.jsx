@@ -602,13 +602,13 @@ export default function Landing() {
       <CardList title="Top Rated" products={topRated} session={session} />
 
       <BannerSlideShow location="bottom" />
-
+      {/* 
       <CardList
         title="Most Wishlisted"
         products={mostWishlised}
         session={session}
       />
-      <CardList title="Most Ordered" products={mostOrdered} session={session} />
+      <CardList title="Most Ordered" products={mostOrdered} session={session} /> */}
 
       <Footer />
     </div>
