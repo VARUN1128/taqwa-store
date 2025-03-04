@@ -135,19 +135,19 @@ export const TopBar = ({ avatarInfo, showCopy }) => {
     >
       <ToastContainer />
       <div className="flex justify-start items-center w-full ">
-        <TbMenu2
+        {/* <TbMenu2
           size={25}
           onClick={() => {
             setOpen((prevOpen) => !prevOpen);
           }}
           style={{ cursor: "pointer" }}
-        />
-        <SideDrawer
+        /> */}
+        {/* <SideDrawer
           name={userName}
           profilePic={avatarPic}
           open={open}
           setOpen={setOpen}
-        />
+        /> */}
       </div>
       <div
         className={`flex justify-center items-center w-full relative ${
