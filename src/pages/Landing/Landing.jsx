@@ -46,7 +46,7 @@ const BannerSlideShow = ({ location }) => {
       const { data, error } = await supabase
         .from("banners")
         .select("*")
-        .eq("enabled", true)
+        // .eq("enabled", true)
         .eq("location", location);
       console.log("Slides", data);
       if (error) {
@@ -135,19 +135,19 @@ export const TopBar = ({ avatarInfo, showCopy }) => {
     >
       <ToastContainer />
       <div className="flex justify-start items-center w-full ">
-        {/* <TbMenu2
+        <TbMenu2
           size={25}
           onClick={() => {
             setOpen((prevOpen) => !prevOpen);
           }}
           style={{ cursor: "pointer" }}
-        /> */}
-        {/* <SideDrawer
+        />
+        <SideDrawer
           name={userName}
           profilePic={avatarPic}
           open={open}
           setOpen={setOpen}
-        /> */}
+        />
       </div>
       <div
         className={`flex justify-center items-center w-full relative ${
@@ -479,7 +479,7 @@ export default function Landing() {
       const { data, error } = await supabase
         .from("categories")
         .select("*")
-        .eq("enabled", true)
+        // .eq("enabled", true)
         .order("id", { ascending: true });
       if (error) {
         console.log(error);
@@ -495,7 +495,7 @@ export default function Landing() {
         .from("products")
         .select("*")
         .order("created_at", { ascending: false })
-        .eq("original", true)
+        // .eq("original", true)
         .limit(10);
 
       if (error) {
@@ -541,7 +541,7 @@ export default function Landing() {
         const { data: productData, error: productError } = await supabase
           .from("products")
           .select("*")
-          .eq("original", true)
+          // .eq("original", true)
           .in("id", productIds);
 
         if (productError) {
@@ -558,7 +558,7 @@ export default function Landing() {
         .from("products")
         .select("*")
         .order("avg_rating", { ascending: false })
-        .eq("original", true)
+        // .eq("original", true)
         .limit(10);
 
       if (error) {
@@ -602,13 +602,13 @@ export default function Landing() {
       <CardList title="Top Rated" products={topRated} session={session} />
 
       <BannerSlideShow location="bottom" />
-      {/* 
+
       <CardList
         title="Most Wishlisted"
         products={mostWishlised}
         session={session}
       />
-      <CardList title="Most Ordered" products={mostOrdered} session={session} /> */}
+      <CardList title="Most Ordered" products={mostOrdered} session={session} />
 
       <Footer />
     </div>
