@@ -360,7 +360,7 @@ export default function SearchResults() {
               We're always adding new products to our catalog. Please check back
               later or check out our other categories.
             </p>
-            <div className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap ">
+            {/* <div className="hide-scrollbar m-auto justify-around w-100 gap-1 flex flex-nowrap mt-5 overflow-x-scroll whitespace-nowrap ">
               {[...categories].map((category, index) => (
                 <CategoryCard
                   category={category.category}
@@ -369,7 +369,7 @@ export default function SearchResults() {
                   key={category.id}
                 />
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="flex justify-center mt-5">
