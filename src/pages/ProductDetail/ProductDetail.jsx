@@ -323,6 +323,7 @@ const ProductDetail = () => {
         .from("products")
         .select("*")
         .eq("id", productId)
+        .eq("original", true)
         .single();
 
       if (productError) {
@@ -338,6 +339,7 @@ const ProductDetail = () => {
       // Fetch categories
       const { data: categoriesData, error: categoriesError } = await supabase
         .from("categories")
+        .eq("enabled", true)
         .select("*");
       if (categoriesError) {
         console.error("Error fetching categories: ", categoriesError);
@@ -376,6 +378,7 @@ const ProductDetail = () => {
         .from("products")
         .select("*")
         .limit(10)
+        .eq("original", true)
         .order("category", { ascending: true })
         .neq("id", productData.id)
         .eq("category", productData.category);

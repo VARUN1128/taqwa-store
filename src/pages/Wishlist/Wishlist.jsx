@@ -25,6 +25,7 @@ export default function Wishlist() {
         const { data: productData, error: productError } = await supabase
           .from("products")
           .select("*")
+
           .in("id", productIds);
         if (productError) {
           console.log(productError);

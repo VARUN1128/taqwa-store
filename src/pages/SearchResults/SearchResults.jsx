@@ -86,7 +86,7 @@ const fetchProducts = async (
     //change the query to get the products if its enabled
 
     // productsQuery = productsQuery.eq("enabled", true);
-    // productsQuery = productsQuery.eq("original", true);
+    productsQuery = productsQuery.eq("original", true);
 
     // set total number of pages based on the number of products
 
