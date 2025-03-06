@@ -603,11 +603,11 @@ export default function Landing() {
 
       <BannerSlideShow location="bottom" />
 
-      <CardList
+      {/* <CardList
         title="Most Wishlisted"
         products={mostWishlised}
         session={session}
-      />
+      /> */}
       {/* <CardList title="Most Ordered" products={mostOrdered} session={session} /> */}
 
       <Footer />
